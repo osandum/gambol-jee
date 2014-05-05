@@ -1,0 +1,17 @@
+## YAML Template.
+---
+
+clubs:
+
+    - &ksf !!gambol.model.Club
+        slug:           "ksf"
+        name:           "KSF"
+    - &capitals !!gambol.model.Club
+        slug:           "capitals"
+        name:           "Copenhagen Capitals"
+    - &rik !!gambol.model.Club
+        slug:           "rik"
+        name:           "RIK"
+    - &hvik !!gambol.model.Club
+        slug:           "hvidovre"
+        name:           "HvIK"
