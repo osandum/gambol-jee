@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                template="/WEB-INF/templates/default.xhtml">        
+
+    <ui:define name="content">
+        Hejsa from Facelets!
+
+        <h:dataTable var="_club" value="#{gambol.clubs}" rendered="#{not empty gambol.clubs}">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                    #{_club.id}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Name</f:facet>
+                    #{_club.name}
+            </h:column>
+            <h:column>
+                <f:facet name="header">REST URL</f:facet>
+                <a href="#{request.contextPath}/rest/clubs/#{_club.slug}">/rest/clubs/#{_club.slug}</a>
+            </h:column>
+            <f:facet name="footer">
+                REST URL for all members: <a href="#{request.contextPath}/rest/members">/rest/members</a>
+            </f:facet>
+        </h:dataTable>
+
+    </ui:define>
+
+</ui:composition>
