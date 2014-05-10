@@ -5,12 +5,15 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author osa
  */
 @Entity
+@XmlRootElement
 public class Club implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -32,6 +35,7 @@ public class Club implements Serializable {
         this.id = id;
     }    
 
+    @XmlID
     public String getSlug() {
         return slug;
     }
