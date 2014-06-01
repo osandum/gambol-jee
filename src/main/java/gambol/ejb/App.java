@@ -1,6 +1,7 @@
 package gambol.ejb;
 
 import gambol.model.Club;
+import gambol.model.Tournament;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
@@ -12,9 +13,7 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import org.yaml.snakeyaml.Yaml;
 
 /**
@@ -43,6 +42,19 @@ public class App {
         List<Club> clubs = allQuery.getResultList();
         
         return clubs;
+    }
+
+    public List<Tournament> getAllTournaments() {
+        // OMG!
+        CriteriaQuery<Tournament> cq = em.getCriteriaBuilder().createQuery(Tournament.class);
+        CriteriaQuery<Tournament> all = cq.select(cq.from(Tournament.class)); //.orderBy(Ord);
+        TypedQuery<Tournament> allQuery = em.createQuery(all);
+        List<Tournament> res = allQuery.getResultList();
+        
+        for (Tournament t: res)
+            t.getFixtures().size();
+        
+        return res;
     }
 
     public void loadInitialData() {

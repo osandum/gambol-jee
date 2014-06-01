@@ -8,12 +8,15 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author osa
  */
 @Entity
+@XmlRootElement
 public class Fixture implements Serializable {
     private static final long serialVersionUID = 1L;
     
@@ -44,6 +47,7 @@ public class Fixture implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date endTime;
 
+    @XmlTransient
     public Tournament getTournament() {
         return tournament;
     }

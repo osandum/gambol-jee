@@ -8,12 +8,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.Constraint;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author osa
  */
 @Entity
+@XmlRootElement
 public class Tournament implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -53,4 +55,12 @@ public class Tournament implements Serializable {
  
     @OneToMany(mappedBy = "tournament")
     private List<Fixture> fixtures;
+
+    public List<Fixture> getFixtures() {
+        return fixtures;
+    }
+
+    public void setFixtures(List<Fixture> fixtures) {
+        this.fixtures = fixtures;
+    }
 }

@@ -24,11 +24,9 @@ public class ClubResource {
     @GET
     @Produces({APPLICATION_JSON, APPLICATION_XML})
     public Club getClub() {
-        for (Club c : gambol.getClubs()) {
-            if (slug.equals(c.getSlug())) {
+        for (Club c : gambol.getClubs())
+            if (slug.equals(c.getSlug()))
                 return c;
-            }
-        }
 
         throw new WebApplicationException("Not found", Response.Status.NOT_FOUND);
     }
