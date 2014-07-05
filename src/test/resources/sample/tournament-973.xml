@@ -1,0 +1,736 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<gambol xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://sandum.net/namespaces/gambol" 
+        season="2013/2014" 
+        xsi:schemaLocation="http://sandum.net/namespaces/gambol file:/Users/osa/KSF/diu-rip/src/main/xsd/gambol.xsd">
+    <tournament season="2013/2014">
+        <fixture id="4">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28824-->
+            <diu-match-id>28824</diu-match-id>
+            <teams>
+                <home-side>KSF</home-side>
+                <away-side>Amar jets</away-side>
+            </teams>
+            <start-time>2013-09-15T12:25:00</start-time>
+            <result>
+                <home-side>4</home-side>
+                <away-side>13</away-side>
+            </result>
+        </fixture>
+        <fixture id="6">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28826-->
+            <diu-match-id>28826</diu-match-id>
+            <teams>
+                <home-side>Hvidovre</home-side>
+                <away-side>Rødovre</away-side>
+            </teams>
+            <start-time>2013-09-26T17:45:00</start-time>
+            <result>
+                <home-side>4</home-side>
+                <away-side>8</away-side>
+            </result>
+        </fixture>
+        <fixture id="3">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28823-->
+            <diu-match-id>28823</diu-match-id>
+            <teams>
+                <home-side>Rungsted</home-side>
+                <away-side>Gentofte Stars</away-side>
+            </teams>
+            <start-time>2013-09-28T13:45:00</start-time>
+            <result>
+                <home-side>0</home-side>
+                <away-side>13</away-side>
+            </result>
+        </fixture>
+        <fixture id="29">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28849-->
+            <diu-match-id>28849</diu-match-id>
+            <teams>
+                <home-side>Gladsaxe</home-side>
+                <away-side>Rødovre</away-side>
+            </teams>
+            <start-time>2013-10-01T17:30:00</start-time>
+            <result>
+                <home-side>5</home-side>
+                <away-side>15</away-side>
+            </result>
+        </fixture>
+        <fixture id="5">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28825-->
+            <diu-match-id>28825</diu-match-id>
+            <teams>
+                <home-side>Gentofte Stars</home-side>
+                <away-side>Herlev</away-side>
+            </teams>
+            <start-time>2013-10-05T13:10:00</start-time>
+            <result>
+                <home-side>0</home-side>
+                <away-side>0</away-side>
+            </result>
+        </fixture>
+        <fixture id="8">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28828-->
+            <diu-match-id>28828</diu-match-id>
+            <teams>
+                <home-side>Rungsted</home-side>
+                <away-side>KSF</away-side>
+            </teams>
+            <start-time>2013-10-05T13:45:00</start-time>
+            <result>
+                <home-side>6</home-side>
+                <away-side>5</away-side>
+            </result>
+        </fixture>
+        <fixture id="7">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28827-->
+            <diu-match-id>28827</diu-match-id>
+            <teams>
+                <home-side>Gladsaxe</home-side>
+                <away-side>Amar jets</away-side>
+            </teams>
+            <start-time>2013-10-12T13:55:00</start-time>
+            <result>
+                <home-side>8</home-side>
+                <away-side>2</away-side>
+            </result>
+        </fixture>
+        <fixture id="44">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28864-->
+            <diu-match-id>28864</diu-match-id>
+            <teams>
+                <home-side>KSF</home-side>
+                <away-side>Herlev</away-side>
+            </teams>
+            <start-time>2013-11-01T18:15:00</start-time>
+            <result>
+                <home-side>3</home-side>
+                <away-side>7</away-side>
+            </result>
+        </fixture>
+        <fixture id="2">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28822-->
+            <diu-match-id>28822</diu-match-id>
+            <teams>
+                <home-side>Herlev</home-side>
+                <away-side>Hvidovre</away-side>
+            </teams>
+            <start-time>2013-11-16T13:35:00</start-time>
+            <result>
+                <home-side>3</home-side>
+                <away-side>7</away-side>
+            </result>
+        </fixture>
+        <fixture id="13">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28833-->
+            <diu-match-id>28833</diu-match-id>
+            <teams>
+                <home-side>Rungsted</home-side>
+                <away-side>Rødovre</away-side>
+            </teams>
+            <start-time>2013-11-17T13:30:00</start-time>
+            <result>
+                <home-side>0</home-side>
+                <away-side>0</away-side>
+            </result>
+        </fixture>
+        <fixture id="14">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28834-->
+            <diu-match-id>28834</diu-match-id>
+            <teams>
+                <home-side>Gentofte Stars</home-side>
+                <away-side>Amar jets</away-side>
+            </teams>
+            <start-time>2013-11-22T18:40:00</start-time>
+            <result>
+                <home-side>8</home-side>
+                <away-side>3</away-side>
+            </result>
+        </fixture>
+        <fixture id="19">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28839-->
+            <diu-match-id>28839</diu-match-id>
+            <teams>
+                <home-side>Rødovre</home-side>
+                <away-side>Herlev</away-side>
+            </teams>
+            <start-time>2013-11-23T15:45:00</start-time>
+            <result>
+                <home-side>12</home-side>
+                <away-side>5</away-side>
+            </result>
+        </fixture>
+        <fixture id="15">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28835-->
+            <diu-match-id>28835</diu-match-id>
+            <teams>
+                <home-side>Hvidovre</home-side>
+                <away-side>Gladsaxe</away-side>
+            </teams>
+            <start-time>2013-11-24T08:00:00</start-time>
+            <result>
+                <home-side>7</home-side>
+                <away-side>2</away-side>
+            </result>
+        </fixture>
+        <fixture id="16">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28836-->
+            <diu-match-id>28836</diu-match-id>
+            <teams>
+                <home-side>Herlev</home-side>
+                <away-side>KSF</away-side>
+            </teams>
+            <start-time>2013-11-24T08:00:00</start-time>
+            <result>
+                <home-side>4</home-side>
+                <away-side>8</away-side>
+            </result>
+        </fixture>
+        <fixture id="20">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28840-->
+            <diu-match-id>28840</diu-match-id>
+            <teams>
+                <home-side>KSF</home-side>
+                <away-side>Hvidovre</away-side>
+            </teams>
+            <start-time>2013-12-07T18:25:00</start-time>
+            <result>
+                <home-side>5</home-side>
+                <away-side>0</away-side>
+            </result>
+        </fixture>
+        <fixture id="22">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28842-->
+            <diu-match-id>28842</diu-match-id>
+            <teams>
+                <home-side>Rungsted</home-side>
+                <away-side>Gladsaxe</away-side>
+            </teams>
+            <start-time>2013-12-08T09:15:00</start-time>
+            <result>
+                <home-side>7</home-side>
+                <away-side>3</away-side>
+            </result>
+        </fixture>
+        <fixture id="23">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28843-->
+            <diu-match-id>28843</diu-match-id>
+            <teams>
+                <home-side>Gentofte Stars</home-side>
+                <away-side>Hvidovre</away-side>
+            </teams>
+            <start-time>2013-12-09T17:45:00</start-time>
+            <result>
+                <overtime/>
+                <home-side>1</home-side>
+                <away-side>1</away-side>
+            </result>
+        </fixture>
+        <fixture id="9">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28829-->
+            <diu-match-id>28829</diu-match-id>
+            <teams>
+                <home-side>Amar jets</home-side>
+                <away-side>Hvidovre</away-side>
+            </teams>
+            <start-time>2013-12-13T18:00:00</start-time>
+            <result>
+                <home-side>2</home-side>
+                <away-side>13</away-side>
+            </result>
+        </fixture>
+        <fixture id="24">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28844-->
+            <diu-match-id>28844</diu-match-id>
+            <teams>
+                <home-side>Rødovre</home-side>
+                <away-side>KSF</away-side>
+            </teams>
+            <start-time>2013-12-14T15:15:00</start-time>
+            <result>
+                <home-side>23</home-side>
+                <away-side>2</away-side>
+            </result>
+        </fixture>
+        <fixture id="26">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28846-->
+            <diu-match-id>28846</diu-match-id>
+            <teams>
+                <home-side>Gladsaxe</home-side>
+                <away-side>Herlev</away-side>
+            </teams>
+            <start-time>2013-12-21T12:15:00</start-time>
+            <result>
+                <home-side>9</home-side>
+                <away-side>7</away-side>
+            </result>
+        </fixture>
+        <fixture id="28">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28848-->
+            <diu-match-id>28848</diu-match-id>
+            <teams>
+                <home-side>KSF</home-side>
+                <away-side>Gentofte Stars</away-side>
+            </teams>
+            <start-time>2013-12-21T18:25:00</start-time>
+            <result>
+                <home-side>5</home-side>
+                <away-side>0</away-side>
+            </result>
+        </fixture>
+        <fixture id="42">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28862-->
+            <diu-match-id>28862</diu-match-id>
+            <teams>
+                <home-side>Amar jets</home-side>
+                <away-side>Gentofte Stars</away-side>
+            </teams>
+            <start-time>2013-12-22T12:30:00</start-time>
+            <result>
+                <home-side>2</home-side>
+                <away-side>13</away-side>
+            </result>
+        </fixture>
+        <fixture id="27">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28847-->
+            <diu-match-id>28847</diu-match-id>
+            <teams>
+                <home-side>Amar jets</home-side>
+                <away-side>Rødovre</away-side>
+            </teams>
+            <start-time>2013-12-28T16:15:00</start-time>
+            <result>
+                <home-side>1</home-side>
+                <away-side>13</away-side>
+            </result>
+        </fixture>
+        <fixture id="21">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28841-->
+            <diu-match-id>28841</diu-match-id>
+            <teams>
+                <home-side>Herlev</home-side>
+                <away-side>Amar jets</away-side>
+            </teams>
+            <start-time>2013-12-29T08:00:00</start-time>
+            <result>
+                <home-side>2</home-side>
+                <away-side>2</away-side>
+            </result>
+        </fixture>
+        <fixture id="30">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28850-->
+            <diu-match-id>28850</diu-match-id>
+            <teams>
+                <home-side>Hvidovre</home-side>
+                <away-side>Herlev</away-side>
+            </teams>
+            <start-time>2014-01-03T18:00:00</start-time>
+            <result>
+                <home-side>9</home-side>
+                <away-side>6</away-side>
+            </result>
+        </fixture>
+        <fixture id="32">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28852-->
+            <diu-match-id>28852</diu-match-id>
+            <teams>
+                <home-side>Amar jets</home-side>
+                <away-side>KSF</away-side>
+            </teams>
+            <start-time>2014-01-05T12:20:00</start-time>
+            <result>
+                <home-side>6</home-side>
+                <away-side>1</away-side>
+            </result>
+        </fixture>
+        <fixture id="31">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28851-->
+            <diu-match-id>28851</diu-match-id>
+            <teams>
+                <home-side>Gentofte Stars</home-side>
+                <away-side>Rungsted</away-side>
+            </teams>
+            <start-time>2014-01-05T12:35:00</start-time>
+            <result>
+                <home-side>6</home-side>
+                <away-side>1</away-side>
+            </result>
+        </fixture>
+        <fixture id="40">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28860-->
+            <diu-match-id>28860</diu-match-id>
+            <teams>
+                <home-side>Gladsaxe</home-side>
+                <away-side>KSF</away-side>
+            </teams>
+            <start-time>2014-01-14T17:30:00</start-time>
+            <result>
+                <home-side>14</home-side>
+                <away-side>2</away-side>
+            </result>
+        </fixture>
+        <fixture id="34">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28854-->
+            <diu-match-id>28854</diu-match-id>
+            <teams>
+                <home-side>Rødovre</home-side>
+                <away-side>Hvidovre</away-side>
+            </teams>
+            <start-time>2014-01-19T13:00:00</start-time>
+            <result>
+                <home-side>5</home-side>
+                <away-side>2</away-side>
+            </result>
+        </fixture>
+        <fixture id="12">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28832-->
+            <diu-match-id>28832</diu-match-id>
+            <teams>
+                <home-side>KSF</home-side>
+                <away-side>Gladsaxe</away-side>
+            </teams>
+            <start-time>2014-01-20T18:00:00</start-time>
+            <result>
+                <home-side>0</home-side>
+                <away-side>5</away-side>
+            </result>
+        </fixture>
+        <fixture id="39">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28859-->
+            <diu-match-id>28859</diu-match-id>
+            <teams>
+                <home-side>Rungsted</home-side>
+                <away-side>Herlev</away-side>
+            </teams>
+            <start-time>2014-01-25T09:15:00</start-time>
+            <result>
+                <home-side>9</home-side>
+                <away-side>5</away-side>
+            </result>
+        </fixture>
+        <fixture id="37">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28857-->
+            <diu-match-id>28857</diu-match-id>
+            <teams>
+                <home-side>Hvidovre</home-side>
+                <away-side>Amar jets</away-side>
+            </teams>
+            <start-time>2014-01-25T18:20:00</start-time>
+            <result>
+                <home-side>12</home-side>
+                <away-side>3</away-side>
+            </result>
+        </fixture>
+        <fixture id="35">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28855-->
+            <diu-match-id>28855</diu-match-id>
+            <teams>
+                <home-side>Amar jets</home-side>
+                <away-side>Gladsaxe</away-side>
+            </teams>
+            <start-time>2014-01-26T15:00:00</start-time>
+            <result>
+                <home-side>7</home-side>
+                <away-side>5</away-side>
+            </result>
+        </fixture>
+        <fixture id="38">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28858-->
+            <diu-match-id>28858</diu-match-id>
+            <teams>
+                <home-side>Gentofte Stars</home-side>
+                <away-side>Rødovre</away-side>
+            </teams>
+            <start-time>2014-01-26T17:05:00</start-time>
+            <result>
+                <overtime/>
+                <home-side>7</home-side>
+                <away-side>0</away-side>
+            </result>
+        </fixture>
+        <fixture id="17">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28837-->
+            <diu-match-id>28837</diu-match-id>
+            <teams>
+                <home-side>Gladsaxe</home-side>
+                <away-side>Gentofte Stars</away-side>
+            </teams>
+            <start-time>2014-02-01T16:15:00</start-time>
+            <result>
+                <home-side>3</home-side>
+                <away-side>11</away-side>
+            </result>
+        </fixture>
+        <fixture id="36">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28856-->
+            <diu-match-id>28856</diu-match-id>
+            <teams>
+                <home-side>KSF</home-side>
+                <away-side>Rungsted</away-side>
+            </teams>
+            <start-time>2014-02-01T18:25:00</start-time>
+            <result>
+                <home-side>8</home-side>
+                <away-side>20</away-side>
+            </result>
+        </fixture>
+        <fixture id="33">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28853-->
+            <diu-match-id>28853</diu-match-id>
+            <teams>
+                <home-side>Herlev</home-side>
+                <away-side>Gentofte Stars</away-side>
+            </teams>
+            <start-time>2014-02-02T08:00:00</start-time>
+            <result>
+                <home-side>3</home-side>
+                <away-side>13</away-side>
+            </result>
+        </fixture>
+        <fixture id="43">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28863-->
+            <diu-match-id>28863</diu-match-id>
+            <teams>
+                <home-side>Gladsaxe</home-side>
+                <away-side>Hvidovre</away-side>
+            </teams>
+            <start-time>2014-02-08T14:40:00</start-time>
+            <result>
+                <home-side>2</home-side>
+                <away-side>8</away-side>
+            </result>
+        </fixture>
+        <fixture id="47">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28867-->
+            <diu-match-id>28867</diu-match-id>
+            <teams>
+                <home-side>Herlev</home-side>
+                <away-side>Rødovre</away-side>
+            </teams>
+            <start-time>2014-02-16T08:00:00</start-time>
+            <result>
+                <home-side>3</home-side>
+                <away-side>11</away-side>
+            </result>
+        </fixture>
+        <fixture id="46">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28866-->
+            <diu-match-id>28866</diu-match-id>
+            <teams>
+                <home-side>Rungsted</home-side>
+                <away-side>Amar jets</away-side>
+            </teams>
+            <start-time>2014-02-23T09:15:00</start-time>
+            <result>
+                <home-side>8</home-side>
+                <away-side>5</away-side>
+            </result>
+        </fixture>
+        <fixture id="52">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28872-->
+            <diu-match-id>28872</diu-match-id>
+            <teams>
+                <home-side>KSF</home-side>
+                <away-side>Rødovre</away-side>
+            </teams>
+            <start-time>2014-02-23T12:25:00</start-time>
+            <result>
+                <home-side>5</home-side>
+                <away-side>0</away-side>
+            </result>
+        </fixture>
+        <fixture id="45">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28865-->
+            <diu-match-id>28865</diu-match-id>
+            <teams>
+                <home-side>Gentofte Stars</home-side>
+                <away-side>Gladsaxe</away-side>
+            </teams>
+            <start-time>2014-02-23T17:05:00</start-time>
+            <result>
+                <home-side>4</home-side>
+                <away-side>0</away-side>
+            </result>
+        </fixture>
+        <fixture id="48">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28868-->
+            <diu-match-id>28868</diu-match-id>
+            <teams>
+                <home-side>Hvidovre</home-side>
+                <away-side>KSF</away-side>
+            </teams>
+            <start-time>2014-02-27T17:50:00</start-time>
+            <result>
+                <home-side>16</home-side>
+                <away-side>1</away-side>
+            </result>
+        </fixture>
+        <fixture id="1">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28821-->
+            <diu-match-id>28821</diu-match-id>
+            <teams>
+                <home-side>Rødovre</home-side>
+                <away-side>Gladsaxe</away-side>
+            </teams>
+            <start-time>2014-03-04T17:45:00</start-time>
+            <result>
+                <home-side>10</home-side>
+                <away-side>4</away-side>
+            </result>
+        </fixture>
+        <fixture id="51">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28871-->
+            <diu-match-id>28871</diu-match-id>
+            <teams>
+                <home-side>Hvidovre</home-side>
+                <away-side>Gentofte Stars</away-side>
+            </teams>
+            <start-time>2014-03-06T17:50:00</start-time>
+            <result>
+                <home-side>0</home-side>
+                <away-side>14</away-side>
+            </result>
+        </fixture>
+        <fixture id="56">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28876-->
+            <diu-match-id>28876</diu-match-id>
+            <teams>
+                <home-side>Gentofte Stars</home-side>
+                <away-side>KSF</away-side>
+            </teams>
+            <start-time>2014-03-09T11:50:00</start-time>
+            <result>
+                <home-side>8</home-side>
+                <away-side>5</away-side>
+            </result>
+        </fixture>
+        <fixture id="41">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28861-->
+            <diu-match-id>28861</diu-match-id>
+            <teams>
+                <home-side>Rødovre</home-side>
+                <away-side>Rungsted</away-side>
+            </teams>
+            <start-time>2014-03-09T12:30:00</start-time>
+            <result>
+                <home-side>14</home-side>
+                <away-side>5</away-side>
+            </result>
+        </fixture>
+        <fixture id="49">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28869-->
+            <diu-match-id>28869</diu-match-id>
+            <teams>
+                <home-side>Amar jets</home-side>
+                <away-side>Herlev</away-side>
+            </teams>
+            <start-time>2014-03-09T15:00:00</start-time>
+            <result>
+                <home-side>9</home-side>
+                <away-side>9</away-side>
+            </result>
+        </fixture>
+        <fixture id="10">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28830-->
+            <diu-match-id>28830</diu-match-id>
+            <teams>
+                <home-side>Rødovre</home-side>
+                <away-side>Gentofte Stars</away-side>
+            </teams>
+            <start-time>2014-03-11T17:45:00</start-time>
+            <result>
+                <home-side>4</home-side>
+                <away-side>1</away-side>
+            </result>
+        </fixture>
+        <fixture id="50">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28870-->
+            <diu-match-id>28870</diu-match-id>
+            <teams>
+                <home-side>Gladsaxe</home-side>
+                <away-side>Rungsted</away-side>
+            </teams>
+            <start-time>2014-03-15T12:15:00</start-time>
+            <result>
+                <home-side>7</home-side>
+                <away-side>7</away-side>
+            </result>
+        </fixture>
+        <fixture id="11">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28831-->
+            <diu-match-id>28831</diu-match-id>
+            <teams>
+                <home-side>Herlev</home-side>
+                <away-side>Rungsted</away-side>
+            </teams>
+            <start-time>2014-03-16T09:10:00</start-time>
+            <result>
+                <home-side>2</home-side>
+                <away-side>10</away-side>
+            </result>
+        </fixture>
+        <fixture id="25">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28845-->
+            <diu-match-id>28845</diu-match-id>
+            <teams>
+                <home-side>Hvidovre</home-side>
+                <away-side>Rungsted</away-side>
+            </teams>
+            <start-time>2014-03-20T17:50:00</start-time>
+            <result>
+                <home-side>5</home-side>
+                <away-side>4</away-side>
+            </result>
+        </fixture>
+        <fixture id="54">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28874-->
+            <diu-match-id>28874</diu-match-id>
+            <teams>
+                <home-side>Herlev</home-side>
+                <away-side>Gladsaxe</away-side>
+            </teams>
+            <start-time>2014-03-25T17:20:00</start-time>
+            <result>
+                <home-side>7</home-side>
+                <away-side>6</away-side>
+            </result>
+        </fixture>
+        <fixture id="53">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28873-->
+            <diu-match-id>28873</diu-match-id>
+            <teams>
+                <home-side>Rungsted</home-side>
+                <away-side>Hvidovre</away-side>
+            </teams>
+            <start-time>2014-03-27T17:50:00</start-time>
+            <result>
+                <home-side>3</home-side>
+                <away-side>6</away-side>
+            </result>
+        </fixture>
+        <fixture id="18">
+            <teams>
+                <home-side>Amar jets</home-side>
+                <away-side>Rungsted</away-side>
+            </teams>
+            <start-time>2014-03-28T17:15:00</start-time>
+            <result>
+                <home-side/>
+                <away-side/>
+            </result>
+        </fixture>
+        <fixture id="55">
+            <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28875-->
+            <diu-match-id>28875</diu-match-id>
+            <teams>
+                <home-side>Rødovre</home-side>
+                <away-side>Amar jets</away-side>
+            </teams>
+            <start-time>2014-03-30T14:45:00</start-time>
+            <result>
+                <home-side>25</home-side>
+                <away-side>3</away-side>
+            </result>
+        </fixture>
+    </tournament>
+</gambol>
