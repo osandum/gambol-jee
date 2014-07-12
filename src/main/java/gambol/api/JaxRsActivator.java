@@ -1,7 +1,7 @@
 package gambol.api;
 
 import gambol.ejb.App;
-import gambol.model.Tournament;
+import gambol.model.TournamentEntity;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ws.rs.ApplicationPath;

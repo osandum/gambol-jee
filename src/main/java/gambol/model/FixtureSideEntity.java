@@ -12,7 +12,7 @@ import javax.persistence.ManyToOne;
  * @author osa
  */
 @Entity
-public class Lineup implements Serializable {
+public class FixtureSideEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue
@@ -27,14 +27,24 @@ public class Lineup implements Serializable {
     }
 
     @ManyToOne(optional = false)
-    private Club club;
+    private ClubEntity club;
 
-    public Club getClub() {
+    public ClubEntity getClub() {
         return club;
     }
 
-    public void setClub(Club club) {
+    public void setClub(ClubEntity club) {
         this.club = club;
+    }
+
+    private Integer score;
+
+    public Integer getScore() {
+        return score;
+    }
+
+    public void setScore(Integer score) {
+        this.score = score;
     }
     
 }

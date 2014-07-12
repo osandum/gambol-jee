@@ -8,16 +8,13 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author osa
  */
-@Entity
-@XmlRootElement
-public class Fixture implements Serializable {
+@Entity(name = "fixture")
+public class FixtureEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -33,13 +30,13 @@ public class Fixture implements Serializable {
     }
 
     @ManyToOne(optional = false)
-    private Tournament tournament;
+    private TournamentEntity tournament;
     
     @ManyToOne(optional = false)
-    private Lineup homeSide;
+    private FixtureSideEntity homeSide;
 
     @ManyToOne(optional = false)
-    private Lineup awaySide;
+    private FixtureSideEntity awaySide;
     
     @Temporal(TemporalType.TIMESTAMP)
     private Date startTime;
@@ -47,28 +44,27 @@ public class Fixture implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date endTime;
 
-    @XmlTransient
-    public Tournament getTournament() {
+    public TournamentEntity getTournament() {
         return tournament;
     }
 
-    public void setTournament(Tournament tournament) {
+    public void setTournament(TournamentEntity tournament) {
         this.tournament = tournament;
     }
 
-    public Lineup getHomeSide() {
+    public FixtureSideEntity getHomeSide() {
         return homeSide;
     }
 
-    public void setHomeSide(Lineup homeSide) {
+    public void setHomeSide(FixtureSideEntity homeSide) {
         this.homeSide = homeSide;
     }
 
-    public Lineup getAwaySide() {
+    public FixtureSideEntity getAwaySide() {
         return awaySide;
     }
 
-    public void setAwaySide(Lineup awaySide) {
+    public void setAwaySide(FixtureSideEntity awaySide) {
         this.awaySide = awaySide;
     }
 

@@ -1,7 +1,7 @@
 package gambol.ejb;
 
-import gambol.model.Club;
-import gambol.model.Tournament;
+import gambol.model.ClubEntity;
+import gambol.model.TournamentEntity;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
@@ -34,24 +34,24 @@ public class App {
         LOG.info("Yo, environment");
     }
 
-    public List<Club> getClubs() {
+    public List<ClubEntity> getClubs() {
         // OMG!
-        CriteriaQuery<Club> cq = em.getCriteriaBuilder().createQuery(Club.class);
-        CriteriaQuery<Club> all = cq.select(cq.from(Club.class)); //.orderBy(Ord);
-        TypedQuery<Club> allQuery = em.createQuery(all);
-        List<Club> clubs = allQuery.getResultList();
+        CriteriaQuery<ClubEntity> cq = em.getCriteriaBuilder().createQuery(ClubEntity.class);
+        CriteriaQuery<ClubEntity> all = cq.select(cq.from(ClubEntity.class)); //.orderBy(Ord);
+        TypedQuery<ClubEntity> allQuery = em.createQuery(all);
+        List<ClubEntity> clubs = allQuery.getResultList();
         
         return clubs;
     }
 
-    public List<Tournament> getAllTournaments() {
+    public List<TournamentEntity> getAllTournaments() {
         // OMG!
-        CriteriaQuery<Tournament> cq = em.getCriteriaBuilder().createQuery(Tournament.class);
-        CriteriaQuery<Tournament> all = cq.select(cq.from(Tournament.class)); //.orderBy(Ord);
-        TypedQuery<Tournament> allQuery = em.createQuery(all);
-        List<Tournament> res = allQuery.getResultList();
+        CriteriaQuery<TournamentEntity> cq = em.getCriteriaBuilder().createQuery(TournamentEntity.class);
+        CriteriaQuery<TournamentEntity> all = cq.select(cq.from(TournamentEntity.class)); //.orderBy(Ord);
+        TypedQuery<TournamentEntity> allQuery = em.createQuery(all);
+        List<TournamentEntity> res = allQuery.getResultList();
         
-        for (Tournament t: res)
+        for (TournamentEntity t: res)
             t.getFixtures().size();
         
         return res;

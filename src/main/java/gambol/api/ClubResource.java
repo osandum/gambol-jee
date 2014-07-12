@@ -1,9 +1,11 @@
 package gambol.api;
 
 import gambol.ejb.App;
-import gambol.model.Club;
+import gambol.model.ClubEntity;
+import gambol.xml.Club;
 import javax.ejb.EJB;
 import javax.ws.rs.GET;
+import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
@@ -13,6 +15,7 @@ import javax.ws.rs.core.Response;
 /**
  * @author osa
  */
+@Path("clubs/{slug}")
 public class ClubResource {
 
     @PathParam("slug")
@@ -24,11 +27,22 @@ public class ClubResource {
     @GET
     @Produces({APPLICATION_JSON, APPLICATION_XML})
     public Club getClub() {
-        for (Club c : gambol.getClubs())
+        for (ClubEntity c : gambol.getClubs())
             if (slug.equals(c.getSlug()))
-                return c;
+                return entity2domain(c);
 
         throw new WebApplicationException("Not found", Response.Status.NOT_FOUND);
+    }
+
+    public static Club entity2domain(ClubEntity entity) {
+        Club c = new Club();
+        c.setName(entity.getName());
+        Club.Address address = new Club.Address();
+        address.setValue(entity.getAddress());
+        address.setLat(entity.getLatitude());
+        address.setLon(entity.getLongitude());
+        c.setAddress(address);
+        return c;
     }
 
 }
