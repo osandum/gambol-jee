@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+
+<club xsi:schemaLocation="http://sandum.net/namespaces/gambol file:/home/osa/KSF/openshift/gambol-docs/src/main/resources/gambol.xsd" 
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://sandum.net/namespaces/gambol">
+    <name>KSF</name>
+    <address>KSF, Sionsgade, København, Danmark</address>
+</club>
