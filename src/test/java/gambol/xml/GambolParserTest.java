@@ -47,7 +47,7 @@ public class GambolParserTest {
 
         int n = 0;
         for (Section s : cal.getSections())
-            for (Tournament t : s.getTournaments()) 
+            for (TournamentTemp t : s.getTournaments()) 
                 ++n;
         
         assertEquals(88, n);
@@ -65,7 +65,7 @@ public class GambolParserTest {
         for (Fixture f : cal.getTournament().getFixtures()) {
             Side home = f.getSides().get(0);
             Side away = f.getSides().get(1);
-            System.out.println(f.getStartTime() + ": " + home.getTeam() + "-" + away.getTeam() + " " + home.getScore() + "-" + away.getScore() + " (" + f.getId() +")");
+            System.out.println(f.getStartTime() + ": " + home.getTeam() + "-" + away.getTeam() + " " + home.getScore() + "-" + away.getScore() + " (" + f.getSourceRef()+")");
             ++n;
         }
         

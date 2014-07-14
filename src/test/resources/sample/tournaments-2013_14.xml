@@ -3,279 +3,279 @@
 <gambol xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://sandum.net/namespaces/gambol" 
         season="2013/2014" 
         xsi:schemaLocation="http://sandum.net/namespaces/gambol file:/Users/osa/KSF/diu-rip/src/main/xsd/gambol.xsd">
-    <section id="0">
+    <section>
         <title>Turneringer, DIU</title>
-        <tournament id="952">
+        <tournament source-ref="DIU:952">
             <title>Reebok Camp + Breddesamling</title>
         </tournament>
-        <tournament id="983">
+        <tournament source-ref="DIU:983">
             <title>U20 - Vest</title>
         </tournament>
-        <tournament id="984">
+        <tournament source-ref="DIU:984">
             <title>U20 - Øst</title>
         </tournament>
-        <tournament id="985">
+        <tournament source-ref="DIU:985">
             <title>1. Division</title>
         </tournament>
-        <tournament id="986">
+        <tournament source-ref="DIU:986">
             <title>Metal Ligaen</title>
         </tournament>
-        <tournament id="987">
+        <tournament source-ref="DIU:987">
             <title>U17 Puljeturnering A</title>
         </tournament>
-        <tournament id="988">
+        <tournament source-ref="DIU:988">
             <title>U17 Puljeturnering B</title>
         </tournament>
-        <tournament id="989">
+        <tournament source-ref="DIU:989">
             <title>U15 Puljeturnering A</title>
         </tournament>
-        <tournament id="990">
+        <tournament source-ref="DIU:990">
             <title>U15 Puljeturnering B</title>
         </tournament>
-        <tournament id="993">
+        <tournament source-ref="DIU:993">
             <title>U18 Landskampe</title>
         </tournament>
-        <tournament id="994">
+        <tournament source-ref="DIU:994">
             <title>U20 Landskampe</title>
         </tournament>
-        <tournament id="995">
+        <tournament source-ref="DIU:995">
             <title>Metal Cup</title>
         </tournament>
-        <tournament id="1001">
+        <tournament source-ref="DIU:1001">
             <title>Kvindernes puljeturnering</title>
         </tournament>
-        <tournament id="1006">
+        <tournament source-ref="DIU:1006">
             <title>Kvindelandsholdet</title>
         </tournament>
-        <tournament id="1007">
+        <tournament source-ref="DIU:1007">
             <title>U13.2 Puljeturnering, december</title>
         </tournament>
-        <tournament id="1009">
+        <tournament source-ref="DIU:1009">
             <title>U13.1 Puljeturnering</title>
         </tournament>
-        <tournament id="1013">
+        <tournament source-ref="DIU:1013">
             <title>LM for U15.2</title>
         </tournament>
-        <tournament id="1014">
+        <tournament source-ref="DIU:1014">
             <title>LM for U13.2</title>
         </tournament>
-        <tournament id="1022">
+        <tournament source-ref="DIU:1022">
             <title>U20 DM-Kval Pulje B - Øst</title>
         </tournament>
-        <tournament id="1023">
+        <tournament source-ref="DIU:1023">
             <title>U17 DM Kvalifikation</title>
         </tournament>
-        <tournament id="1024">
+        <tournament source-ref="DIU:1024">
             <title>DM for U17</title>
         </tournament>
-        <tournament id="1025">
+        <tournament source-ref="DIU:1025">
             <title>DM for U15</title>
         </tournament>
-        <tournament id="1026">
+        <tournament source-ref="DIU:1026">
             <title>DM for U13</title>
         </tournament>
-        <tournament id="1027">
+        <tournament source-ref="DIU:1027">
             <title>SM for U13</title>
         </tournament>
-        <tournament id="1028">
+        <tournament source-ref="DIU:1028">
             <title>JM for U13</title>
         </tournament>
-        <tournament id="1029">
+        <tournament source-ref="DIU:1029">
             <title>DM for U20</title>
         </tournament>
-        <tournament id="1030">
+        <tournament source-ref="DIU:1030">
             <title>Kvindernes DM Kval</title>
         </tournament>
-        <tournament id="1031">
+        <tournament source-ref="DIU:1031">
             <title>Kvindernes DM Finaler</title>
         </tournament>
-        <tournament id="1032">
+        <tournament source-ref="DIU:1032">
             <title>U20 DM-Kval Pulje A</title>
         </tournament>
-        <tournament id="1035">
+        <tournament source-ref="DIU:1035">
             <title>1. division play-off</title>
         </tournament>
-        <tournament id="1037">
+        <tournament source-ref="DIU:1037">
             <title>Metal Ligaen, kvartfinaler</title>
         </tournament>
-        <tournament id="1038">
+        <tournament source-ref="DIU:1038">
             <title>Metal Ligaen, semifinaler</title>
         </tournament>
-        <tournament id="1039">
+        <tournament source-ref="DIU:1039">
             <title>Metal Ligaen, finaler</title>
         </tournament>
-        <tournament id="1040">
+        <tournament source-ref="DIU:1040">
             <title>Metal Ligaen, bronzekampe</title>
         </tournament>
     </section>
-    <section id="1">
+    <section>
         <title>Turneringer, Øst</title>
-        <tournament id="997">
+        <tournament source-ref="DIU:997">
             <title>Løve cup øst</title>
         </tournament>
-        <tournament id="1015">
+        <tournament source-ref="DIU:1015">
             <title>Play off U 17 gruppe 1</title>
         </tournament>
-        <tournament id="1016">
+        <tournament source-ref="DIU:1016">
             <title>Play off U 17 gruppe 2</title>
         </tournament>
-        <tournament id="1033">
+        <tournament source-ref="DIU:1033">
             <title>Play off U 15 gruppe 1</title>
         </tournament>
-        <tournament id="1034">
+        <tournament source-ref="DIU:1034">
             <title>Play off U 15 gruppe 2</title>
         </tournament>
-        <tournament id="968">
+        <tournament source-ref="DIU:968">
             <title>U 17 øst grundspil</title>
         </tournament>
-        <tournament id="969">
+        <tournament source-ref="DIU:969">
             <title>U 15 øst grundspil 1</title>
         </tournament>
-        <tournament id="970">
+        <tournament source-ref="DIU:970">
             <title>U 13 øst udd</title>
         </tournament>
-        <tournament id="976">
+        <tournament source-ref="DIU:976">
             <title>U 15 .2 øst</title>
         </tournament>
-        <tournament id="971">
+        <tournament source-ref="DIU:971">
             <title>u 13 øst point</title>
         </tournament>
-        <tournament id="975">
+        <tournament source-ref="DIU:975">
             <title>U 13.2 øst</title>
         </tournament>
-        <tournament id="973">
+        <tournament source-ref="DIU:973">
             <title>U 11 øst</title>
         </tournament>
-        <tournament id="974">
+        <tournament source-ref="DIU:974">
             <title>U 11.2 øst</title>
         </tournament>
-        <tournament id="972">
+        <tournament source-ref="DIU:972">
             <title>Kvinder øst</title>
         </tournament>
-        <tournament id="978">
+        <tournament source-ref="DIU:978">
             <title>U 9 Hvid øst</title>
         </tournament>
-        <tournament id="977">
+        <tournament source-ref="DIU:977">
             <title>U 9 Rød øst</title>
         </tournament>
-        <tournament id="982">
+        <tournament source-ref="DIU:982">
             <title>2 div. Øst</title>
         </tournament>
-        <tournament id="979">
+        <tournament source-ref="DIU:979">
             <title>Old Boys 1 øst</title>
         </tournament>
-        <tournament id="991">
+        <tournament source-ref="DIU:991">
             <title>Old Boys 2 øst</title>
         </tournament>
-        <tournament id="981">
+        <tournament source-ref="DIU:981">
             <title>Old Boys 3 øst</title>
         </tournament>
     </section>
-    <section id="2">
+    <section>
         <title>Turneringer, Vest</title>
-        <tournament id="953">
+        <tournament source-ref="DIU:953">
             <title>U 11 vest</title>
         </tournament>
-        <tournament id="954">
+        <tournament source-ref="DIU:954">
             <title>U 11.2 vest</title>
         </tournament>
-        <tournament id="955">
+        <tournament source-ref="DIU:955">
             <title>U 13 udd. vest</title>
         </tournament>
-        <tournament id="956">
+        <tournament source-ref="DIU:956">
             <title>U 13.2 vest</title>
         </tournament>
-        <tournament id="957">
+        <tournament source-ref="DIU:957">
             <title>U 15 vest</title>
         </tournament>
-        <tournament id="958">
+        <tournament source-ref="DIU:958">
             <title>U 15.2 vest</title>
         </tournament>
-        <tournament id="959">
+        <tournament source-ref="DIU:959">
             <title>U 17 vest</title>
         </tournament>
-        <tournament id="960">
+        <tournament source-ref="DIU:960">
             <title>U 17.2 vest</title>
         </tournament>
-        <tournament id="961">
+        <tournament source-ref="DIU:961">
             <title>Kvinder vest</title>
         </tournament>
-        <tournament id="962">
+        <tournament source-ref="DIU:962">
             <title>Division A - 2. div.</title>
         </tournament>
-        <tournament id="963">
+        <tournament source-ref="DIU:963">
             <title>Division B</title>
         </tournament>
-        <tournament id="964">
+        <tournament source-ref="DIU:964">
             <title>U 7 vest</title>
         </tournament>
-        <tournament id="965">
+        <tournament source-ref="DIU:965">
             <title>U 9 vest</title>
         </tournament>
-        <tournament id="966">
+        <tournament source-ref="DIU:966">
             <title>U 13 point vest</title>
         </tournament>
-        <tournament id="967">
+        <tournament source-ref="DIU:967">
             <title>2 div.</title>
         </tournament>
-        <tournament id="1017">
+        <tournament source-ref="DIU:1017">
             <title>Play off U 17 gruppe 1, vest</title>
         </tournament>
-        <tournament id="1018">
+        <tournament source-ref="DIU:1018">
             <title>Play off U 17 gruppe 2, vest</title>
         </tournament>
-        <tournament id="1019">
+        <tournament source-ref="DIU:1019">
             <title>Play off U 15 gruppe 1, vest</title>
         </tournament>
-        <tournament id="1020">
+        <tournament source-ref="DIU:1020">
             <title>Play off U 15 gruppe 2, vest</title>
         </tournament>
     </section>
-    <section id="3">
+    <section>
         <title>Turneringer, Øvrige</title>
-        <tournament id="950">
+        <tournament source-ref="DIU:950">
             <title>Træningskampe Liga 2013/2014</title>
         </tournament>
-        <tournament id="951">
+        <tournament source-ref="DIU:951">
             <title>Træningskampe øvrige 2013/2014</title>
         </tournament>
-        <tournament id="996">
+        <tournament source-ref="DIU:996">
             <title>Czech Hockey Games</title>
         </tournament>
-        <tournament id="998">
+        <tournament source-ref="DIU:998">
             <title>Løve Cup</title>
         </tournament>
-        <tournament id="1000">
+        <tournament source-ref="DIU:1000">
             <title>Testkampe</title>
         </tournament>
-        <tournament id="1002">
+        <tournament source-ref="DIU:1002">
             <title>Skåne U18.2</title>
         </tournament>
-        <tournament id="1003">
+        <tournament source-ref="DIU:1003">
             <title>Skåne U15.1</title>
         </tournament>
-        <tournament id="1004">
+        <tournament source-ref="DIU:1004">
             <title>Skåne U13.1</title>
         </tournament>
-        <tournament id="1005">
+        <tournament source-ref="DIU:1005">
             <title>Skåne U14.1</title>
         </tournament>
-        <tournament id="1008">
+        <tournament source-ref="DIU:1008">
             <title>Continental Cup Group E</title>
         </tournament>
-        <tournament id="1010">
+        <tournament source-ref="DIU:1010">
             <title>DanHostel Cup 2013</title>
         </tournament>
-        <tournament id="1011">
+        <tournament source-ref="DIU:1011">
             <title>DanHostel Cup 2013 - Semifinaler</title>
         </tournament>
-        <tournament id="1012">
+        <tournament source-ref="DIU:1012">
             <title>DanHostel Cup 2013 - Finaler</title>
         </tournament>
-        <tournament id="1021">
+        <tournament source-ref="DIU:1021">
             <title>Olympic Winter Games</title>
         </tournament>
-        <tournament id="1036">
+        <tournament source-ref="DIU:1036">
             <title>U 11 - Cup Aalborg</title>
         </tournament>
     </section>
