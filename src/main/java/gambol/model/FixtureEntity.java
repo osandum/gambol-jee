@@ -2,6 +2,8 @@ package gambol.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -21,6 +23,9 @@ public class FixtureEntity implements Serializable {
     @GeneratedValue
     private Long id;
 
+    @Column(length = 16, nullable = false)
+    private String sourceRef;
+
     public Long getId() {
         return id;
     }
@@ -29,13 +34,21 @@ public class FixtureEntity implements Serializable {
         this.id = id;
     }
 
+    public String getSourceRef() {
+        return sourceRef;
+    }
+
+    public void setSourceRef(String sourceRef) {
+        this.sourceRef = sourceRef;
+    }
+
     @ManyToOne(optional = false)
     private TournamentEntity tournament;
     
-    @ManyToOne(optional = false)
+    @ManyToOne(cascade = CascadeType.ALL)
     private FixtureSideEntity homeSide;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(cascade = CascadeType.ALL)
     private FixtureSideEntity awaySide;
     
     @Temporal(TemporalType.TIMESTAMP)

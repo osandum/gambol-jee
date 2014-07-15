@@ -1,7 +1,11 @@
 package gambol.model;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -23,13 +27,18 @@ public class ClubEntity implements Serializable {
 
     @Column(length = 64, nullable = false)
     private String name;
+    
+    @ElementCollection
+    @Column(name = "alias_name", length = 64)
+    @CollectionTable(name = "club_alias")
+    private Set<String> aliasNames = new HashSet<String>();
 
     @Column(length = 128)
     private String address;
 
-    @Column(precision = 10, scale = 6)
+    @Column(precision = 10, scale = 6, name = "lat")
     private Double geoLatitude;
-    @Column(precision = 10, scale = 6)
+    @Column(precision = 10, scale = 6, name = "lon")
     private Double geoLongitude;
     
     public Long getId() {
@@ -80,4 +89,11 @@ public class ClubEntity implements Serializable {
         this.geoLongitude = getLongitude;
     }
 
+    public Set<String> getAliasNames() {
+        return aliasNames;
+    }
+
+    public void setAliasNames(Set<String> aliases) {
+        aliasNames = aliases;
+    }
 }

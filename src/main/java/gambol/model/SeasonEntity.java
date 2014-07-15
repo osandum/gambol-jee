@@ -3,41 +3,29 @@ package gambol.model;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 /**
  *
  * @author osa
  */
-@Entity(name = "location")
-public class LocationEntity implements Serializable {
+@Entity(name = "season")
+public class SeasonEntity implements Serializable {
     private static final long serialVersionUID = 1L;
-
-    @Id
-    @GeneratedValue
-    private Long id;
-
-    @Column(length = 16, nullable = false)
-    private String slug;
-
-    @Column(length = 64, nullable = false)
-    private String name;
     
-    public Long getId() {
+    @Id
+    @Column(length = 16, nullable = false)
+    private String id;
+    
+    @Column(length = 16, nullable = false)
+    private String name;
+
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
-    }    
-
-    public String getSlug() {
-        return slug;
-    }
-
-    public void setSlug(String slug) {
-        this.slug = slug;
     }
 
     public String getName() {
@@ -47,7 +35,5 @@ public class LocationEntity implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
-
-    
     
 }

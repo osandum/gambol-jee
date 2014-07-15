@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne;
  *
  * @author osa
  */
-@Entity
+@Entity(name = "fixture_side")
 public class FixtureSideEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

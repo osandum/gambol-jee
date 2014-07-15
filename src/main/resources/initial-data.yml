@@ -3,10 +3,20 @@
 
 clubs:
 
+    - &s2013 !!gambol.model.SeasonEntity
+        id:             "2013"
+        name:           "2013/14"
+    - &s2014 !!gambol.model.SeasonEntity
+        id:             "2014"
+        name:           "2014/15"
+        
     - &ksf !!gambol.model.ClubEntity
         slug:           "ksf"
         name:           "KSF"
         address:        "KSF, Sionsgade 15, København, Danmark"
+        aliasNames: !!set
+            ? KSF
+            ? Kjøbenhavns Skøjteløberforening"
         latitude:       55.711951 
         longitude:      12.583288
     - &capitals !!gambol.model.ClubEntity
@@ -18,38 +28,62 @@ clubs:
     - &rik !!gambol.model.ClubEntity
         slug:           "rik"
         name:           "RIK"
+        aliasNames: !!set
+            ? RIK
+            ? Rungsted
         address:        "Hørsholm Skøjtehal, Stadionalle, Hørsholm, Danmark"
         latitude:       55.896316 
         longitude:      12.516958
     - &hvik !!gambol.model.ClubEntity
         slug:           "hvidovre"
         name:           "HvIK"
+        address:        "Hvidovre Isstadion, Hvidovre, Danmark"
+        latitude:       55.625850 
+        longitude:      12.477773
 
-    - &u11_1 !!gambol.model.TournamentEntity
-        slug:   "u11-1"
-        name:   "U11 Øst"
+    - &u11_1_2013 !!gambol.model.TournamentEntity
+        slug:      "u11-1"
+        name:      "U11 Øst"
+        season:    *s2013
+        sourceRef: "DIU:973"
+    - &u11_1_2014 !!gambol.model.TournamentEntity
+        slug:      "u11-1"
+        name:      "U11 Øst"
+        season:    *s2014
+        sourceRef: "DIU:1056"
     - &u11_2 !!gambol.model.TournamentEntity
         slug:   "u11-2"
         name:   "U11.2 Øst"
-    
-    - &ksf_u11_1 !!gambol.model.FixtureSideEntity
-        club:   *ksf
-    - &rik_u11_1 !!gambol.model.FixtureSideEntity
-        club:   *rik
-    - &hvik_u11_1 !!gambol.model.FixtureSideEntity
-        club:   *hvik
+        season:    *s2013
+        sourceRef: "DIU:974"
+        
+fixtures: 
     
     - !!gambol.model.FixtureEntity
-        tournament: *u11_1
-        homeSide: *rik_u11_1
-        awaySide: *ksf_u11_1
+        tournament: *u11_1_2013
+        homeSide:
+            !!gambol.model.FixtureSideEntity
+            club:   *rik
+            score:  6
+        awaySide: 
+            !!gambol.model.FixtureSideEntity
+            club:   *ksf
+            score:  5
         startTime: 2013-10-05 13:45:00 +2
         endTime:   2013-10-05 15:15:00 +2
+        sourceRef: "DIU:974:8"
     
     - !!gambol.model.FixtureEntity
-        tournament: *u11_1
-        homeSide: *ksf_u11_1
-        awaySide: *hvik_u11_1
+        tournament: *u11_1_2013
+        homeSide:
+            !!gambol.model.FixtureSideEntity
+            club:   *ksf
+            score:  5
+        awaySide:
+            !!gambol.model.FixtureSideEntity
+            club:   *hvik
+            score:  0
         startTime: 2013-12-07 18:25:00 +1
         endTime:   2013-12-07 19:55:00 +1
+        sourceRef: "DIU:974:20"
         

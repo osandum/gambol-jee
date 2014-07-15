@@ -4,6 +4,7 @@ import gambol.ejb.App;
 import gambol.model.ClubEntity;
 import gambol.model.TournamentEntity;
 import gambol.xml.Club;
+import gambol.xml.Tournament;
 import java.util.LinkedList;
 import java.util.List;
 import javax.ejb.EJB;
@@ -43,7 +44,10 @@ public class ClubsResource {
     @Path("tournaments")
     @Produces({APPLICATION_JSON, APPLICATION_XML})
     public Response listAllTournaments() {
-        List<TournamentEntity> res = gambol.getAllTournaments();
-        return Response.ok(res.toArray(new TournamentEntity[0])).build();
+        List<Tournament> res = new LinkedList<Tournament>();
+        for (TournamentEntity entity : gambol.getAllTournaments())
+            res.add(TournamentResource.entity2domain(entity));
+        return Response.ok(res.toArray(new Tournament[0])).build();
     }
+        
 }
