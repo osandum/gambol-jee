@@ -27,14 +27,14 @@ public class FixtureSideEntity implements Serializable {
     }
 
     @ManyToOne(optional = false)
-    private ClubEntity club;
+    private TournamentTeamEntity team;
 
-    public ClubEntity getClub() {
-        return club;
+    public TournamentTeamEntity getTeam() {
+        return team;
     }
 
-    public void setClub(ClubEntity club) {
-        this.club = club;
+    public void setTeam(TournamentTeamEntity team) {
+        this.team = team;
     }
 
     private Integer score;

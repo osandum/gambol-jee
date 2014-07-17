@@ -22,7 +22,7 @@ public class ClubEntity implements Serializable {
     @GeneratedValue
     private Long id;
 
-    @Column(length = 16, nullable = false)
+    @Column(length = 16, nullable = false, unique = true)
     private String slug;
 
     @Column(length = 64, nullable = false)

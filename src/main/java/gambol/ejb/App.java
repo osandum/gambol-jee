@@ -4,6 +4,7 @@ import gambol.model.ClubEntity;
 import gambol.model.FixtureEntity;
 import gambol.model.SeasonEntity;
 import gambol.model.TournamentEntity;
+import gambol.model.TournamentTeamEntity;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +45,7 @@ public class App {
         CriteriaQuery<ClubEntity> query = builder.createQuery(ClubEntity.class);
         Root<ClubEntity> root = query.from(ClubEntity.class);
         query.select(root);
-        query.where(builder.equal(root.get("name"), slug));
+        query.where(builder.equal(root.get("slug"), slug));
         return em.createQuery(query).setMaxResults(1).getSingleResult();
     }
 
@@ -125,4 +126,35 @@ public class App {
             LOG.log(Level.INFO, "{0} persisted", fixture);
         }
     }
+
+    public TournamentTeamEntity findTeam(TournamentEntity tournament, String clubRef, String teamName) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<TournamentTeamEntity> query = builder.createQuery(TournamentTeamEntity.class);
+        Root<TournamentTeamEntity> root = query.from(TournamentTeamEntity.class);
+        query.select(root);
+        query.where(builder.equal(root.get("tournament"), tournament),
+                builder.equal(root.get("name"), teamName),
+                builder.equal(root.get("club").get("slug"), clubRef));
+        return em.createQuery(query).setMaxResults(1).getSingleResult();
+        
+    }
+
+    public TournamentTeamEntity findOrCreateTeam(TournamentEntity tournament, String clubRef, String teamName) {
+        try {
+            return findTeam(tournament, clubRef, teamName);
+        }
+        catch (NoResultException ex) {            
+            TournamentTeamEntity res = new TournamentTeamEntity();
+            res.setTournament(tournament);
+            ClubEntity club = findOrCreateClub(clubRef);
+            res.setClub(club);
+            res.setName(teamName);
+            res.setSlug(teamName.toLowerCase());
+            em.persist(res);
+            return res;
+        }
+    }
+
 }

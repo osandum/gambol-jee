@@ -52,10 +52,26 @@ clubs:
         season:    *s2014
         sourceRef: "DIU:1056"
     - &u11_2 !!gambol.model.TournamentEntity
-        slug:   "u11-2"
-        name:   "U11.2 Øst"
+        slug:      "u11-2"
+        name:      "U11.2 Øst"
         season:    *s2013
         sourceRef: "DIU:974"
+
+    - &ksf_u11_1_2013 !!gambol.model.TournamentTeamEntity
+        tournament: *u11_1_2013
+        slug:      "ksf"
+        name:      "KSF"
+        club:      *ksf
+    - &rik_u11_1_2013 !!gambol.model.TournamentTeamEntity
+        tournament: *u11_1_2013
+        slug:      "rik"
+        name:      "RIK"
+        club:      *rik
+    - &hvik_u11_1_2013 !!gambol.model.TournamentTeamEntity
+        tournament: *u11_1_2013
+        slug:      "hvik"
+        name:      "HvIK"
+        club:      *hvik
         
 fixtures: 
     
@@ -63,11 +79,11 @@ fixtures:
         tournament: *u11_1_2013
         homeSide:
             !!gambol.model.FixtureSideEntity
-            club:   *rik
+            team:   *rik_u11_1_2013
             score:  6
         awaySide: 
             !!gambol.model.FixtureSideEntity
-            club:   *ksf
+            team:   *ksf_u11_1_2013
             score:  5
         startTime: 2013-10-05 13:45:00 +2
         endTime:   2013-10-05 15:15:00 +2
@@ -77,11 +93,11 @@ fixtures:
         tournament: *u11_1_2013
         homeSide:
             !!gambol.model.FixtureSideEntity
-            club:   *ksf
+            team:   *ksf_u11_1_2013
             score:  5
         awaySide:
             !!gambol.model.FixtureSideEntity
-            club:   *hvik
+            team:   *hvik_u11_1_2013
             score:  0
         startTime: 2013-12-07 18:25:00 +1
         endTime:   2013-12-07 19:55:00 +1

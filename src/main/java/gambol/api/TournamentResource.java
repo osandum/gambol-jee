@@ -1,7 +1,6 @@
 package gambol.api;
 
 import gambol.ejb.App;
-import gambol.model.ClubEntity;
 import gambol.model.FixtureEntity;
 import gambol.model.FixtureSideEntity;
 import gambol.model.TournamentEntity;
@@ -10,6 +9,7 @@ import gambol.xml.FixtureSideRole;
 import gambol.xml.Fixtures;
 import gambol.xml.Side;
 import gambol.xml.Tournament;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,7 +19,6 @@ import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
-import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.*;
@@ -70,6 +69,7 @@ public class TournamentResource {
         
         for (TournamentEntity t : gambol.getAllTournaments())
             if (slug.equals(t.getSlug()) && seasonId.equals(t.getSeason().getId())) {
+                LOG.info("tournament " + t.getSeason().getName() + "/" + t.getSlug() + " exists already: " + t);
                 t.setSourceRef(tt.getSourceRef());
                 return Response.noContent().build();
             }
@@ -80,6 +80,7 @@ public class TournamentResource {
         t.setSeason(gambol.findOrCreateSeason(seasonId));
         t.setName(tt.getTitle());
         em.persist(t);
+        LOG.info("tournament " + t.getSeason().getName() + "/" + t.getSlug() + " created: " + t);
         
         return Response.ok().build();
     }
@@ -120,24 +121,17 @@ public class TournamentResource {
                     if (f == null) {
                         // new fixture
                         f = new FixtureEntity();
-                        f.setSourceRef(fo.getSourceRef());
                         f.setTournament(t);
-                        for (Side s : fo.getSides()) {
-                            FixtureSideEntity fe = new FixtureSideEntity();
-                            fe.setClub(gambol.findOrCreateClub(s.getTeam()));
-                            fe.setScore(s.getScore());
-                            FixtureSideRole role = s.getRole();
-                            if (FixtureSideRole.HOME.equals(role))
-                                f.setHomeSide(fe);
-                            else if (FixtureSideRole.AWAY.equals(role))
-                                f.setAwaySide(fe);
-                        }
+                        domain2entity(fo, f);
                         em.persist(f);
                         nf.add(f);
+                        LOG.info(fo.getSourceRef() + " not found: new fixture created");
                     }
                     else {
                         // existing fixture, update:
+                        f.setTournament(t);
                         domain2entity(fo, f);
+                        LOG.info(fo.getSourceRef() + ": fixture updated");
                     }
                    //:.. 
                 }
@@ -148,13 +142,28 @@ public class TournamentResource {
         throw new WebApplicationException("Not found", Response.Status.NOT_FOUND);
     }
     
-    public static void domain2entity(Fixture f, FixtureEntity entity) {
-        FixtureSideEntity homeSide = entity.getHomeSide();
-        FixtureSideEntity awaySide = entity.getAwaySide();
+    private void domain2entity(Fixture f, FixtureEntity entity) {
         entity.setStartTime(f.getStartTime());
         entity.setEndTime(f.getEndTime());
+        
+        if (entity.getStartTime() != null  &&  entity.getEndTime() == null) {
+            Calendar d = Calendar.getInstance();
+            d.setTime(entity.getStartTime());
+            d.add(Calendar.MINUTE, 90);
+            entity.setEndTime(d.getTime());
+        }
+        
+        entity.setSourceRef(f.getSourceRef());
         for (Side s : f.getSides()) {
-            ; //...
+            FixtureSideEntity fe = new FixtureSideEntity();
+            Side.Team team = s.getTeam();
+            fe.setTeam(gambol.findOrCreateTeam(entity.getTournament(), team.getClubRef(), team.getValue()));
+            fe.setScore(s.getScore());
+            FixtureSideRole role = s.getRole();
+            if (FixtureSideRole.HOME.equals(role))
+                entity.setHomeSide(fe);
+            else if (FixtureSideRole.AWAY.equals(role))
+                entity.setAwaySide(fe);
         }
     }
 
@@ -178,7 +187,10 @@ public class TournamentResource {
         
         Side model = new Side();
         model.setRole(role);
-        model.setTeam(entity.getClub().getSlug());
+        Side.Team team = new Side.Team();
+        team.setClubRef(entity.getTeam().getClub().getSlug());
+        team.setValue(entity.getTeam().getName());
+        model.setTeam(team);
         model.setScore(entity.getScore());
 
         return model;

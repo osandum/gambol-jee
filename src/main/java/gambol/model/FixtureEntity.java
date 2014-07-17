@@ -23,7 +23,7 @@ public class FixtureEntity implements Serializable {
     @GeneratedValue
     private Long id;
 
-    @Column(length = 16, nullable = false)
+    @Column(length = 16, nullable = false, unique = true)
     private String sourceRef;
 
     public Long getId() {
