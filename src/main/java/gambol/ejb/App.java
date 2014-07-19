@@ -128,8 +128,6 @@ public class App {
     }
 
     public TournamentTeamEntity findTeam(TournamentEntity tournament, String clubRef, String teamName) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<TournamentTeamEntity> query = builder.createQuery(TournamentTeamEntity.class);
         Root<TournamentTeamEntity> root = query.from(TournamentTeamEntity.class);
@@ -155,6 +153,15 @@ public class App {
             em.persist(res);
             return res;
         }
+    }
+
+    public void updateOrCreateClub(String slug, ClubEntity c) {
+        ClubEntity entity = findOrCreateClub(slug);
+        entity.setName(c.getName());
+        entity.setAliasNames(c.getAliasNames());
+        entity.setLatitude(c.getLatitude());
+        entity.setLongitude(c.getLongitude());
+        entity.setAddress(c.getAddress());
     }
 
 }

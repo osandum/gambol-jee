@@ -5,7 +5,9 @@ import gambol.model.ClubEntity;
 import gambol.xml.Club;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -36,6 +38,13 @@ public class ClubResource {
         throw new WebApplicationException("Not found", Response.Status.NOT_FOUND);
     }
 
+    @PUT
+    @Consumes({APPLICATION_JSON, APPLICATION_XML})
+    public Response putClub(Club club) {
+        gambol.updateOrCreateClub(slug, domain2entity(club));
+        return Response.noContent().build();
+    }
+
     public static Club entity2domain(ClubEntity entity) {
         Club c = new Club();
         c.setName(entity.getName());
@@ -47,4 +56,15 @@ public class ClubResource {
         return c;
     }
 
+    private static ClubEntity domain2entity(Club club) {
+        ClubEntity entity = new ClubEntity();
+        entity.setName(club.getName());
+        Club.Address addr = club.getAddress();
+        if (addr != null) {
+            entity.setLatitude(addr.getLat());
+            entity.setLongitude(addr.getLon());
+            entity.setAddress(addr.getValue());
+        }
+        return entity;
+    }
 }
