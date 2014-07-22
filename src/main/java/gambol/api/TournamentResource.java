@@ -9,11 +9,6 @@ import gambol.xml.FixtureSideRole;
 import gambol.xml.Fixtures;
 import gambol.xml.Side;
 import gambol.xml.Tournament;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
@@ -108,63 +103,15 @@ public class TournamentResource {
     @Consumes({APPLICATION_JSON, APPLICATION_XML})
     public Response putTournamentFixtures(Fixtures fs) {
         LOG.log(Level.INFO, ".... {0} {1}", new Object[]{slug, seasonId});
-        
-        for (TournamentEntity t : gambol.getAllTournaments())
+
+        for (TournamentEntity t : gambol.getAllTournaments()) {
             if (slug.equals(t.getSlug()) && seasonId.equals(t.getSeason().getId())) {
-                Map<String,FixtureEntity> all = new HashMap<String,FixtureEntity>();
-                for (FixtureEntity f : t.getFixtures())
-                    all.put(f.getSourceRef(), f);
-                
-                List<FixtureEntity> nf = new LinkedList<FixtureEntity>();
-                for (Fixture fo : fs.getFixtures()) {
-                    FixtureEntity f = all.get(fo.getSourceRef());
-                    if (f == null) {
-                        // new fixture
-                        f = new FixtureEntity();
-                        f.setTournament(t);
-                        domain2entity(fo, f);
-                        em.persist(f);
-                        nf.add(f);
-                        LOG.info(fo.getSourceRef() + " not found: new fixture created");
-                    }
-                    else {
-                        // existing fixture, update:
-                        f.setTournament(t);
-                        domain2entity(fo, f);
-                        LOG.info(fo.getSourceRef() + ": fixture updated");
-                    }
-                   //:.. 
-                }
-                
+                gambol.updateFixtures(t, fs.getFixtures());
                 return Response.ok().build();
             }
+        }
 
         throw new WebApplicationException("Not found", Response.Status.NOT_FOUND);
-    }
-    
-    private void domain2entity(Fixture f, FixtureEntity entity) {
-        entity.setStartTime(f.getStartTime());
-        entity.setEndTime(f.getEndTime());
-        
-        if (entity.getStartTime() != null  &&  entity.getEndTime() == null) {
-            Calendar d = Calendar.getInstance();
-            d.setTime(entity.getStartTime());
-            d.add(Calendar.MINUTE, 90);
-            entity.setEndTime(d.getTime());
-        }
-        
-        entity.setSourceRef(f.getSourceRef());
-        for (Side s : f.getSides()) {
-            FixtureSideEntity fe = new FixtureSideEntity();
-            Side.Team team = s.getTeam();
-            fe.setTeam(gambol.findOrCreateTeam(entity.getTournament(), team.getClubRef(), team.getValue()));
-            fe.setScore(s.getScore());
-            FixtureSideRole role = s.getRole();
-            if (FixtureSideRole.HOME.equals(role))
-                entity.setHomeSide(fe);
-            else if (FixtureSideRole.AWAY.equals(role))
-                entity.setAwaySide(fe);
-        }
     }
 
     public static Fixture entity2domain(FixtureEntity entity) {

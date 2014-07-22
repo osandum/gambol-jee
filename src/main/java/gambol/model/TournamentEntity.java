@@ -1,6 +1,7 @@
 package gambol.model;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,7 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.validation.Constraint;
 
 /**
  *
@@ -83,5 +83,13 @@ public class TournamentEntity implements Serializable {
 
     public void setFixtures(List<FixtureEntity> fixtures) {
         this.fixtures = fixtures;
+    }
+    
+    public static TournamentEntity create(SeasonEntity season, String sourceRef) {
+        TournamentEntity t = new TournamentEntity();
+        t.setSourceRef(sourceRef);
+        t.setSeason(season);
+        t.setFixtures(Collections.<FixtureEntity>emptyList());
+        return t;
     }
 }

@@ -2,10 +2,18 @@ package gambol.ejb;
 
 import gambol.model.ClubEntity;
 import gambol.model.FixtureEntity;
+import gambol.model.FixtureSideEntity;
 import gambol.model.SeasonEntity;
 import gambol.model.TournamentEntity;
 import gambol.model.TournamentTeamEntity;
+import gambol.xml.Fixture;
+import gambol.xml.FixtureSideRole;
+import gambol.xml.Side;
+import gambol.xml.Tournament;
 import java.io.InputStream;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -52,8 +60,7 @@ public class App {
     public ClubEntity findOrCreateClub(String slug) {
         try {
             return findClub(slug);
-        }
-        catch (NoResultException ex) {
+        } catch (NoResultException ex) {
             ClubEntity res = new ClubEntity();
             res.setSlug(slug);
             res.setName(slug);
@@ -74,8 +81,7 @@ public class App {
     public SeasonEntity findOrCreateSeason(String slug) {
         try {
             return findSeason(slug);
-        }
-        catch (NoResultException ex) {
+        } catch (NoResultException ex) {
             SeasonEntity res = new SeasonEntity();
             res.setId(slug);
             res.setName(slug);
@@ -90,8 +96,48 @@ public class App {
         CriteriaQuery<ClubEntity> all = cq.select(cq.from(ClubEntity.class)); //.orderBy(Ord);
         TypedQuery<ClubEntity> allQuery = em.createQuery(all);
         List<ClubEntity> clubs = allQuery.getResultList();
-        
+
         return clubs;
+    }
+
+    public TournamentEntity findTournamentBySourceRef(String sourceRef) {
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<TournamentEntity> query = builder.createQuery(TournamentEntity.class);
+        Root<TournamentEntity> root = query.from(TournamentEntity.class);
+        query.select(root);
+        query.where(builder.equal(root.get("sourceRef"), sourceRef));
+        return em.createQuery(query).getSingleResult();
+    }
+
+    
+    
+    public TournamentEntity putTournament(Tournament tt) {
+        String sourceRef = tt.getSourceRef();
+        String seasonId = tt.getSeason();
+        if (seasonId == null)
+            throw new IllegalArgumentException("Invalid season ID");
+        String slug = tt.getSlug();
+        String name = tt.getTitle();
+        if (name == null)
+            throw new IllegalArgumentException("Invalid tournament name");
+        if (slug == null)
+            slug = name.toLowerCase().replaceAll("[-_,. ]+", "-");
+
+        TournamentEntity entity;
+        try {
+            entity = findTournamentBySourceRef(sourceRef);
+        } catch (NoResultException ex) {
+            SeasonEntity season = findOrCreateSeason(seasonId);
+            entity = TournamentEntity.create(season, sourceRef);
+        }
+        entity.setSlug(slug);
+        entity.setName(name);
+
+        em.persist(entity);
+        
+        updateFixtures(entity, tt.getFixtures());
+        
+        return entity;
     }
 
     public List<TournamentEntity> getAllTournaments() {
@@ -100,10 +146,11 @@ public class App {
         CriteriaQuery<TournamentEntity> all = cq.select(cq.from(TournamentEntity.class)); //.orderBy(Ord);
         TypedQuery<TournamentEntity> allQuery = em.createQuery(all);
         List<TournamentEntity> res = allQuery.getResultList();
-        
-        for (TournamentEntity t: res)
+
+        for (TournamentEntity t : res) {
             t.getFixtures().size();
-        
+        }
+
         return res;
     }
 
@@ -119,7 +166,7 @@ public class App {
         }
 
         for (Object o : oo.get("fixtures")) {
-            FixtureEntity fixture = (FixtureEntity)o;
+            FixtureEntity fixture = (FixtureEntity) o;
             em.persist(fixture.getHomeSide());
             em.persist(fixture.getAwaySide());
             em.persist(fixture);
@@ -136,25 +183,31 @@ public class App {
                 builder.equal(root.get("name"), teamName),
                 builder.equal(root.get("club").get("slug"), clubRef));
         return em.createQuery(query).setMaxResults(1).getSingleResult();
-        
+
     }
 
     public TournamentTeamEntity findOrCreateTeam(TournamentEntity tournament, String clubRef, String teamName) {
         try {
             return findTeam(tournament, clubRef, teamName);
-        }
-        catch (NoResultException ex) {            
+        } catch (NoResultException ex) {
             TournamentTeamEntity res = new TournamentTeamEntity();
             res.setTournament(tournament);
             ClubEntity club = findOrCreateClub(clubRef);
             res.setClub(club);
             res.setName(teamName);
-            res.setSlug(teamName.toLowerCase());
+            res.setSlug(asSlug(teamName, 16));
             em.persist(res);
             return res;
         }
     }
 
+    private static String asSlug(String name, int maxLength) {
+        String slug = name.toLowerCase().replaceAll("[-_,. ]+", "-");
+        if (slug.length() > maxLength)
+            slug = slug.substring(0, maxLength);
+        return slug;
+    }
+    
     public void updateOrCreateClub(String slug, ClubEntity c) {
         ClubEntity entity = findOrCreateClub(slug);
         entity.setName(c.getName());
@@ -164,4 +217,57 @@ public class App {
         entity.setAddress(c.getAddress());
     }
 
+    public void updateFixtures(TournamentEntity t, List<Fixture> fixtures) {
+        Map<String, FixtureEntity> all = new HashMap<String, FixtureEntity>();
+        for (FixtureEntity f : t.getFixtures()) {
+            all.put(f.getSourceRef(), f);
+        }
+
+        List<FixtureEntity> nf = new LinkedList<FixtureEntity>();
+        for (Fixture fo : fixtures) {
+            FixtureEntity f = all.get(fo.getSourceRef());
+            if (f == null) {
+                // new fixture
+                f = new FixtureEntity();
+                f.setTournament(t);
+                domain2entity(fo, f);
+                em.persist(f);
+                nf.add(f);
+                LOG.info(fo.getSourceRef() + " not found: new fixture created");
+            } else {
+                // existing fixture, update:
+                f.setTournament(t);
+                domain2entity(fo, f);
+                LOG.info(fo.getSourceRef() + ": fixture updated");
+            }
+            //:.. 
+        }
+    }
+
+    private void domain2entity(Fixture f, FixtureEntity entity) {
+        entity.setStartTime(f.getStartTime());
+        entity.setEndTime(f.getEndTime());
+
+        if (entity.getStartTime() != null && entity.getEndTime() == null) {
+            Calendar d = Calendar.getInstance();
+            d.setTime(entity.getStartTime());
+            d.add(Calendar.MINUTE, 90);
+            entity.setEndTime(d.getTime());
+        }
+
+        entity.setSourceRef(f.getSourceRef());
+        for (Side s : f.getSides()) {
+            FixtureSideEntity fe = new FixtureSideEntity();
+            Side.Team team = s.getTeam();
+            String clubRef = team.getClubRef();
+            fe.setTeam(findOrCreateTeam(entity.getTournament(), clubRef, team.getValue()));
+            fe.setScore(s.getScore());
+            FixtureSideRole role = s.getRole();
+            if (FixtureSideRole.HOME.equals(role)) {
+                entity.setHomeSide(fe);
+            } else if (FixtureSideRole.AWAY.equals(role)) {
+                entity.setAwaySide(fe);
+            }
+        }
+    }
 }
