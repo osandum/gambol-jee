@@ -11,31 +11,6 @@
            xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
            jaxb:extensionBindingPrefixes="xjc">
 
-    <!-- xs:annotation>
-        <xs:appinfo>
-            <jaxb:schemaBindings>
-                <jaxb:package name="gambol.xml"/>
-            </jaxb:schemaBindings>
-            
-            <jaxb:bindings>
-                <jaxb:globalBindings>
-                    <xjc:simple />
-                    <xjc:javaType 
-                        name="java.util.Date"
-                        xmlType="xs:dateTime"
-                        adapter="net.sandum.xml.XmlDateTimeAdapter" />
-
-                    <jaxb:javaType name="java.lang.Integer" xmlType="xs:integer"/> 
-                </jaxb:globalBindings>
-            </jaxb:bindings>            
-        </xs:appinfo>
-    </xs:annotation -->
-
-    <!-- xs:element name="gambol" type="g:Gambol" / -->     
-    <!-- xs:element name="club" type="g:Club" / -->
-
-
-
     <xs:element name="gambol">     
         <xs:complexType>
             <xs:choice>
@@ -54,6 +29,21 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="fixture" minOccurs="0" maxOccurs="unbounded" type="g:Fixture"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>     
+
+    <xs:element name="tournament-source">
+        <xs:complexType>
+            <xs:sequence>
+                
+                <xs:element name="fixtures">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="fixture" minOccurs="0" maxOccurs="unbounded" type="g:Fixture"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>     
             </xs:sequence>
         </xs:complexType>
     </xs:element>     
@@ -104,8 +94,15 @@
             </xs:sequence>
 
             <xs:attribute name="season" type="xs:string" />
-            <xs:attribute name="association" type="xs:string" />
+        <!-- xs:attribute name="association" type="xs:string" / -->
             <xs:attribute name="source-ref" type="xs:string" use="required" />
+            <xs:attribute name="slug" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>
+                        Used only for tournament source uploads
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
 
