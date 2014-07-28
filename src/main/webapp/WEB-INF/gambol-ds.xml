@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!-- This is an unmanaged datasource. It should be used for proofs of concept 
-or testing only. It uses H2, an in memory database that ships with JBoss 
-AS. -->
+     or testing only. It uses H2, an in memory database that ships with JBoss 
+     AS. -->
 <datasources xmlns="http://www.jboss.org/ironjacamar/schema"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="http://www.jboss.org/ironjacamar/schema http://docs.jboss.org/ironjacamar/schema/datasources_1_0.xsd">
 
     <!-- The datasource is bound into JNDI at this location. We reference 
     this in META-INF/persistence.xml -->
-    <datasource jndi-name="java:jboss/datasources/GambolDevDS"
-               pool-name="gambol-dev" enabled="true"
-               use-java-context="true">
+    <datasource jndi-name="java:jboss/datasources/GambolDevDS" enabled="true" use-java-context="true" pool-name="gambol-dev">
         <connection-url>jdbc:h2:mem:gambol-dev;DB_CLOSE_DELAY=-1</connection-url>
         <driver>h2</driver>
         <security>
@@ -20,7 +18,7 @@ AS. -->
         </security>
     </datasource>
    
-    <datasource jndi-name="java:jboss/datasources/PostgreSQLDS" enabled="${postgresql.enabled}" use-java-context="true" pool-name="PostgreSQLDS" use-ccm="true">
+    <datasource jndi-name="java:jboss/datasources/GambolProdDS" enabled="${postgresql.enabled}" use-java-context="true" pool-name="gambol-prod" use-ccm="true">
         <connection-url>jdbc:postgresql://${env.OPENSHIFT_POSTGRESQL_DB_HOST}:${env.OPENSHIFT_POSTGRESQL_DB_PORT}/${env.OPENSHIFT_APP_NAME}</connection-url>
         <driver>postgresql</driver>
         <security>
