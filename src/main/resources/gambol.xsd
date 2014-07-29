@@ -65,6 +65,8 @@
                 </xs:element>
                 
             </xs:sequence> 
+            
+            <xs:attribute name="country" type="xs:string" />
         </xs:complexType>
     </xs:element>
         
