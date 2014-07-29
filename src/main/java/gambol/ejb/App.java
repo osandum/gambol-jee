@@ -90,6 +90,13 @@ public class App {
         }
     }
 
+    public List<SeasonEntity> getSeasons() {
+        // OMG!
+        CriteriaQuery<SeasonEntity> cq = em.getCriteriaBuilder().createQuery(SeasonEntity.class);
+        CriteriaQuery<SeasonEntity> all = cq.select(cq.from(SeasonEntity.class)); //.orderBy(Ord);
+        return em.createQuery(all).getResultList();
+    }
+
     public List<ClubEntity> getClubs() {
         // OMG!
         CriteriaQuery<ClubEntity> cq = em.getCriteriaBuilder().createQuery(ClubEntity.class);
@@ -140,6 +147,17 @@ public class App {
         return entity;
     }
 
+    public TournamentEntity getTournament(String seasonId, String slug) {
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<TournamentEntity> query = builder.createQuery(TournamentEntity.class);
+        Root<TournamentEntity> root = query.from(TournamentEntity.class);
+        query.select(root);
+        query.where(
+                builder.equal(root.get("slug"), slug),
+                builder.equal(root.get("season").get("id"), seasonId));
+        return em.createQuery(query).setMaxResults(1).getSingleResult();
+    }
+
     public List<TournamentEntity> getAllTournaments() {
         // OMG!
         CriteriaQuery<TournamentEntity> cq = em.getCriteriaBuilder().createQuery(TournamentEntity.class);
@@ -155,6 +173,9 @@ public class App {
     }
 
     public void loadInitialData() {
+        if (!getSeasons().isEmpty())
+            return;
+        
         InputStream is = getClass().getResourceAsStream("/initial-data.yml");
         Map<String, List<Object>> oo = (Map<String, List<Object>>) new Yaml().load(is);
 
@@ -202,7 +223,10 @@ public class App {
     }
 
     private static String asSlug(String name, int maxLength) {
-        String slug = name.toLowerCase().replaceAll("[-_,. ]+", "-");
+        String slug = name
+                .replaceAll("[-_/,. ]+", "-")
+                .replaceAll("[-\\p{IsAlphabetic}\\p{IsDigit}]+", "")
+                .toLowerCase();
         if (slug.length() > maxLength)
             slug = slug.substring(0, maxLength);
         return slug;
@@ -215,6 +239,7 @@ public class App {
         entity.setLatitude(c.getLatitude());
         entity.setLongitude(c.getLongitude());
         entity.setAddress(c.getAddress());
+        entity.setCountryIso2(c.getCountryIso2());
     }
 
     public void updateFixtures(TournamentEntity t, List<Fixture> fixtures) {

@@ -2,6 +2,7 @@ package gambol.model;
 
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,12 +10,18 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.UniqueConstraint;
 
 /**
  *
  * @author osa
  */
 @Entity(name = "tournament")
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames={"slug", "season_id"}) })
 public class TournamentEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -30,6 +37,14 @@ public class TournamentEntity implements Serializable {
 
     @Column(length = 64, nullable = false)
     private String name;
+    
+    @Column(insertable = false, updatable = false)
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    private Date dateCreated;
+
+    @Column(insertable = false, updatable = false)
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    private Date lastModified;
     
     public Long getId() {
         return id;
@@ -61,6 +76,23 @@ public class TournamentEntity implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+    
+    @PreUpdate
+    @PrePersist
+    public void updateTimeStamps() {
+        lastModified = new Date();
+        if (dateCreated == null) {
+            dateCreated = new Date();
+        }
+    }
+
+    public Date getDateCreated() {
+        return dateCreated;
+    }
+
+    public Date getLastModified() {
+        return lastModified;
     }
     
     @ManyToOne(optional = false)

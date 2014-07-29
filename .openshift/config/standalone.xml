@@ -101,6 +101,9 @@
             <logger category="org.jboss.as.config">
                 <level name="DEBUG"/>
             </logger>
+            <logger category="org.hibernate.SQL">
+                <level name="DEBUG"/>
+            </logger>
             <logger category="sun.rmi">
                 <level name="WARN"/>
             </logger>
@@ -160,7 +163,7 @@
                         <flush-strategy>IdleConnections</flush-strategy>
                     </pool>
                 </datasource>
-                <datasource jndi-name="java:jboss/datasources/GambolProdDS" enabled="${postgresql.enabled}" use-java-context="true" pool-name="gambol-prod" use-ccm="true">
+                <datasource jndi-name="java:jboss/datasources/GambolDS" enabled="${postgresql.enabled}" use-java-context="true" pool-name="gambol-prod" use-ccm="true">
                     <connection-url>jdbc:postgresql://${env.OPENSHIFT_POSTGRESQL_DB_HOST}:${env.OPENSHIFT_POSTGRESQL_DB_PORT}/${env.OPENSHIFT_APP_NAME}</connection-url>
                     <driver>postgresql</driver>
                     <security>

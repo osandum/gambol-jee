@@ -15,6 +15,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.6</maven.compiler.source>
         <maven.compiler.target>1.6</maven.compiler.target>
+
+        <datasource>java:jboss/datasources/GambolDevDS</datasource>
+        <hbm2ddl.auto>create-drop</hbm2ddl.auto>
+        <showsql>true</showsql>
     </properties>
 
     <dependencies>
@@ -55,6 +59,13 @@
                 <version>7.1.0.Final</version>
             </plugin>
         </plugins>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
     </build>
 
     <profiles>
@@ -64,6 +75,11 @@
             <!-- By default that is to put the resulting archive into the 'deployments' folder. -->
             <!-- http://maven.apache.org/guides/mini/guide-building-for-different-environments.html -->
             <id>openshift</id>
+            <properties>
+                <datasource>java:jboss/datasources/GambolProdDS</datasource>
+                <hbm2ddl.auto>create-drop</hbm2ddl.auto>
+                <showsql>true</showsql>
+            </properties>
             <build>
                 <finalName>${project.artifactId}</finalName>
                 <plugins>

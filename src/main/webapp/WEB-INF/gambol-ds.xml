@@ -18,7 +18,7 @@
         </security>
     </datasource>
    
-    <datasource jndi-name="java:jboss/datasources/GambolProdDS" enabled="${postgresql.enabled}" use-java-context="true" pool-name="gambol-prod" use-ccm="true">
+    <datasource jndi-name="java:jboss/datasources/GambolDS" enabled="${postgresql.enabled}" use-java-context="true" pool-name="gambol-prod" use-ccm="true">
         <connection-url>jdbc:postgresql://${env.OPENSHIFT_POSTGRESQL_DB_HOST}:${env.OPENSHIFT_POSTGRESQL_DB_PORT}/${env.OPENSHIFT_APP_NAME}</connection-url>
         <driver>postgresql</driver>
         <security>
@@ -27,11 +27,11 @@
         </security>
     </datasource>
    
-    <drivers>
+    <!-- drivers>
         <driver name="postgresql" module="org.postgresql.jdbc">
             <xa-datasource-class>org.postgresql.xa.PGXADataSource</xa-datasource-class>
         </driver>
-    </drivers>
+    </drivers -->
 
 </datasources>
  

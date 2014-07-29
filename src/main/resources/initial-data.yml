@@ -3,6 +3,9 @@
 
 clubs:
 
+    - &s2012 !!gambol.model.SeasonEntity
+        id:             "2012"
+        name:           "2012/13"
     - &s2013 !!gambol.model.SeasonEntity
         id:             "2013"
         name:           "2013/14"
@@ -26,8 +29,8 @@ clubs:
         latitude:       55.756831 
         longitude:      12.526965
     - &rik !!gambol.model.ClubEntity
-        slug:           "rik"
-        name:           "RIK"
+        slug:           "rungsted"
+        name:           "Rungsted"
         aliasNames: !!set
             ? RIK
             ? Rungsted

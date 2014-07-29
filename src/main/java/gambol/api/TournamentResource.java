@@ -51,11 +51,8 @@ public class TournamentResource {
     public Tournament getTournament() {
         LOG.log(Level.INFO, ".... {0} {1}", new Object[]{slug, seasonId});
         
-        for (TournamentEntity t : gambol.getAllTournaments())
-            if (slug.equals(t.getSlug()) && seasonId.equals(t.getSeason().getId())) 
-                return entity2domain(t);
-
-        throw new WebApplicationException("Not found", Response.Status.NOT_FOUND);
+        TournamentEntity t = gambol.getTournament(seasonId, slug);
+        return entity2domain(t);
     }
 
     @PUT
@@ -86,16 +83,13 @@ public class TournamentResource {
     public Response getTournamentFixtures() {
         LOG.log(Level.INFO, ".... {0} {1}", new Object[]{slug, seasonId});
         
-        for (TournamentEntity t : gambol.getAllTournaments())
-            if (slug.equals(t.getSlug()) && seasonId.equals(t.getSeason().getId())) {
-                Fixtures res = new Fixtures();
-                for (FixtureEntity f : t.getFixtures())
-                    res.getFixtures().add(entity2domain(f));
-                
-                return Response.ok(res).build();
-            }
+        TournamentEntity t = gambol.getTournament(seasonId, slug);
 
-        throw new WebApplicationException("Not found", Response.Status.NOT_FOUND);
+        Fixtures res = new Fixtures();
+        for (FixtureEntity f : t.getFixtures())
+            res.getFixtures().add(entity2domain(f));
+
+        return Response.ok(res).build();
     }
 
     @PUT
@@ -104,14 +98,9 @@ public class TournamentResource {
     public Response putTournamentFixtures(Fixtures fs) {
         LOG.log(Level.INFO, ".... {0} {1}", new Object[]{slug, seasonId});
 
-        for (TournamentEntity t : gambol.getAllTournaments()) {
-            if (slug.equals(t.getSlug()) && seasonId.equals(t.getSeason().getId())) {
-                gambol.updateFixtures(t, fs.getFixtures());
-                return Response.ok().build();
-            }
-        }
-
-        throw new WebApplicationException("Not found", Response.Status.NOT_FOUND);
+        TournamentEntity t = gambol.getTournament(seasonId, slug);
+        gambol.updateFixtures(t, fs.getFixtures());
+        return Response.ok().build();
     }
 
     public static Fixture entity2domain(FixtureEntity entity) {

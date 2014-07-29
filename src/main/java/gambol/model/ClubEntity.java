@@ -40,6 +40,9 @@ public class ClubEntity implements Serializable {
     private Double geoLatitude;
     @Column(precision = 10, scale = 6, name = "lon")
     private Double geoLongitude;
+
+    @Column(length = 2)
+    private String country;
     
     public Long getId() {
         return id;
@@ -71,6 +74,14 @@ public class ClubEntity implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getCountryIso2() {
+        return country;
+    }
+
+    public void setCountryIso2(String iso2) {
+        this.country = iso2;
     }
 
     public Double getLatitude() {
