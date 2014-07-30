@@ -96,7 +96,7 @@ public class RootResource {
     
     @GET
     @Path("fixtures.ics")
-    @Produces("text/calendar")
+    @Produces("text/calendar; charset=UTF-8")
     public Response getFixturesCalendar(
             @QueryParam("season") List<String> seasonId,
             @QueryParam("tournament") List<String> tournamentRef,
@@ -122,8 +122,7 @@ public class RootResource {
             f += p + "-";
         
         return Response.ok(res)
-                .header("Content-Disposition", "attachment; filename=" + f + "fixtures.ics")
-                .encoding("UTF8")
+                .header("Content-Disposition", "attachment;filename=" + f + "fixtures.ics")
                 .build();
     }
     
