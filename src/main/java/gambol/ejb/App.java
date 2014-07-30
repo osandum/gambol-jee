@@ -1,11 +1,17 @@
 package gambol.ejb;
 
 import gambol.model.ClubEntity;
+import gambol.model.ClubEntity_;
 import gambol.model.FixtureEntity;
+import gambol.model.FixtureEntity_;
 import gambol.model.FixtureSideEntity;
+import gambol.model.FixtureSideEntity_;
 import gambol.model.SeasonEntity;
+import gambol.model.SeasonEntity_;
 import gambol.model.TournamentEntity;
+import gambol.model.TournamentEntity_;
 import gambol.model.TournamentTeamEntity;
+import gambol.model.TournamentTeamEntity_;
 import gambol.xml.Fixture;
 import gambol.xml.FixtureSideRole;
 import gambol.xml.Side;
@@ -27,6 +33,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.yaml.snakeyaml.Yaml;
 
@@ -294,5 +302,54 @@ public class App {
                 entity.setAwaySide(fe);
             }
         }
+    }
+
+    public List<FixtureEntity> getFixtures(List<String> seasonId, List<String> tournamentRef, List<String> clubRef) {
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        
+        CriteriaQuery<FixtureEntity> q = builder.createQuery(FixtureEntity.class);
+        Root<FixtureEntity> fixtures = q.from(FixtureEntity.class);
+               
+        Predicate a = builder.conjunction();
+        if (!seasonId.isEmpty() || !tournamentRef.isEmpty()) {
+            Join<FixtureEntity, TournamentEntity> tournament = fixtures.join(FixtureEntity_.tournament);
+            if (!seasonId.isEmpty()) {
+                Join<TournamentEntity, SeasonEntity> season = tournament.join(TournamentEntity_.season);
+                a.getExpressions().add(season.get(SeasonEntity_.id).in(seasonId));
+            }
+            if (!tournamentRef.isEmpty()) {
+                a.getExpressions().add(tournament.get(TournamentEntity_.slug).in(tournamentRef));
+            }
+        }
+        if (!clubRef.isEmpty()) {
+            Join<FixtureEntity, FixtureSideEntity> homeSide = fixtures.join(FixtureEntity_.homeSide);
+            Join<FixtureSideEntity, TournamentTeamEntity> homeTeam = homeSide.join(FixtureSideEntity_.team);
+            Join<TournamentTeamEntity, ClubEntity> homeClub = homeTeam.join(TournamentTeamEntity_.club);
+
+            Join<FixtureEntity, FixtureSideEntity> awaySide = fixtures.join(FixtureEntity_.awaySide);
+            Join<FixtureSideEntity, TournamentTeamEntity> awayTeam = awaySide.join(FixtureSideEntity_.team);        
+            Join<TournamentTeamEntity, ClubEntity> awayClub = awayTeam.join(TournamentTeamEntity_.club);
+            
+            a.getExpressions().add(
+                    builder.or(homeClub.get(ClubEntity_.slug).in(clubRef),
+                               awayClub.get(ClubEntity_.slug).in(clubRef)));
+        }
+        q.where(a);
+        
+        List<FixtureEntity> res = em.createQuery(q).getResultList();
+        
+        return res;
+        
+/*
+        root.j
+        query.select(root);
+        query.where(
+                builder.equal(root.get("slug"), slug),
+                builder.equal(root.get("season").get("id"), seasonId));
+
+        return em.createQuery(query).setMaxResults(1).getSingleResult();
+
+        throw new RuntimeException("Not implemented");        
+*/
     }
 }
