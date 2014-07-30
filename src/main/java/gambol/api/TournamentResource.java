@@ -3,6 +3,7 @@ package gambol.api;
 import gambol.ejb.App;
 import gambol.model.FixtureEntity;
 import gambol.model.FixtureSideEntity;
+import gambol.model.SeasonEntity;
 import gambol.model.TournamentEntity;
 import gambol.xml.Fixture;
 import gambol.xml.FixtureSideRole;
@@ -113,6 +114,12 @@ public class TournamentResource {
         model.getSides().add(entity2domain(FixtureSideRole.HOME, entity.getHomeSide()));
         model.getSides().add(entity2domain(FixtureSideRole.AWAY, entity.getAwaySide()));
         model.setSourceRef(entity.getSourceRef());
+        TournamentEntity tournament = entity.getTournament();
+        String tourRef = tournament.getSlug();
+        model.setTournamentRef(tourRef);
+        SeasonEntity season = tournament.getSeason();
+        String seasonRef = season.getId();
+        model.setSeason(seasonRef);
         
         return model;
     }

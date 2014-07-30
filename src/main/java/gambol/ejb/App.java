@@ -335,6 +335,7 @@ public class App {
                                awayClub.get(ClubEntity_.slug).in(clubRef)));
         }
         q.where(a);
+        q.orderBy(builder.asc(fixtures.get(FixtureEntity_.startTime)));
         
         List<FixtureEntity> res = em.createQuery(q).getResultList();
         

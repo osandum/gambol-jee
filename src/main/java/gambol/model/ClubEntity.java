@@ -1,6 +1,7 @@
 package gambol.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.CollectionTable;
@@ -37,9 +38,9 @@ public class ClubEntity implements Serializable {
     private String address;
 
     @Column(precision = 10, scale = 6, name = "lat")
-    private Double geoLatitude;
+    private BigDecimal geoLatitude;
     @Column(precision = 10, scale = 6, name = "lon")
-    private Double geoLongitude;
+    private BigDecimal geoLongitude;
 
     @Column(length = 2)
     private String country;
@@ -84,19 +85,19 @@ public class ClubEntity implements Serializable {
         this.country = iso2;
     }
 
-    public Double getLatitude() {
+    public BigDecimal getLatitude() {
         return geoLatitude;
     }
 
-    public void setLatitude(Double getLatitude) {
+    public void setLatitude(BigDecimal getLatitude) {
         this.geoLatitude = getLatitude;
     }
 
-    public Double getLongitude() {
+    public BigDecimal getLongitude() {
         return geoLongitude;
     }
 
-    public void setLongitude(Double getLongitude) {
+    public void setLongitude(BigDecimal getLongitude) {
         this.geoLongitude = getLongitude;
     }
 
