@@ -121,6 +121,8 @@
         </xs:sequence>
 
         <xs:attribute name="source-ref" type="xs:string" />
+        <xs:attribute name="tournament-ref" type="xs:string" />
+        <xs:attribute name="season" type="xs:string" />
     </xs:complexType>
     <!-- /xs:element -->
 

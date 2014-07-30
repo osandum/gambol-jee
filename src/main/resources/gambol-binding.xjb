@@ -23,6 +23,7 @@
                 adapter="net.sandum.xml.XmlDateTimeAdapter" />
 
             <javaType name="java.lang.Integer" xmlType="xs:integer"/> 
+            <javaType name="java.math.BigDecimal" xmlType="xs:double"/> 
         </globalBindings>
     </bindings>            
 
