@@ -4,20 +4,16 @@ import gambol.ejb.App;
 import gambol.model.ClubEntity;
 import gambol.model.FixtureEntity;
 import gambol.model.FixtureSideEntity;
-import gambol.model.SeasonEntity;
 import gambol.model.TournamentEntity;
 import gambol.xml.Club;
-import gambol.xml.Fixture;
 import gambol.xml.Fixtures;
-import gambol.xml.Side;
 import gambol.xml.Tournament;
-import gambol.xml.TournamentTemp;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.GET;
@@ -31,7 +27,6 @@ import javax.ws.rs.core.UriInfo;
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import net.fortuna.ical4j.model.ValidationException;
@@ -117,8 +112,19 @@ public class RootResource {
         new CalendarOutputter().output(cal, bo);
         bo.close();
         byte[] res = bo.toByteArray();
+
+        String f = "";
+        for (String p : clubRef)
+            f += p + "-";
+        for (String p : tournamentRef)
+            f += p + "-";
+        for (String p : seasonId)
+            f += p + "-";
         
-        return Response.ok(res).build();
+        return Response.ok(res)
+                .header("Content-Disposition", "attachment; filename=" + f + "fixtures.ics")
+                .encoding("UTF8")
+                .build();
     }
     
     protected Calendar getCalendar(List<FixtureEntity> fixtures) {
@@ -137,8 +143,13 @@ public class RootResource {
             FixtureSideEntity away = f.getAwaySide();
 
             // Create the event
+            String sourceRef = f.getSourceRef();
+            Matcher m = Pattern.compile("([^:]+):([^:]+):([^:]+)").matcher(sourceRef);
+            if (!m.matches())
+                throw new RuntimeException("'"+sourceRef+"' WTF?");
+            
             String eventName = home.getTeam().getName() + " \u2013 " + away.getTeam().getName();
-            eventName += " (" + tournament.getName() + ", kamp " + f.getSourceRef() + ")";
+            eventName += " (" + tournament.getName() + ", kamp " + m.group(3) + ")";
             if (home.getScore() != null && away.getScore() != null) {
                 eventName += ": " + home.getScore() + "-" + away.getScore();
             }
@@ -146,7 +157,7 @@ public class RootResource {
             DateTime end = new DateTime(f.getEndTime());
             VEvent evt = new VEvent(start, end, eventName);
             
-            String uid = "GAMBOL:fixture:" + f.getSourceRef();
+            String uid = "GAMBOL:fixture:" + sourceRef;
             evt.getProperties().add(new Uid(uid));
             
             ClubEntity homeClub = home.getTeam().getClub();
