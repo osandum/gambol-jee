@@ -131,6 +131,8 @@ public class App {
         String seasonId = tt.getSeason();
         if (seasonId == null)
             throw new IllegalArgumentException("Invalid season ID");
+        SeasonEntity season = findOrCreateSeason(seasonId);
+        
         String slug = tt.getSlug();
         String name = tt.getTitle();
         if (name == null)
@@ -141,8 +143,8 @@ public class App {
         TournamentEntity entity;
         try {
             entity = findTournamentBySourceRef(sourceRef);
+            entity.setSeason(season);
         } catch (NoResultException ex) {
-            SeasonEntity season = findOrCreateSeason(seasonId);
             entity = TournamentEntity.create(season, sourceRef);
         }
         entity.setSlug(slug);
@@ -251,6 +253,8 @@ public class App {
     }
 
     public void updateFixtures(TournamentEntity t, List<Fixture> fixtures) {
+        // Uh-oh, this thing leaves orphaned FixtureSideEntity rows behind.
+        
         Map<String, FixtureEntity> all = new HashMap<String, FixtureEntity>();
         for (FixtureEntity f : t.getFixtures()) {
             all.put(f.getSourceRef(), f);
@@ -289,19 +293,29 @@ public class App {
         }
 
         entity.setSourceRef(f.getSourceRef());
+        
+        FixtureSideEntity homeSide = entity.getHomeSide();
+        FixtureSideEntity awaySide = entity.getAwaySide();
+        
         for (Side s : f.getSides()) {
-            FixtureSideEntity fe = new FixtureSideEntity();
-            Side.Team team = s.getTeam();
-            String clubRef = team.getClubRef();
-            fe.setTeam(findOrCreateTeam(entity.getTournament(), clubRef, team.getValue()));
-            fe.setScore(s.getScore());
             FixtureSideRole role = s.getRole();
             if (FixtureSideRole.HOME.equals(role)) {
-                entity.setHomeSide(fe);
+                domain2entity(s, homeSide, entity.getTournament());
+                entity.setHomeSide(homeSide);
             } else if (FixtureSideRole.AWAY.equals(role)) {
-                entity.setAwaySide(fe);
+                domain2entity(s, awaySide, entity.getTournament());
+                entity.setAwaySide(awaySide);
             }
         }
+    }
+
+    private void domain2entity(Side s, FixtureSideEntity fe, TournamentEntity tournament) {
+        if (fe == null)
+            fe = new FixtureSideEntity();
+        Side.Team team = s.getTeam();
+        String clubRef = team.getClubRef();
+        fe.setTeam(findOrCreateTeam(tournament, clubRef, team.getValue()));
+        fe.setScore(s.getScore());
     }
 
     public List<FixtureEntity> getFixtures(List<String> seasonId, List<String> tournamentRef, List<String> clubRef) {

@@ -10,6 +10,7 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -23,6 +24,7 @@ public class ClubEntity implements Serializable {
     @GeneratedValue
     private Long id;
 
+    @Size(min = 1, max = 16)
     @Column(length = 16, nullable = false, unique = true)
     private String slug;
 
