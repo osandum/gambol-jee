@@ -31,17 +31,17 @@
             
             eventSources: [
                 {
-                    url: "/gambol/rs/events?home=ksf",
+                    url: "#{request.contextPath}/rs/events?home=ksf",
                     cache: true,
                     className: 'ksf-home'
                 },
                 {
-                    url: "/gambol/rs/events?away=ksf",
+                    url: "#{request.contextPath}/rs/events?away=ksf",
                     cache: true,
                     className: 'ksf-away'
                 }
             ]
-        })
+        });
 
     });
     </script>
