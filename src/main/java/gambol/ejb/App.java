@@ -18,6 +18,7 @@ import gambol.xml.Side;
 import gambol.xml.Tournament;
 import java.io.InputStream;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -318,13 +319,18 @@ public class App {
         fe.setScore(s.getScore());
     }
 
-    public List<FixtureEntity> getFixtures(List<String> seasonId, List<String> tournamentRef, List<String> clubRef, List<String> homeClubRef, List<String> awayClubRef) {
+    public List<FixtureEntity> getFixtures(Date start, Date end, List<String> seasonId, List<String> tournamentRef, List<String> clubRef, List<String> homeClubRef, List<String> awayClubRef) {
         CriteriaBuilder builder = em.getCriteriaBuilder();
         
         CriteriaQuery<FixtureEntity> q = builder.createQuery(FixtureEntity.class);
         Root<FixtureEntity> fixtures = q.from(FixtureEntity.class);
                
         Predicate a = builder.conjunction();
+        if (start != null)
+            a.getExpressions().add(builder.greaterThanOrEqualTo(fixtures.get(FixtureEntity_.endTime), start));
+        if (end != null)
+            a.getExpressions().add(builder.lessThanOrEqualTo(fixtures.get(FixtureEntity_.startTime), end));
+        
         if (!seasonId.isEmpty() || !tournamentRef.isEmpty()) {
             Join<FixtureEntity, TournamentEntity> tournament = fixtures.join(FixtureEntity_.tournament);
             if (!seasonId.isEmpty()) {

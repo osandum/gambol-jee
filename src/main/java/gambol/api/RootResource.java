@@ -3,17 +3,16 @@ package gambol.api;
 import gambol.ejb.App;
 import gambol.model.ClubEntity;
 import gambol.model.FixtureEntity;
-import gambol.model.FixtureSideEntity;
 import gambol.model.TournamentEntity;
+import gambol.util.DateParam;
 import gambol.xml.Club;
 import gambol.xml.Fixtures;
 import gambol.xml.Tournament;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.GET;
@@ -80,13 +79,15 @@ public class RootResource {
     @Path("fixtures")
     @Produces({APPLICATION_JSON, APPLICATION_XML})
     public Response getFixtures(
+            @QueryParam("start") DateParam start,
+            @QueryParam("end") DateParam end,
             @QueryParam("season") List<String> seasonId,
             @QueryParam("tournament") List<String> tournamentRef,
             @QueryParam("club") List<String> clubRef,
             @QueryParam("home") List<String> homeClubRef,
             @QueryParam("away") List<String> awayClubRef) {
         
-        List<FixtureEntity> fixtures = gambol.getFixtures(seasonId, tournamentRef, clubRef, homeClubRef, awayClubRef);
+        List<FixtureEntity> fixtures = gambol.getFixtures(u(start), u(end), seasonId, tournamentRef, clubRef, homeClubRef, awayClubRef);
         
         Fixtures res = new Fixtures();
         for (FixtureEntity entity : fixtures) {
@@ -95,18 +96,50 @@ public class RootResource {
         
         return Response.ok(res).build();
     }
+     
+    private static Date u(DateParam p) {
+        return p == null ? null : p.getValue();
+    }
     
     @GET
-    @Path("fixtures.ics")
-    @Produces("text/calendar; charset=UTF-8")
-    public Response getFixturesCalendar(
+    @Path("events")
+    @Produces(APPLICATION_JSON)
+    public List<FullCalendarEvent> getFixturesFullCalendarEvents(
+            @QueryParam("start") DateParam start,
+            @QueryParam("end") DateParam end,
             @QueryParam("season") List<String> seasonId,
             @QueryParam("tournament") List<String> tournamentRef,
             @QueryParam("club") List<String> clubRef,
             @QueryParam("home") List<String> homeClubRef,
             @QueryParam("away") List<String> awayClubRef) throws ValidationException, IOException {
         
-        List<FixtureEntity> fixtures = gambol.getFixtures(seasonId, tournamentRef, clubRef, homeClubRef, awayClubRef);
+        List<FixtureEntity> fixtures = gambol.getFixtures(u(start), u(end), seasonId, tournamentRef, clubRef, homeClubRef, awayClubRef);
+        
+        List<FullCalendarEvent> res = new LinkedList<FullCalendarEvent>();
+        for (FixtureEntity f : fixtures) {
+            FullCalendarEvent e = new FullCalendarEvent();
+            e.id = f.getSourceRef(); // TODO: make our own opaque ref
+            e.title = f.getEventTitle(); 
+            e.start = f.getStartTime();
+            e.end = f.getEndTime();
+            res.add(e);
+        }
+        return res;
+    }
+    
+    @GET
+    @Path("fixtures.ics")
+    @Produces("text/calendar; charset=UTF-8")
+    public Response getFixturesCalendar(
+            @QueryParam("start") DateParam start,
+            @QueryParam("end") DateParam end,
+            @QueryParam("season") List<String> seasonId,
+            @QueryParam("tournament") List<String> tournamentRef,
+            @QueryParam("club") List<String> clubRef,
+            @QueryParam("home") List<String> homeClubRef,
+            @QueryParam("away") List<String> awayClubRef) throws ValidationException, IOException {
+        
+        List<FixtureEntity> fixtures = gambol.getFixtures(u(start), u(end), seasonId, tournamentRef, clubRef, homeClubRef, awayClubRef);
 
         Calendar cal = getCalendar(fixtures);
         
@@ -141,29 +174,15 @@ public class RootResource {
         cal.getProperties().add(CalScale.GREGORIAN);
         int n = 0;
         for (FixtureEntity f : fixtures) {
-            TournamentEntity tournament = f.getTournament();
-            FixtureSideEntity home = f.getHomeSide();
-            FixtureSideEntity away = f.getAwaySide();
-
-            // Create the event
-            String sourceRef = f.getSourceRef();
-            Matcher m = Pattern.compile("([^:]+):([^:]+):([^:]+)").matcher(sourceRef);
-            if (!m.matches())
-                throw new RuntimeException("'"+sourceRef+"' WTF?");
-            
-            String eventName = home.getTeam().getName() + " \u2013 " + away.getTeam().getName();
-            eventName += " (" + tournament.getName() + ", kamp " + m.group(3) + ")";
-            if (home.getScore() != null && away.getScore() != null) {
-                eventName += ": " + home.getScore() + "-" + away.getScore();
-            }
+            String eventName = f.getEventTitle();
             DateTime start = new DateTime(f.getStartTime());
             DateTime end = new DateTime(f.getEndTime());
             VEvent evt = new VEvent(start, end, eventName);
             
-            String uid = "GAMBOL:fixture:" + sourceRef;
+            String uid = "GAMBOL:fixture:" + f.getSourceRef();
             evt.getProperties().add(new Uid(uid));
             
-            ClubEntity homeClub = home.getTeam().getClub();
+            ClubEntity homeClub = f.getHomeSide().getTeam().getClub();
             if (!StringUtils.isEmpty(homeClub.getAddress())) 
                 evt.getProperties().add(new Location(homeClub.getAddress()));
             if (homeClub.getLatitude() != null && homeClub.getLongitude() != null)
@@ -171,7 +190,6 @@ public class RootResource {
             
             cal.getComponents().add(evt);
             
-            System.out.println(f.getStartTime() + ": " + home.getTeam() + "-" + away.getTeam());
             ++n;
         }
         

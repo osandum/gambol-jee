@@ -2,6 +2,8 @@ package gambol.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -97,4 +99,17 @@ public class FixtureEntity implements Serializable {
         this.endTime = endTime;
     }
 
+    public String getEventTitle() {
+        // Create the event
+        Matcher m = Pattern.compile("([^:]+):([^:]+):([^:]+)").matcher(sourceRef);
+        if (!m.matches())
+            throw new RuntimeException("'"+sourceRef+"' WTF?");
+
+        String eventName = homeSide.getTeam().getName() + " \u2013 " + awaySide.getTeam().getName();
+        eventName += " (" + tournament.getName() + ", kamp " + m.group(3) + ")";
+        if (homeSide.getScore() != null && awaySide.getScore() != null) {
+            eventName += ": " + homeSide.getScore() + "-" + awaySide.getScore();
+        }        
+        return eventName;
+    }
 }

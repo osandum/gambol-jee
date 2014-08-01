@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                template="/WEB-INF/templates/default.xhtml">        
+
+    <ui:define name="content">
+        <style>
+.fc-event.ksf-home {
+	background-color: #036fab;
+	color: white;
+	}
+.fc-event.ksf-away {
+	background-color: #98AAB1;
+	color: graytext;              
+	}
+            
+        </style>
+        <div id="calendar"></div>
+
+    <script>
+    $(document).ready(function() {
+
+        $('#calendar').fullCalendar({
+            // put your options and callbacks here
+            lang: 'da',
+            firstDay: 1,
+            weekNumbers: true,
+            
+            eventSources: [
+                {
+                    url: "/gambol/rs/events?home=ksf",
+                    cache: true,
+                    className: 'ksf-home'
+                },
+                {
+                    url: "/gambol/rs/events?away=ksf",
+                    cache: true,
+                    className: 'ksf-away'
+                }
+            ]
+        })
+
+    });
+    </script>
+        
+    </ui:define>
+
+</ui:composition>
