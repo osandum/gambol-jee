@@ -318,7 +318,7 @@ public class App {
         fe.setScore(s.getScore());
     }
 
-    public List<FixtureEntity> getFixtures(List<String> seasonId, List<String> tournamentRef, List<String> clubRef) {
+    public List<FixtureEntity> getFixtures(List<String> seasonId, List<String> tournamentRef, List<String> clubRef, List<String> homeClubRef, List<String> awayClubRef) {
         CriteriaBuilder builder = em.getCriteriaBuilder();
         
         CriteriaQuery<FixtureEntity> q = builder.createQuery(FixtureEntity.class);
@@ -335,7 +335,7 @@ public class App {
                 a.getExpressions().add(tournament.get(TournamentEntity_.slug).in(tournamentRef));
             }
         }
-        if (!clubRef.isEmpty()) {
+        if (!clubRef.isEmpty() || !homeClubRef.isEmpty() || !awayClubRef.isEmpty()) {
             Join<FixtureEntity, FixtureSideEntity> homeSide = fixtures.join(FixtureEntity_.homeSide);
             Join<FixtureSideEntity, TournamentTeamEntity> homeTeam = homeSide.join(FixtureSideEntity_.team);
             Join<TournamentTeamEntity, ClubEntity> homeClub = homeTeam.join(TournamentTeamEntity_.club);
@@ -344,9 +344,14 @@ public class App {
             Join<FixtureSideEntity, TournamentTeamEntity> awayTeam = awaySide.join(FixtureSideEntity_.team);        
             Join<TournamentTeamEntity, ClubEntity> awayClub = awayTeam.join(TournamentTeamEntity_.club);
             
-            a.getExpressions().add(
-                    builder.or(homeClub.get(ClubEntity_.slug).in(clubRef),
-                               awayClub.get(ClubEntity_.slug).in(clubRef)));
+            if (!clubRef.isEmpty())
+                a.getExpressions().add(
+                        builder.or(homeClub.get(ClubEntity_.slug).in(clubRef),
+                                   awayClub.get(ClubEntity_.slug).in(clubRef)));
+            if (!homeClubRef.isEmpty())
+                a.getExpressions().add(homeClub.get(ClubEntity_.slug).in(homeClubRef));
+            if (!awayClubRef.isEmpty())
+                a.getExpressions().add(awayClub.get(ClubEntity_.slug).in(awayClubRef));
         }
         q.where(a);
         q.orderBy(builder.asc(fixtures.get(FixtureEntity_.startTime)));

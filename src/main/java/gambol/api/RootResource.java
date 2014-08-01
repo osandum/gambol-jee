@@ -82,9 +82,11 @@ public class RootResource {
     public Response getFixtures(
             @QueryParam("season") List<String> seasonId,
             @QueryParam("tournament") List<String> tournamentRef,
-            @QueryParam("club") List<String> clubRef) {
+            @QueryParam("club") List<String> clubRef,
+            @QueryParam("home") List<String> homeClubRef,
+            @QueryParam("away") List<String> awayClubRef) {
         
-        List<FixtureEntity> fixtures = gambol.getFixtures(seasonId, tournamentRef, clubRef);
+        List<FixtureEntity> fixtures = gambol.getFixtures(seasonId, tournamentRef, clubRef, homeClubRef, awayClubRef);
         
         Fixtures res = new Fixtures();
         for (FixtureEntity entity : fixtures) {
@@ -100,9 +102,11 @@ public class RootResource {
     public Response getFixturesCalendar(
             @QueryParam("season") List<String> seasonId,
             @QueryParam("tournament") List<String> tournamentRef,
-            @QueryParam("club") List<String> clubRef) throws ValidationException, IOException {
+            @QueryParam("club") List<String> clubRef,
+            @QueryParam("home") List<String> homeClubRef,
+            @QueryParam("away") List<String> awayClubRef) throws ValidationException, IOException {
         
-        List<FixtureEntity> fixtures = gambol.getFixtures(seasonId, tournamentRef, clubRef);
+        List<FixtureEntity> fixtures = gambol.getFixtures(seasonId, tournamentRef, clubRef, homeClubRef, awayClubRef);
 
         Calendar cal = getCalendar(fixtures);
         
