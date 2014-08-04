@@ -25,9 +25,10 @@
     <meta name="msapplication-TileColor" content="#3372DF"/>
 
     <link rel="stylesheet" href="styles/h5bp.css"/>
+<!--
     <link rel="stylesheet" href="styles/components/components.css"/>
+-->    
     <link rel="stylesheet" href="styles/main.css"/>
-    
     <!-- h:outputStylesheet name="./css/default.css"/>
     <h:outputStylesheet name="./css/cssLayout.css"/ -->
 
@@ -43,18 +44,26 @@
 </h:head>
 
 <h:body>
+    <header class="app-bar promote-layer">
+      <div class="app-bar-container">
+        <ui:insert name="app-bar"><h1>Istid — kampkalender</h1></ui:insert>
+      </div>
+    </header>
 
-    <div id="top" class="top">
-        <ui:insert name="top">Istid — kampkalender</ui:insert>
-    </div>
-    <div>
-        <div id="left">
-            <ui:insert name="left">Left</ui:insert>
-        </div>
-        <div id="content" class="left_content">
-            <ui:insert name="content">Content</ui:insert>
-        </div>
-    </div>
+    <nav class="navdrawer-container promote-layer">
+      <ui:insert name="nav-bar">
+        <h4>Navigation</h4>
+        <ul>
+          <li><a href="#hello">Hello</a></li>
+          <li><a href="#get-started">Get Started</a></li>
+          <li><a href="styleguide/index.html">Style Guide</a></li>
+        </ul>           
+      </ui:insert>
+    </nav>
+    
+    <main>
+        <ui:insert name="content">Content</ui:insert>        
+    </main>    
 
 </h:body>
 

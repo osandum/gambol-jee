@@ -301,22 +301,23 @@ public class App {
         for (Side s : f.getSides()) {
             FixtureSideRole role = s.getRole();
             if (FixtureSideRole.HOME.equals(role)) {
-                domain2entity(s, homeSide, entity.getTournament());
+                homeSide = domain2entity(s, homeSide, entity.getTournament());
                 entity.setHomeSide(homeSide);
             } else if (FixtureSideRole.AWAY.equals(role)) {
-                domain2entity(s, awaySide, entity.getTournament());
+                awaySide = domain2entity(s, awaySide, entity.getTournament());
                 entity.setAwaySide(awaySide);
             }
         }
     }
 
-    private void domain2entity(Side s, FixtureSideEntity fe, TournamentEntity tournament) {
+    private FixtureSideEntity domain2entity(Side s, FixtureSideEntity fe, TournamentEntity tournament) {
         if (fe == null)
             fe = new FixtureSideEntity();
         Side.Team team = s.getTeam();
         String clubRef = team.getClubRef();
         fe.setTeam(findOrCreateTeam(tournament, clubRef, team.getValue()));
         fe.setScore(s.getScore());
+        return fe;
     }
 
     public List<FixtureEntity> getFixtures(Date start, Date end, List<String> seasonId, List<String> tournamentRef, List<String> clubRef, List<String> homeClubRef, List<String> awayClubRef) {
