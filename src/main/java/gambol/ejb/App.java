@@ -14,6 +14,7 @@ import gambol.model.TournamentTeamEntity;
 import gambol.model.TournamentTeamEntity_;
 import gambol.xml.Fixture;
 import gambol.xml.FixtureSideRole;
+import gambol.xml.ScheduleStatus;
 import gambol.xml.Side;
 import gambol.xml.Tournament;
 import java.io.InputStream;
@@ -283,6 +284,7 @@ public class App {
     }
 
     private void domain2entity(Fixture f, FixtureEntity entity) {
+        entity.setStatus(f.getSchedule());
         entity.setStartTime(f.getStartTime());
         entity.setEndTime(f.getEndTime());
 
@@ -327,6 +329,8 @@ public class App {
         Root<FixtureEntity> fixtures = q.from(FixtureEntity.class);
                
         Predicate a = builder.conjunction();
+        a.getExpressions().add(builder.equal(fixtures.get(FixtureEntity_.status), ScheduleStatus.CONFIRMED));
+
         if (start != null)
             a.getExpressions().add(builder.greaterThanOrEqualTo(fixtures.get(FixtureEntity_.endTime), start));
         if (end != null)

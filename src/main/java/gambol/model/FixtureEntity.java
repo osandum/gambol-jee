@@ -1,5 +1,6 @@
 package gambol.model;
 
+import gambol.xml.ScheduleStatus;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.regex.Matcher;
@@ -7,6 +8,8 @@ import java.util.regex.Pattern;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -59,6 +62,9 @@ public class FixtureEntity implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date endTime;
 
+    @Enumerated(EnumType.STRING)
+    private ScheduleStatus status;
+    
     public TournamentEntity getTournament() {
         return tournament;
     }
@@ -97,6 +103,14 @@ public class FixtureEntity implements Serializable {
 
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
+    }
+
+    public ScheduleStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ScheduleStatus status) {
+        this.status = status;
     }
 
     public String getEventTitle() {
