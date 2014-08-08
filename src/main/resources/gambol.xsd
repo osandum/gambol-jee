@@ -123,6 +123,7 @@
         <xs:attribute name="source-ref" type="xs:string" />
         <xs:attribute name="tournament-ref" type="xs:string" />
         <xs:attribute name="season" type="xs:string" />
+        <xs:attribute name="schedule" type="g:ScheduleStatus" />
     </xs:complexType>
     <!-- /xs:element -->
 
@@ -130,6 +131,14 @@
         <xs:restriction base="xs:string">
             <xs:enumeration value="home" />
             <xs:enumeration value="away" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="ScheduleStatus" final="restriction" >
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="none" />
+            <xs:enumeration value="tentative" />
+            <xs:enumeration value="confirmed" />
         </xs:restriction>
     </xs:simpleType>
 
