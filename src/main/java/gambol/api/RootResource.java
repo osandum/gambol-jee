@@ -32,11 +32,14 @@ import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.property.CalScale;
+import net.fortuna.ical4j.model.property.Description;
 import net.fortuna.ical4j.model.property.Geo;
 import net.fortuna.ical4j.model.property.Location;
 import net.fortuna.ical4j.model.property.ProdId;
+import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.model.property.Version;
+import net.fortuna.ical4j.model.property.XProperty;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -140,11 +143,13 @@ public class RootResource {
             @QueryParam("tournament") List<String> tournamentRef,
             @QueryParam("club") List<String> clubRef,
             @QueryParam("home") List<String> homeClubRef,
-            @QueryParam("away") List<String> awayClubRef) throws ValidationException, IOException {
+            @QueryParam("away") List<String> awayClubRef,
+            @QueryParam("calname") String calname,
+            @QueryParam("caldesc") String caldesc) throws ValidationException, IOException {
         
         List<FixtureEntity> fixtures = gambol.getFixtures(u(start), u(end), seasonId, seriesId, tournamentRef, clubRef, homeClubRef, awayClubRef);
 
-        Calendar cal = getCalendar(fixtures);
+        Calendar cal = getCalendar(fixtures, calname, caldesc);
         
         cal.validate();
         
@@ -166,7 +171,7 @@ public class RootResource {
                 .build();
     }
     
-    protected Calendar getCalendar(List<FixtureEntity> fixtures) {
+    protected Calendar getCalendar(List<FixtureEntity> fixtures, String calname, String caldesc) {
         TimeZoneRegistry tzr = TimeZoneRegistryFactory.getInstance().createRegistry();
         VTimeZone tz = tzr.getTimeZone("Europe/Copenhagen").getVTimeZone();
         
@@ -175,15 +180,22 @@ public class RootResource {
         cal.getProperties().add(new ProdId("-//Gambol//iCal4j 1.0//EN"));
         cal.getProperties().add(Version.VERSION_2_0);
         cal.getProperties().add(CalScale.GREGORIAN);
+        if (calname != null)
+            cal.getProperties().add(new XProperty("X-WR-CALNAME", calname));        
+        if (caldesc != null)
+            cal.getProperties().add(new XProperty("X-WR-CALDESC", caldesc));        
         int n = 0;
         for (FixtureEntity f : fixtures) {
             String eventName = f.getEventTitle();
             DateTime start = new DateTime(f.getStartTime());
             DateTime end = new DateTime(f.getEndTime());
+            String eventDescr = f.getEventDescription();
             VEvent evt = new VEvent(start, end, eventName);
             
             String uid = "GAMBOL:fixture:" + f.getSourceRef();
             evt.getProperties().add(new Uid(uid));
+            
+            evt.getProperties().add(new Description(eventDescr));
             
             ClubEntity homeClub = f.getHomeSide().getTeam().getClub();
             if (!StringUtils.isEmpty(homeClub.getAddress())) 

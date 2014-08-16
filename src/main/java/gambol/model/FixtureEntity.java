@@ -113,14 +113,18 @@ public class FixtureEntity implements Serializable {
         this.status = status;
     }
 
-    public String getEventTitle() {
+    public String getEventDescription() {
         // Create the event
         Matcher m = Pattern.compile("([^:]+):([^:]+):([^:]+)(:.*)?").matcher(sourceRef);
         if (!m.matches())
             throw new RuntimeException("'"+sourceRef+"' WTF?");
+        String descr = tournament.getName() + ", kamp " + m.group(3);
+        return descr;
+    }
 
+    public String getEventTitle() {
         String eventName = homeSide.getTeam().getName() + " \u2013 " + awaySide.getTeam().getName();
-        eventName += " (" + tournament.getName() + ", kamp " + m.group(3) + ")";
+        eventName += " (" + tournament.getSeries().getName() + ")";
         if (homeSide.getScore() != null && awaySide.getScore() != null) {
             eventName += ": " + homeSide.getScore() + "-" + awaySide.getScore();
         }        
