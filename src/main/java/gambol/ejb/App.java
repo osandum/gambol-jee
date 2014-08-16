@@ -289,13 +289,12 @@ public class App {
         // Uh-oh, this thing leaves orphaned FixtureSideEntity rows behind.
         
         Map<String, FixtureEntity> all = new HashMap<String, FixtureEntity>();
-        for (FixtureEntity f : t.getFixtures()) {
+        for (FixtureEntity f : t.getFixtures()) 
             all.put(f.getSourceRef(), f);
-        }
 
         List<FixtureEntity> nf = new LinkedList<FixtureEntity>();
         for (Fixture fo : fixtures) {
-            FixtureEntity f = all.get(fo.getSourceRef());
+            FixtureEntity f = all.remove(fo.getSourceRef());
             if (f == null) {
                 // new fixture
                 f = new FixtureEntity();
@@ -310,7 +309,11 @@ public class App {
                 domain2entity(fo, f);
                 LOG.info(fo.getSourceRef() + ": fixture updated: " + f);
             }
-            //:.. 
+        }
+        
+        for (FixtureEntity f : all.values()) {
+            em.remove(f);
+            LOG.info(f.getSourceRef() + ": history");
         }
     }
 
