@@ -28,7 +28,7 @@ public class FixtureEntity implements Serializable {
     @GeneratedValue
     private Long id;
 
-    @Column(length = 16, nullable = false, unique = true)
+    @Column(length = 64, nullable = false, unique = true)
     private String sourceRef;
 
     public Long getId() {
@@ -125,5 +125,10 @@ public class FixtureEntity implements Serializable {
             eventName += ": " + homeSide.getScore() + "-" + awaySide.getScore();
         }        
         return eventName;
+    }
+
+    @Override
+    public String toString() {
+        return "{[" + sourceRef + "] id=" + id + " home=" + homeSide + " away=" + awaySide + "}";
     }
 }

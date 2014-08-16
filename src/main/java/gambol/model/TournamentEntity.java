@@ -105,6 +105,17 @@ public class TournamentEntity implements Serializable {
     public void setSeason(SeasonEntity season) {
         this.season = season;
     }
+    
+    @ManyToOne(optional = false)
+    private SeriesEntity series;
+
+    public SeriesEntity getSeries() {
+        return series;
+    }
+
+    public void setSeries(SeriesEntity series) {
+        this.series = series;
+    }
 
     @OneToMany(mappedBy = "tournament")
     private List<FixtureEntity> fixtures;
@@ -117,10 +128,11 @@ public class TournamentEntity implements Serializable {
         this.fixtures = fixtures;
     }
     
-    public static TournamentEntity create(SeasonEntity season, String sourceRef) {
+    public static TournamentEntity create(SeasonEntity season, SeriesEntity series, String sourceRef) {
         TournamentEntity t = new TournamentEntity();
         t.setSourceRef(sourceRef);
         t.setSeason(season);
+        t.setSeries(series);
         t.setFixtures(Collections.<FixtureEntity>emptyList());
         return t;
     }

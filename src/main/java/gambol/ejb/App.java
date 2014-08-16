@@ -8,6 +8,8 @@ import gambol.model.FixtureSideEntity;
 import gambol.model.FixtureSideEntity_;
 import gambol.model.SeasonEntity;
 import gambol.model.SeasonEntity_;
+import gambol.model.SeriesEntity;
+import gambol.model.SeriesEntity_;
 import gambol.model.TournamentEntity;
 import gambol.model.TournamentEntity_;
 import gambol.model.TournamentTeamEntity;
@@ -36,6 +38,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.yaml.snakeyaml.Yaml;
@@ -84,7 +87,7 @@ public class App {
         CriteriaQuery<SeasonEntity> query = builder.createQuery(SeasonEntity.class);
         Root<SeasonEntity> root = query.from(SeasonEntity.class);
         query.select(root);
-        query.where(builder.equal(root.get("id"), slug));
+        query.where(builder.equal(root.get(SeasonEntity_.id), slug));
         return em.createQuery(query).setMaxResults(1).getSingleResult();
     }
 
@@ -107,6 +110,31 @@ public class App {
         return em.createQuery(all).getResultList();
     }
 
+
+    private SeriesEntity findSeries(String slug) {
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<SeriesEntity> query = builder.createQuery(SeriesEntity.class);
+        Root<SeriesEntity> root = query.from(SeriesEntity.class);
+        query.select(root);
+        query.where(builder.equal(root.get(SeriesEntity_.slug), slug));
+        return em.createQuery(query).setMaxResults(1).getSingleResult();
+    }
+
+    private SeriesEntity findOrCreateSeries(String slug) {
+        try {
+            return findSeries(slug);
+        } catch (NoResultException ex) {
+            SeriesEntity res = new SeriesEntity();
+            res.setSlug(slug);
+            res.setName(slug);
+            res.setFixtureDuration(60);
+            em.persist(res);
+            LOG.log(Level.INFO, "{0} created", res);
+            return res;
+        }
+    }
+    
+    
     public List<ClubEntity> getClubs() {
         // OMG!
         CriteriaQuery<ClubEntity> cq = em.getCriteriaBuilder().createQuery(ClubEntity.class);
@@ -142,12 +170,15 @@ public class App {
         if (slug == null)
             slug = name.toLowerCase().replaceAll("[-_,. ]+", "-");
 
+        String seriesSlug = slug.replaceAll("-[^-]*$", "");
+        SeriesEntity series = findOrCreateSeries(seriesSlug);
+        
         TournamentEntity entity;
         try {
             entity = findTournamentBySourceRef(sourceRef);
             entity.setSeason(season);
         } catch (NoResultException ex) {
-            entity = TournamentEntity.create(season, sourceRef);
+            entity = TournamentEntity.create(season, series, sourceRef);
         }
         entity.setSlug(slug);
         entity.setName(name);
@@ -228,7 +259,7 @@ public class App {
             ClubEntity club = findOrCreateClub(clubRef);
             res.setClub(club);
             res.setName(teamName);
-            res.setSlug(asSlug(teamName, 16));
+            res.setSlug(club.getSlug());
             em.persist(res);
             return res;
         }
@@ -272,12 +303,12 @@ public class App {
                 domain2entity(fo, f);
                 em.persist(f);
                 nf.add(f);
-                LOG.info(fo.getSourceRef() + " not found: new fixture created");
+                LOG.info(fo.getSourceRef() + " not found: new fixture created: " + f);
             } else {
                 // existing fixture, update:
                 f.setTournament(t);
                 domain2entity(fo, f);
-                LOG.info(fo.getSourceRef() + ": fixture updated");
+                LOG.info(fo.getSourceRef() + ": fixture updated: " + f);
             }
             //:.. 
         }
@@ -291,11 +322,10 @@ public class App {
         if (entity.getStartTime() != null && entity.getEndTime() == null) {
             Calendar d = Calendar.getInstance();
             d.setTime(entity.getStartTime());
-            d.add(Calendar.MINUTE, 90);
+            int durationMinutes = entity.getTournament().getSeries().getFixtureDuration();
+            d.add(Calendar.MINUTE, durationMinutes);
             entity.setEndTime(d.getTime());
         }
-
-        entity.setSourceRef(f.getSourceRef());
         
         FixtureSideEntity homeSide = entity.getHomeSide();
         FixtureSideEntity awaySide = entity.getAwaySide();
@@ -310,6 +340,8 @@ public class App {
                 entity.setAwaySide(awaySide);
             }
         }
+        
+        entity.setSourceRef(f.getSourceRef());
     }
 
     private FixtureSideEntity domain2entity(Side s, FixtureSideEntity fe, TournamentEntity tournament) {
@@ -322,7 +354,7 @@ public class App {
         return fe;
     }
 
-    public List<FixtureEntity> getFixtures(Date start, Date end, List<String> seasonId, List<String> tournamentRef, List<String> clubRef, List<String> homeClubRef, List<String> awayClubRef) {
+    public List<FixtureEntity> getFixtures(Date start, Date end, List<String> seasonId, List<String> seriesId, List<String> tournamentRef, List<String> clubRef, List<String> homeClubRef, List<String> awayClubRef) {
         CriteriaBuilder builder = em.getCriteriaBuilder();
         
         CriteriaQuery<FixtureEntity> q = builder.createQuery(FixtureEntity.class);
@@ -336,14 +368,25 @@ public class App {
         if (end != null)
             a.getExpressions().add(builder.lessThanOrEqualTo(fixtures.get(FixtureEntity_.startTime), end));
         
-        if (!seasonId.isEmpty() || !tournamentRef.isEmpty()) {
+        if (!seasonId.isEmpty() || !seriesId.isEmpty() || !tournamentRef.isEmpty()) {
             Join<FixtureEntity, TournamentEntity> tournament = fixtures.join(FixtureEntity_.tournament);
             if (!seasonId.isEmpty()) {
                 Join<TournamentEntity, SeasonEntity> season = tournament.join(TournamentEntity_.season);
                 a.getExpressions().add(season.get(SeasonEntity_.id).in(seasonId));
             }
+            if (!seriesId.isEmpty()) {
+                Path<String> seriesSlug = tournament.join(TournamentEntity_.series).get(SeriesEntity_.slug);
+                Predicate b = builder.disjunction();
+                for (String ss : seriesId)
+                    b.getExpressions().add(builder.like(seriesSlug, ss + "%"));
+                a.getExpressions().add(b);
+            }
             if (!tournamentRef.isEmpty()) {
-                a.getExpressions().add(tournament.get(TournamentEntity_.slug).in(tournamentRef));
+                Path<String> tournamentSlug = tournament.get(TournamentEntity_.slug);
+                Predicate b = builder.disjunction();
+                for (String ts : tournamentRef)
+                    b.getExpressions().add(builder.like(tournamentSlug, ts + "%"));
+                a.getExpressions().add(b);
             }
         }
         if (!clubRef.isEmpty() || !homeClubRef.isEmpty() || !awayClubRef.isEmpty()) {

@@ -3,6 +3,10 @@
 
 clubs:
 
+    - &ser0 !!gambol.model.SeriesEntity
+        slug:           "ser0"
+        name:           "Series 0"
+        fixtureDuration: 60
     - &s2012 !!gambol.model.SeasonEntity
         id:             "2012"
         name:           "2012/13"
@@ -48,16 +52,19 @@ clubs:
         slug:      "u11-1"
         name:      "U11 Øst"
         season:    *s2013
+        series:    *ser0
         sourceRef: "DIU:973"
     - &u11_1_2014 !!gambol.model.TournamentEntity
         slug:      "u11-1"
         name:      "U11 Øst"
         season:    *s2014
+        series:    *ser0
         sourceRef: "DIU:1056"
     - &u11_2 !!gambol.model.TournamentEntity
         slug:      "u11-2"
         name:      "U11.2 Øst"
         season:    *s2013
+        series:    *ser0
         sourceRef: "DIU:974"
 
     - &ksf_u11_1_2013 !!gambol.model.TournamentTeamEntity

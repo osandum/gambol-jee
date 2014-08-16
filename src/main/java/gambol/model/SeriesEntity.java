@@ -5,7 +5,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -13,9 +12,9 @@ import javax.persistence.UniqueConstraint;
  *
  * @author osa
  */
-@Entity(name = "tournament_team")
-@Table(uniqueConstraints = { @UniqueConstraint(columnNames={"slug", "tournament_id"}) })
-public class TournamentTeamEntity implements Serializable {
+@Entity(name = "series")
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames={"slug"}) })
+public class SeriesEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -27,14 +26,18 @@ public class TournamentTeamEntity implements Serializable {
 
     @Column(length = 64, nullable = false)
     private String name;
-    
-    @ManyToOne(optional = false)
-    private ClubEntity club;
-    
-    @ManyToOne(optional = false)
-    private TournamentEntity tournament;
 
-    
+    @Column(nullable = false)
+    private int fixtureDuration;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getSlug() {
         return slug;
     }
@@ -43,7 +46,6 @@ public class TournamentTeamEntity implements Serializable {
         this.slug = slug;
     }
 
-    
     public String getName() {
         return name;
     }
@@ -52,22 +54,17 @@ public class TournamentTeamEntity implements Serializable {
         this.name = name;
     }
 
+    public int getFixtureDuration() {
+        return fixtureDuration;
+    }
+
+    public void setFixtureDuration(int fixtureDuration) {
+        this.fixtureDuration = fixtureDuration;
+    }
+
+    @Override
+    public String toString() {
+        return "{" + slug + " id=" + id + " name=\"" + name + "\" dur=" + fixtureDuration + "}";
+    }
     
-    public ClubEntity getClub() {
-        return club;
-    }
-
-    public void setClub(ClubEntity club) {
-        this.club = club;
-    }
-
-    
-    public TournamentEntity getTournament() {
-        return tournament;
-    }
-
-    public void setTournament(TournamentEntity tournament) {
-        this.tournament = tournament;
-    }
-
 }
