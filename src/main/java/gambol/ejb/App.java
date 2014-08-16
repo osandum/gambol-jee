@@ -177,6 +177,7 @@ public class App {
         try {
             entity = findTournamentBySourceRef(sourceRef);
             entity.setSeason(season);
+            entity.setSeries(series);
         } catch (NoResultException ex) {
             entity = TournamentEntity.create(season, series, sourceRef);
         }
