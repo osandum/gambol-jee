@@ -115,7 +115,7 @@ public class FixtureEntity implements Serializable {
 
     public String getEventTitle() {
         // Create the event
-        Matcher m = Pattern.compile("([^:]+):([^:]+):([^:]+)").matcher(sourceRef);
+        Matcher m = Pattern.compile("([^:]+):([^:]+):([^:]+)(:.*)?").matcher(sourceRef);
         if (!m.matches())
             throw new RuntimeException("'"+sourceRef+"' WTF?");
 
