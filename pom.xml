@@ -7,7 +7,7 @@
 
     <groupId>gambol</groupId>
     <artifactId>gambol-docs</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.2</version>
 
     <organization>
         <name>Sandum.Net</name>
