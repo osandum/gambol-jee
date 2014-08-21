@@ -64,6 +64,9 @@ public class FixtureEntity implements Serializable {
 
     @Enumerated(EnumType.STRING)
     private ScheduleStatus status;
+
+    @Column(length = 16)
+    private String matchNumber;
     
     public TournamentEntity getTournament() {
         return tournament;
@@ -113,13 +116,17 @@ public class FixtureEntity implements Serializable {
         this.status = status;
     }
 
+    public String getMatchNumber() {
+        return matchNumber;
+    }
+
+    public void setMatchNumber(String matchNumber) {
+        this.matchNumber = matchNumber;
+    }
+    
     public String getEventDescription() {
         // Create the event
-        Matcher m = Pattern.compile("([^:]+):([^:]+):([^:]+)(:.*)?").matcher(sourceRef);
-        if (!m.matches())
-            throw new RuntimeException("'"+sourceRef+"' WTF?");
-        String descr = tournament.getName() + ", kamp " + m.group(3);
-        return descr;
+        return tournament.getName() + ", kamp " + matchNumber;
     }
 
     public String getEventTitle() {

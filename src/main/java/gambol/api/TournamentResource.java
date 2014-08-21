@@ -113,6 +113,7 @@ public class TournamentResource {
         model.setEndTime(entity.getEndTime());
         model.getSides().add(entity2domain(FixtureSideRole.HOME, entity.getHomeSide()));
         model.getSides().add(entity2domain(FixtureSideRole.AWAY, entity.getAwaySide()));
+        model.setMatchNumber(entity.getMatchNumber());
         model.setSourceRef(entity.getSourceRef());
         TournamentEntity tournament = entity.getTournament();
         String tourRef = tournament.getSlug();

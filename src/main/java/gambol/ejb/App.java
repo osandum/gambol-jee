@@ -345,6 +345,8 @@ public class App {
             }
         }
         
+        entity.setMatchNumber(f.getMatchNumber());
+        
         entity.setSourceRef(f.getSourceRef());
     }
 
