@@ -21,7 +21,6 @@ import gambol.xml.Side;
 import gambol.xml.Tournament;
 import java.io.InputStream;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -360,7 +359,7 @@ public class App {
         return fe;
     }
 
-    public List<FixtureEntity> getFixtures(Date start, Date end, List<String> seasonId, List<String> seriesId, List<String> tournamentRef, List<String> clubRef, List<String> homeClubRef, List<String> awayClubRef) {
+    public List<FixtureEntity> getFixtures(FixturesQueryParam param) {
         CriteriaBuilder builder = em.getCriteriaBuilder();
         
         CriteriaQuery<FixtureEntity> q = builder.createQuery(FixtureEntity.class);
@@ -369,33 +368,33 @@ public class App {
         Predicate a = builder.conjunction();
         a.getExpressions().add(builder.equal(fixtures.get(FixtureEntity_.status), ScheduleStatus.CONFIRMED));
 
-        if (start != null)
-            a.getExpressions().add(builder.greaterThanOrEqualTo(fixtures.get(FixtureEntity_.endTime), start));
-        if (end != null)
-            a.getExpressions().add(builder.lessThanOrEqualTo(fixtures.get(FixtureEntity_.startTime), end));
+        if (param.start != null)
+            a.getExpressions().add(builder.greaterThanOrEqualTo(fixtures.get(FixtureEntity_.endTime), param.start));
+        if (param.end != null)
+            a.getExpressions().add(builder.lessThanOrEqualTo(fixtures.get(FixtureEntity_.startTime), param.end));
         
-        if (!seasonId.isEmpty() || !seriesId.isEmpty() || !tournamentRef.isEmpty()) {
+        if (!param.seasonId.isEmpty() || !param.seriesId.isEmpty() || !param.tournamentRef.isEmpty()) {
             Join<FixtureEntity, TournamentEntity> tournament = fixtures.join(FixtureEntity_.tournament);
-            if (!seasonId.isEmpty()) {
+            if (!param.seasonId.isEmpty()) {
                 Join<TournamentEntity, SeasonEntity> season = tournament.join(TournamentEntity_.season);
-                a.getExpressions().add(season.get(SeasonEntity_.id).in(seasonId));
+                a.getExpressions().add(season.get(SeasonEntity_.id).in(param.seasonId));
             }
-            if (!seriesId.isEmpty()) {
+            if (!param.seriesId.isEmpty()) {
                 Path<String> seriesSlug = tournament.join(TournamentEntity_.series).get(SeriesEntity_.slug);
                 Predicate b = builder.disjunction();
-                for (String ss : seriesId)
+                for (String ss : param.seriesId)
                     b.getExpressions().add(builder.like(seriesSlug, ss + "%"));
                 a.getExpressions().add(b);
             }
-            if (!tournamentRef.isEmpty()) {
+            if (!param.tournamentRef.isEmpty()) {
                 Path<String> tournamentSlug = tournament.get(TournamentEntity_.slug);
                 Predicate b = builder.disjunction();
-                for (String ts : tournamentRef)
+                for (String ts : param.tournamentRef)
                     b.getExpressions().add(builder.like(tournamentSlug, ts + "%"));
                 a.getExpressions().add(b);
             }
         }
-        if (!clubRef.isEmpty() || !homeClubRef.isEmpty() || !awayClubRef.isEmpty()) {
+        if (!param.clubRef.isEmpty() || !param.homeClubRef.isEmpty() || !param.awayClubRef.isEmpty()) {
             Join<FixtureEntity, FixtureSideEntity> homeSide = fixtures.join(FixtureEntity_.homeSide);
             Join<FixtureSideEntity, TournamentTeamEntity> homeTeam = homeSide.join(FixtureSideEntity_.team);
             Join<TournamentTeamEntity, ClubEntity> homeClub = homeTeam.join(TournamentTeamEntity_.club);
@@ -404,14 +403,14 @@ public class App {
             Join<FixtureSideEntity, TournamentTeamEntity> awayTeam = awaySide.join(FixtureSideEntity_.team);        
             Join<TournamentTeamEntity, ClubEntity> awayClub = awayTeam.join(TournamentTeamEntity_.club);
             
-            if (!clubRef.isEmpty())
+            if (!param.clubRef.isEmpty())
                 a.getExpressions().add(
-                        builder.or(homeClub.get(ClubEntity_.slug).in(clubRef),
-                                   awayClub.get(ClubEntity_.slug).in(clubRef)));
-            if (!homeClubRef.isEmpty())
-                a.getExpressions().add(homeClub.get(ClubEntity_.slug).in(homeClubRef));
-            if (!awayClubRef.isEmpty())
-                a.getExpressions().add(awayClub.get(ClubEntity_.slug).in(awayClubRef));
+                        builder.or(homeClub.get(ClubEntity_.slug).in(param.clubRef),
+                                   awayClub.get(ClubEntity_.slug).in(param.clubRef)));
+            if (!param.homeClubRef.isEmpty())
+                a.getExpressions().add(homeClub.get(ClubEntity_.slug).in(param.homeClubRef));
+            if (!param.awayClubRef.isEmpty())
+                a.getExpressions().add(awayClub.get(ClubEntity_.slug).in(param.awayClubRef));
         }
         q.where(a);
         q.orderBy(builder.asc(fixtures.get(FixtureEntity_.startTime)));

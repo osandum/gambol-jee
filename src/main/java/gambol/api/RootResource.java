@@ -1,6 +1,7 @@
 package gambol.api;
 
 import gambol.ejb.App;
+import gambol.ejb.FixturesQueryParam;
 import gambol.model.ClubEntity;
 import gambol.model.FixtureEntity;
 import gambol.model.TournamentEntity;
@@ -91,7 +92,8 @@ public class RootResource {
             @QueryParam("home") List<String> homeClubRef,
             @QueryParam("away") List<String> awayClubRef) {
         
-        List<FixtureEntity> fixtures = gambol.getFixtures(u(start), u(end), seasonId, seriesId, tournamentRef, clubRef, homeClubRef, awayClubRef);
+        FixturesQueryParam searchParams = qp(start, end, seasonId, seriesId, tournamentRef, clubRef, homeClubRef, awayClubRef);        
+        List<FixtureEntity> fixtures = gambol.getFixtures(searchParams);
         
         Fixtures res = new Fixtures();
         for (FixtureEntity entity : fixtures) {
@@ -103,6 +105,19 @@ public class RootResource {
      
     private static Date u(DateParam p) {
         return p == null ? null : p.getValue();
+    }
+
+    private static FixturesQueryParam qp(DateParam start, DateParam end, List<String> seasonId, List<String> seriesId, List<String> tournamentRef, List<String> clubRef, List<String> homeClubRef, List<String> awayClubRef) {
+        FixturesQueryParam res = new FixturesQueryParam();
+        res.setStart(u(start));
+        res.setEnd(u(end));
+        res.setSeasonId(seasonId);
+        res.setSeriesId(seriesId);
+        res.setTournamentRef(tournamentRef);
+        res.setClubRef(clubRef);
+        res.setHomeClubRef(homeClubRef);
+        res.setAwayClubRef(awayClubRef);
+        return res;
     }
     
     @GET
@@ -118,7 +133,8 @@ public class RootResource {
             @QueryParam("home") List<String> homeClubRef,
             @QueryParam("away") List<String> awayClubRef) throws ValidationException, IOException {
         
-        List<FixtureEntity> fixtures = gambol.getFixtures(u(start), u(end), seasonId, seriesId, tournamentRef, clubRef, homeClubRef, awayClubRef);
+        FixturesQueryParam searchParams = qp(start, end, seasonId, seriesId, tournamentRef, clubRef, homeClubRef, awayClubRef);        
+        List<FixtureEntity> fixtures = gambol.getFixtures(searchParams);
         
         List<FullCalendarEvent> res = new LinkedList<FullCalendarEvent>();
         for (FixtureEntity f : fixtures) {
@@ -146,8 +162,9 @@ public class RootResource {
             @QueryParam("away") List<String> awayClubRef,
             @QueryParam("calname") String calname,
             @QueryParam("caldesc") String caldesc) throws ValidationException, IOException {
-        
-        List<FixtureEntity> fixtures = gambol.getFixtures(u(start), u(end), seasonId, seriesId, tournamentRef, clubRef, homeClubRef, awayClubRef);
+
+        FixturesQueryParam searchParams = qp(start, end, seasonId, seriesId, tournamentRef, clubRef, homeClubRef, awayClubRef);        
+        List<FixtureEntity> fixtures = gambol.getFixtures(searchParams);
 
         Calendar cal = getCalendar(fixtures, calname, caldesc);
         
