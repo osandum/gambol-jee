@@ -199,7 +199,6 @@ public class RootResource {
         cal.getComponents().add(vtz);
         cal.getProperties().add(new ProdId("-//Gambol//iCal4j 1.0//EN"));
         cal.getProperties().add(Version.VERSION_2_0);
-        cal.getProperties().add(Method.PUBLISH);
         cal.getProperties().add(CalScale.GREGORIAN);
         if (calname != null)
             cal.getProperties().add(new XProperty("X-WR-CALNAME", calname));
