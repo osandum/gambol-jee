@@ -370,9 +370,9 @@ public class App {
         a.getExpressions().add(builder.equal(fixtures.get(FixtureEntity_.status), ScheduleStatus.CONFIRMED));
 
         if (param.start != null)
-            a.getExpressions().add(builder.greaterThanOrEqualTo(fixtures.get(FixtureEntity_.endTime), param.start));
+            a.getExpressions().add(builder.greaterThanOrEqualTo(builder.coalesce(fixtures.get(FixtureEntity_.endTime), fixtures.get(FixtureEntity_.startTime)), param.start));
         if (param.end != null)
-            a.getExpressions().add(builder.lessThanOrEqualTo(fixtures.get(FixtureEntity_.startTime), param.end));
+            a.getExpressions().add(builder.lessThanOrEqualTo(builder.coalesce(fixtures.get(FixtureEntity_.startTime), fixtures.get(FixtureEntity_.endTime)), param.end));
         
         if (!param.seasonId.isEmpty() || !param.seriesId.isEmpty() || !param.tournamentRef.isEmpty()) {
             Join<FixtureEntity, TournamentEntity> tournament = fixtures.join(FixtureEntity_.tournament);
