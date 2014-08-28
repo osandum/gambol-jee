@@ -2,6 +2,7 @@ package gambol.model;
 
 import gambol.xml.ScheduleStatus;
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -108,6 +109,17 @@ public class FixtureEntity implements Serializable {
         this.endTime = endTime;
     }
 
+    public Date estimateEndTime() {
+        if (getEndTime() != null)
+            return getEndTime();
+
+        Calendar d = Calendar.getInstance();
+        d.setTime(getStartTime());
+        int durationMinutes = getTournament().getSeries().getFixtureDuration();
+        d.add(Calendar.MINUTE, durationMinutes);
+        return d.getTime();
+    }
+    
     public ScheduleStatus getStatus() {
         return status;
     }

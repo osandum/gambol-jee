@@ -322,6 +322,7 @@ public class App {
         entity.setStartTime(f.getStartTime());
         entity.setEndTime(f.getEndTime());
 
+    /*    
         if (entity.getStartTime() != null && entity.getEndTime() == null) {
             Calendar d = Calendar.getInstance();
             d.setTime(entity.getStartTime());
@@ -329,7 +330,7 @@ public class App {
             d.add(Calendar.MINUTE, durationMinutes);
             entity.setEndTime(d.getTime());
         }
-        
+    */    
         FixtureSideEntity homeSide = entity.getHomeSide();
         FixtureSideEntity awaySide = entity.getAwaySide();
         

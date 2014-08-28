@@ -37,8 +37,10 @@ public class SourcesResource {
     @Path("tournament")
     @Consumes({APPLICATION_JSON, APPLICATION_XML})
     public Response putTournament(Tournament tt) {
+        // Do the work:
         TournamentEntity t = gambol.putTournament(tt);
         
+        // Construct resource URL:
         URI tournamentUri = uriInfo.getBaseUriBuilder().path("tournament/{seasonId}/{tournamentSlug}").build(t.getSeason().getId(), t.getSlug());        
         
         return Response.created(tournamentUri).build();

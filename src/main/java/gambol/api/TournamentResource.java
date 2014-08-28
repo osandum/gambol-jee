@@ -110,7 +110,7 @@ public class TournamentResource {
         
         Fixture model = new Fixture();
         model.setStartTime(entity.getStartTime());
-        model.setEndTime(entity.getEndTime());
+        model.setEndTime(entity.estimateEndTime());
         model.getSides().add(entity2domain(FixtureSideRole.HOME, entity.getHomeSide()));
         model.getSides().add(entity2domain(FixtureSideRole.AWAY, entity.getAwaySide()));
         model.setMatchNumber(entity.getMatchNumber());

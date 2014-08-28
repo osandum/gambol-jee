@@ -144,7 +144,7 @@ public class RootResource {
             e.id = f.getSourceRef(); // TODO: make our own opaque ref
             e.title = f.getEventTitle();
             e.start = f.getStartTime();
-            e.end = f.getEndTime();
+            e.end = f.estimateEndTime();
             res.add(e);
         }
         return res;
@@ -210,7 +210,7 @@ public class RootResource {
         for (FixtureEntity f : fixtures) {
             String eventName = f.getEventTitle();
             DateTime start = new DateTime(f.getStartTime());
-            DateTime end = new DateTime(f.getEndTime());
+            DateTime end = new DateTime(f.estimateEndTime());
             String eventDescr = f.getEventDescription();
             VEvent evt = new VEvent(start, end, eventName);
 
