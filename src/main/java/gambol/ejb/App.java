@@ -408,10 +408,19 @@ public class App {
                 a.getExpressions().add(
                         builder.or(homeClub.get(ClubEntity_.slug).in(param.clubRef),
                                    awayClub.get(ClubEntity_.slug).in(param.clubRef)));
-            if (!param.homeClubRef.isEmpty())
+            if (!param.homeClubRef.isEmpty()) {
+                // List all home-games for the specified club:
                 a.getExpressions().add(homeClub.get(ClubEntity_.slug).in(param.homeClubRef));
-            if (!param.awayClubRef.isEmpty())
+            }
+            if (!param.awayClubRef.isEmpty()) {
+                // List all away-games for the specified club:
                 a.getExpressions().add(awayClub.get(ClubEntity_.slug).in(param.awayClubRef));
+                // ...but skip those against (other teams) in the same club, if any. This 
+                // is to avoid the same matches getting listed twice, if a club tournament
+                // schedule is split between home games and away games, e.g. in separate 
+                // calendar colors:
+                a.getExpressions().add(homeClub.get(ClubEntity_.slug).in(param.awayClubRef).not());
+            }
         }
         q.where(a);
         q.orderBy(builder.asc(fixtures.get(FixtureEntity_.startTime)));
