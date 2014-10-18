@@ -38,8 +38,17 @@ public class GamesheetParserTest {
     }
 
     @Test
-    public void parseGame() throws JAXBException {
+    public void parseGame31597() throws JAXBException {
         URL src = getClass().getResource("/sample/game-31597.xml");
+        Unmarshaller um = jaxbContext.createUnmarshaller();
+        um.setSchema(schema);
+        Gamesheet game = ((Gambol)um.unmarshal(src)).getGamesheet();
+        assertNotNull(game);
+    }
+
+    @Test
+    public void parseGame31811() throws JAXBException {
+        URL src = getClass().getResource("/sample/game-31811.xml");
         Unmarshaller um = jaxbContext.createUnmarshaller();
         um.setSchema(schema);
         Gamesheet game = ((Gambol)um.unmarshal(src)).getGamesheet();

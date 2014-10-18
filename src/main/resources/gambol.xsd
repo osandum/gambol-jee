@@ -147,9 +147,16 @@
     <xs:simpleType name="GameOffense" final="restriction">
         <xs:restriction base="xs:string">
             <xs:enumeration value="TRIP" />
-            <xs:enumeration value="ROUGH" />
             <xs:enumeration value="SLASH" />
             <xs:enumeration value="HOOK" />
+            <xs:enumeration value="CROSS" />
+            <xs:enumeration value="BOARD" />
+            <xs:enumeration value="HI-ST" />
+            <xs:enumeration value="ELBOW" />
+            <xs:enumeration value="INTRF" />
+            <xs:enumeration value="ROUGH" />
+            <xs:enumeration value="DELAY" />
+            <xs:enumeration value="UN-SP" />
         </xs:restriction>
     </xs:simpleType>
     
@@ -160,6 +167,7 @@
             <xs:enumeration value="PP2" />
             <xs:enumeration value="SH1" />
             <xs:enumeration value="SH2" />
+            <xs:enumeration value="GWS" />
         </xs:restriction>
     </xs:simpleType>
           
@@ -230,7 +238,7 @@
             <xs:extension base="g:Event">
                 <xs:sequence>
                     <xs:element name="assist" type="g:PlayerRef" minOccurs="0" maxOccurs="3" />
-                    <xs:element name="participation">
+                    <xs:element name="participation" minOccurs="0">
                         <xs:complexType>
                             <xs:sequence>
                                 <xs:element name="positive" type="g:Participants" />
