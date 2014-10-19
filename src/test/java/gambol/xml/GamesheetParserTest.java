@@ -22,7 +22,7 @@ public class GamesheetParserTest {
 
     @Before
     public void setUp() throws JAXBException, SAXException {
-        jaxbContext = JAXBContext.newInstance(Gambol.class);
+        jaxbContext = JAXBContext.newInstance(Gamesheet.class);
 
         assertNotNull(jaxbContext);
 
@@ -36,7 +36,7 @@ public class GamesheetParserTest {
         Unmarshaller um = jaxbContext.createUnmarshaller();
         assertNotNull(um);
         um.setSchema(schema);
-        return ((Gambol)um.unmarshal(src)).getGamesheet();
+        return (Gamesheet)um.unmarshal(src);
     }
 
     @Test

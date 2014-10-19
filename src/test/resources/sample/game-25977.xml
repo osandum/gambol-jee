@@ -1,159 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
-<gambol xmlns="http://sandum.net/namespaces/gambol" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://sandum.net/namespaces/gambol file:/home/osa/KSF/openshift/gambol-docs/src/main/resources/gambol.xsd">
-  <gamesheet source-ref="DIU:871:25977">
-    <roster side="home">
-      <player pos="GK" number="21">
+<gamesheet xmlns="http://sandum.net/namespaces/gambol" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" source-ref="DIU:871:25977">
+  <roster side="home">
+    <player pos="GK" number="21">
         <first-names>Christoffer</first-names>
         <last-name>Normann Thykjær</last-name>
       </player>
-      <player line="1" pos="CE" number="4">
+    <player line="1" pos="CE" number="4">
         <first-names>Bertil</first-names>
         <last-name>Tving Sandum</last-name>
       </player>
-      <player line="1" pos="LD" number="5">
+    <player line="1" pos="LD" number="5">
         <first-names>Anton Hans</first-names>
         <last-name>Buchardt</last-name>
       </player>
-      <player line="1" pos="LW" number="8">
+    <player line="1" pos="LW" number="8">
         <first-names>Jonathan</first-names>
         <last-name>Hansen</last-name>
       </player>
-      <player line="1" pos="RD" number="3">
+    <player line="1" pos="RD" number="3">
         <first-names>Bertram</first-names>
         <last-name>Kofod Hansen</last-name>
       </player>
-      <player line="1" pos="RW" number="6">
+    <player line="1" pos="RW" number="6">
         <first-names>Mathias</first-names>
         <last-name>Fisker</last-name>
       </player>
-      <player line="2" pos="CE" number="12">
+    <player line="2" pos="CE" number="12">
         <first-names>Alfred Thylgård</first-names>
         <last-name>Nielsen</last-name>
       </player>
-      <player line="2" pos="LD" number="10">
+    <player line="2" pos="LD" number="10">
         <first-names>Johan</first-names>
         <last-name>Pedersen</last-name>
       </player>
-      <player line="2" pos="LW" number="13">
+    <player line="2" pos="LW" number="13">
         <first-names>Valdemar Theodor</first-names>
         <last-name>Hygom</last-name>
       </player>
-      <player line="2" pos="RD" number="9">
+    <player line="2" pos="RD" number="9">
         <first-names>Martin</first-names>
         <last-name>Poulsen</last-name>
       </player>
-      <player line="2" pos="RW" number="11">
+    <player line="2" pos="RW" number="11">
         <first-names>Johanna</first-names>
         <last-name>Hansen</last-name>
       </player>
-      <player line="3" pos="CE" number="18">
+    <player line="3" pos="CE" number="18">
         <first-names>Sorush</first-names>
         <last-name>Kyany</last-name>
       </player>
-      <player line="3" pos="LD" number="16">
+    <player line="3" pos="LD" number="16">
         <first-names>Maks</first-names>
         <last-name>Loker</last-name>
       </player>
-      <player line="3" pos="LW" number="19">
+    <player line="3" pos="LW" number="19">
         <first-names>Rasmus</first-names>
         <last-name>Rodies</last-name>
       </player>
-      <player line="3" pos="RD" number="15">
+    <player line="3" pos="RD" number="15">
         <first-names>Vitus</first-names>
         <last-name>Stærke-Balling</last-name>
       </player>
-      <player line="3" pos="RW" number="17">
+    <player line="3" pos="RW" number="17">
         <first-names>Karl</first-names>
         <last-name>Sonneff</last-name>
       </player>
-      <player line="4" pos="LD" number="26">
+    <player line="4" pos="LD" number="26">
         <first-names>Artemy</first-names>
         <last-name>Sakaev</last-name>
       </player>
-      <player line="4" pos="RD" number="23">
+    <player line="4" pos="RD" number="23">
         <first-names>Mads-Cornelius</first-names>
         <last-name>Ravn</last-name>
       </player>
-    </roster>
-    <roster side="away">
-      <player pos="GK" number="31">
+  </roster>
+  <roster side="away">
+    <player pos="GK" number="31">
         <first-names>Noah</first-names>
         <last-name>Folmer-Petersen</last-name>
       </player>
-      <player line="1" pos="CE" number="18">
+    <player line="1" pos="CE" number="18">
         <first-names>Anton</first-names>
         <last-name>Linde</last-name>
       </player>
-      <player line="1" pos="LD" number="6">
+    <player line="1" pos="LD" number="6">
         <first-names>Meick</first-names>
         <last-name>Fogdal</last-name>
       </player>
-      <player line="1" pos="LW" number="7">
+    <player line="1" pos="LW" number="7">
         <first-names>Jonas</first-names>
         <last-name>Frederiksen</last-name>
       </player>
-      <player line="1" pos="RD" number="4">
+    <player line="1" pos="RD" number="4">
         <first-names>Lukas Lundvald</first-names>
         <last-name>Nielsen</last-name>
       </player>
-      <player line="1" pos="RW" number="9">
+    <player line="1" pos="RW" number="9">
         <first-names>Sebastian</first-names>
         <last-name>Nielsen</last-name>
       </player>
-      <player line="2" pos="CE" number="17">
+    <player line="2" pos="CE" number="17">
         <first-names>Mikkel</first-names>
         <last-name>Linddal-Andersen</last-name>
       </player>
-      <player line="2" pos="LD" number="5">
+    <player line="2" pos="LD" number="5">
         <first-names>Robin</first-names>
         <last-name>Bauer Nørby</last-name>
       </player>
-      <player line="2" pos="LW" number="20">
+    <player line="2" pos="LW" number="20">
         <first-names>Sebastian Bavnegaard</first-names>
         <last-name>Hansen</last-name>
       </player>
-      <player line="2" pos="RD" number="10">
+    <player line="2" pos="RD" number="10">
         <first-names>Niclas</first-names>
         <last-name>Marty Johansen</last-name>
       </player>
-      <player line="2" pos="RW" number="12">
+    <player line="2" pos="RW" number="12">
         <first-names>Mikkel</first-names>
         <last-name>Arnholtz</last-name>
       </player>
-    </roster>
-    <events>
-      <goal side="home" game-situation="EQ">
+  </roster>
+  <events>
+    <goal side="home" game-situation="EQ">
         <time>05:59</time>
         <player number="4"/>
       </goal>
-      <goal side="home" game-situation="EQ">
+    <goal side="home" game-situation="EQ">
         <time>14:45</time>
         <player number="4"/>
       </goal>
-      <goal side="away" game-situation="EQ">
+    <goal side="away" game-situation="EQ">
         <time>20:13</time>
         <player number="4"/>
         <assist number="5"/>
         <assist number="18"/>
       </goal>
-      <goal side="home" game-situation="EQ">
+    <goal side="home" game-situation="EQ">
         <time>21:58</time>
         <player number="4"/>
       </goal>
-      <goal side="away" game-situation="EQ">
+    <goal side="away" game-situation="EQ">
         <time>23:01</time>
         <player number="18"/>
       </goal>
-      <goal side="home" game-situation="EQ">
+    <goal side="home" game-situation="EQ">
         <time>23:38</time>
         <player number="17"/>
         <assist number="19"/>
       </goal>
-      <goal side="home" game-situation="EQ">
+    <goal side="home" game-situation="EQ">
         <time>31:21</time>
         <player number="8"/>
         <assist number="26"/>
       </goal>
-    </events>
-  </gamesheet>
-</gambol>
+  </events>
+</gamesheet>

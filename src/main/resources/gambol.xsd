@@ -19,7 +19,7 @@
                 </xs:sequence>
                 <xs:element name="tournament" type="g:Tournament_temp" />
                 <!--xs:element name="fixture" type="g:Fixture" /-->
-                <xs:element name="gamesheet" type="g:Gamesheet" />
+                <!--xs:element name="gamesheet" type="g:Gamesheet" /-->
             </xs:choice>
         
             <xs:attribute name="season" type="xs:string" />
@@ -188,21 +188,23 @@
         <xs:attribute name="role" type="g:FixtureSideRole" />
     </xs:complexType>
         
-    <xs:complexType name="Gamesheet">
-        <xs:sequence>
-            <xs:element name="roster" minOccurs="2" maxOccurs="2" type="g:Roster" />
-            <xs:element name="events">
-                <xs:complexType>
-                    <xs:choice maxOccurs="unbounded">
-                        <xs:element name="goal" type="g:GoalEvent" />
-                        <xs:element name="penalty" type="g:PenaltyEvent" />
-                    </xs:choice>
-                </xs:complexType>
-            </xs:element>
-        </xs:sequence>
+    <xs:element name="gamesheet">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="roster" minOccurs="2" maxOccurs="2" type="g:Roster" />
+                <xs:element name="events">
+                    <xs:complexType>
+                        <xs:choice maxOccurs="unbounded">
+                            <xs:element name="goal" type="g:GoalEvent" />
+                            <xs:element name="penalty" type="g:PenaltyEvent" />
+                        </xs:choice>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
 
-        <xs:attribute name="source-ref" type="xs:string" use="required" />
-    </xs:complexType>
+            <xs:attribute name="source-ref" type="xs:string" use="required" />
+        </xs:complexType>
+    </xs:element>
 
     <xs:complexType name="Roster">
         <xs:sequence>
