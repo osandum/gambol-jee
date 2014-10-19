@@ -200,6 +200,8 @@
                 </xs:complexType>
             </xs:element>
         </xs:sequence>
+
+        <xs:attribute name="source-ref" type="xs:string" use="required" />
     </xs:complexType>
 
     <xs:complexType name="Roster">

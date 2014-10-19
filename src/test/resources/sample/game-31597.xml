@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <gambol xmlns="http://sandum.net/namespaces/gambol" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://sandum.net/namespaces/gambol file:/home/osa/KSF/openshift/gambol-docs/src/main/resources/gambol.xsd">
-  <gamesheet xsi:schemaLocation="http://sandum.net/namespaces/gambol file:/home/osa/KSF/openshift/gambol-docs/src/main/resources/gambol.xsd">
+  <gamesheet source-ref="DIU:1044:31597">
     <roster side="home">
       <player pos="GK" number="31">
         <first-names>Sebastian</first-names>

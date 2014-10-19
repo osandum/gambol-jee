@@ -7,14 +7,12 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
 /**
- *
  * @author osa
  */
 public class GamesheetParserTest {
@@ -30,28 +28,32 @@ public class GamesheetParserTest {
 
         SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         schema = sf.newSchema(getClass().getResource("/gambol.xsd"));
-
     }
 
-    @After
-    public void tearDown() {
+    private Gamesheet parseGame(String path) throws JAXBException {
+        URL src = getClass().getResource(path);
+        assertNotNull(path, src);
+        Unmarshaller um = jaxbContext.createUnmarshaller();
+        assertNotNull(um);
+        um.setSchema(schema);
+        return ((Gambol)um.unmarshal(src)).getGamesheet();
     }
 
     @Test
     public void parseGame31597() throws JAXBException {
-        URL src = getClass().getResource("/sample/game-31597.xml");
-        Unmarshaller um = jaxbContext.createUnmarshaller();
-        um.setSchema(schema);
-        Gamesheet game = ((Gambol)um.unmarshal(src)).getGamesheet();
+        Gamesheet game = parseGame("/sample/game-31597.xml");
         assertNotNull(game);
     }
 
     @Test
     public void parseGame31811() throws JAXBException {
-        URL src = getClass().getResource("/sample/game-31811.xml");
-        Unmarshaller um = jaxbContext.createUnmarshaller();
-        um.setSchema(schema);
-        Gamesheet game = ((Gambol)um.unmarshal(src)).getGamesheet();
+        Gamesheet game = parseGame("/sample/game-31811.xml");
+        assertNotNull(game);
+    }
+
+    @Test
+    public void parseGame25977() throws JAXBException {
+        Gamesheet game = parseGame("/sample/game-25977.xml");
         assertNotNull(game);
     }
 }
