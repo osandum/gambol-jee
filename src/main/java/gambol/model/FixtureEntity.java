@@ -1,11 +1,11 @@
 package gambol.model;
 
+import gambol.xml.FixtureSideRole;
+import static gambol.xml.FixtureSideRole.AWAY;
 import gambol.xml.ScheduleStatus;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -92,6 +92,10 @@ public class FixtureEntity implements Serializable {
     public void setAwaySide(FixtureSideEntity awaySide) {
         this.awaySide = awaySide;
     }
+    
+    public FixtureSideEntity getSide(FixtureSideRole role) {
+        return role == AWAY ? getAwaySide() : getHomeSide();
+    }
 
     public Date getStartTime() {
         return startTime;
@@ -112,6 +116,8 @@ public class FixtureEntity implements Serializable {
     public Date estimateEndTime() {
         if (getEndTime() != null)
             return getEndTime();
+        if (getStartTime() == null)
+            return null;
 
         Calendar d = Calendar.getInstance();
         d.setTime(getStartTime());

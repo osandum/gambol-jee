@@ -14,7 +14,7 @@ import javax.persistence.UniqueConstraint;
  * @author osa
  */
 @Entity(name = "tournament_team")
-@Table(uniqueConstraints = { @UniqueConstraint(columnNames={"slug", "tournament_id"}) })
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames={"slug", "tournament_id", "name"}) })
 public class TournamentTeamEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -70,4 +70,9 @@ public class TournamentTeamEntity implements Serializable {
         this.tournament = tournament;
     }
 
+    @Override
+    public String toString() {
+        return "["+id+":\""+name+"\"]";
+    }
+    
 }

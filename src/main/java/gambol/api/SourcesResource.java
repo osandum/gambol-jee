@@ -1,7 +1,9 @@
 package gambol.api;
 
 import gambol.ejb.App;
+import gambol.model.FixtureEntity;
 import gambol.model.TournamentEntity;
+import gambol.xml.Gamesheet;
 import gambol.xml.Tournament;
 import java.net.URI;
 import javax.ejb.EJB;
@@ -42,6 +44,20 @@ public class SourcesResource {
         
         // Construct resource URL:
         URI tournamentUri = uriInfo.getBaseUriBuilder().path("tournament/{seasonId}/{tournamentSlug}").build(t.getSeason().getId(), t.getSlug());        
+        
+        return Response.created(tournamentUri).build();
+    }
+    
+    @POST
+    @Path("gamesheet")
+    @Consumes({APPLICATION_JSON, APPLICATION_XML})
+    public Response putGamesheet(Gamesheet gg) {
+        // Do the work:
+        FixtureEntity f = gambol.putGamesheet(gg);
+        
+        // Construct resource URL:
+        TournamentEntity t = f.getTournament();
+        URI tournamentUri = uriInfo.getBaseUriBuilder().path("gamesheet/{seasonId}/{tournamentSlug}/{fixtureSlug}").build(t.getSeason().getId(), t.getSlug(), f.getMatchNumber());        
         
         return Response.created(tournamentUri).build();
     }
