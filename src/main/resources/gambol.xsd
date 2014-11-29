@@ -267,7 +267,7 @@
         <xs:complexContent>
             <xs:extension base="g:Event">
                 <xs:sequence>
-                    <xs:element name="minutes" type="xs:string" />
+                    <xs:element name="minutes" type="xs:nonNegativeInteger" />
                     <xs:element name="offense" type="g:GameOffense" />
                     <xs:element name="end-time" type="xs:string" />
                 </xs:sequence>
