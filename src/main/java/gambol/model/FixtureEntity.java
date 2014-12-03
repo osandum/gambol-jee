@@ -6,6 +6,7 @@ import gambol.xml.ScheduleStatus;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.logging.Logger;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,6 +24,8 @@ import javax.persistence.TemporalType;
  */
 @Entity(name = "fixture")
 public class FixtureEntity implements Serializable {
+    private static Logger LOG = Logger.getLogger(FixtureEntity.class.getName());
+
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -125,8 +128,14 @@ public class FixtureEntity implements Serializable {
         d.add(Calendar.MINUTE, durationMinutes);
         Date eet = d.getTime();
         
-        Date curfew = getHomeSide().getTeam().getClub().curfewAfter(getStartTime());
-        return curfew != null && eet.after(curfew) ? curfew : eet;
+        ClubEntity homeClub = getHomeSide().getTeam().getClub();        
+        Date curfew = homeClub.curfewAfter(getStartTime());
+        if (curfew != null && eet.after(curfew)) {
+            LOG.info(sourceRef + ": culling estimated end-time " + eet + " to " + curfew + " (as per " + homeClub.getName() + " rules)");
+            eet = curfew;
+        }
+        
+        return eet;
     }
     
     public ScheduleStatus getStatus() {
