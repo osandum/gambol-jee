@@ -24,7 +24,7 @@ import javax.persistence.TemporalType;
  */
 @Entity(name = "fixture")
 public class FixtureEntity implements Serializable {
-    private static Logger LOG = Logger.getLogger(FixtureEntity.class.getName());
+    private static final Logger LOG = Logger.getLogger(FixtureEntity.class.getName());
 
     private static final long serialVersionUID = 1L;
     
@@ -127,6 +127,7 @@ public class FixtureEntity implements Serializable {
         int durationMinutes = getTournament().getSeries().getFixtureDuration();
         d.add(Calendar.MINUTE, durationMinutes);
         Date eet = d.getTime();
+        LOG.info(sourceRef + ": estimated end-time " + eet);
         
         ClubEntity homeClub = getHomeSide().getTeam().getClub();        
         Date curfew = homeClub.curfewAfter(getStartTime());
