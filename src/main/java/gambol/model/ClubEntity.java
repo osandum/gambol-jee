@@ -2,8 +2,13 @@ package gambol.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -36,6 +41,9 @@ public class ClubEntity implements Serializable {
     @CollectionTable(name = "club_alias")
     private Set<String> aliasNames = new HashSet<String>();
 
+    @Column(length = 5, name = "ice_curfew")
+    private String iceCurfewHHMM;
+    
     @Column(length = 128)
     private String address;
 
@@ -85,6 +93,41 @@ public class ClubEntity implements Serializable {
 
     public void setCountryIso2(String iso2) {
         this.country = iso2;
+    }
+    
+    public String getCurfew() {
+        return iceCurfewHHMM;
+    }
+
+    public void setCurfew(String curfew) {
+        this.iceCurfewHHMM = curfew;
+    }
+
+    public TimeZone getTimeZone() {
+        return TimeZone.getTimeZone("Europe/Copenhagen");
+    }
+    
+    private final static Pattern HH_MM = Pattern.compile("([01][0-9]|2[0-3]):([0-5][0-9])");
+    
+    public Date curfewAfter(Date from) {
+        if (from == null || iceCurfewHHMM == null)
+            return null;
+        Matcher m = HH_MM.matcher(iceCurfewHHMM);
+        if (!m.matches())             
+            throw new RuntimeException(iceCurfewHHMM + ": unrecognized time code");
+        
+        int hh = Integer.valueOf(m.group(1));
+        int mm = Integer.valueOf(m.group(2));
+        Calendar cal = Calendar.getInstance(getTimeZone());
+        cal.setTime(from);
+        cal.set(Calendar.HOUR_OF_DAY, hh);
+        cal.set(Calendar.MINUTE, mm);
+        Date curfew = cal.getTime();
+        if (!curfew.after(from)) {
+            cal.add(Calendar.DATE, 1);
+            curfew = cal.getTime();
+        }
+        return curfew;
     }
 
     public BigDecimal getLatitude() {

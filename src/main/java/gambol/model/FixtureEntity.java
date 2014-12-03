@@ -123,7 +123,10 @@ public class FixtureEntity implements Serializable {
         d.setTime(getStartTime());
         int durationMinutes = getTournament().getSeries().getFixtureDuration();
         d.add(Calendar.MINUTE, durationMinutes);
-        return d.getTime();
+        Date eet = d.getTime();
+        
+        Date curfew = getHomeSide().getTeam().getClub().curfewAfter(getStartTime());
+        return curfew != null && eet.after(curfew) ? curfew : eet;
     }
     
     public ScheduleStatus getStatus() {
