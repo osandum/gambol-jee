@@ -6,7 +6,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.persistence.CollectionTable;
@@ -102,10 +101,6 @@ public class ClubEntity implements Serializable {
     public void setCurfew(String curfew) {
         this.iceCurfewHHMM = curfew;
     }
-
-    public TimeZone getTimeZone() {
-        return TimeZone.getTimeZone("Europe/Copenhagen");
-    }
     
     private final static Pattern HH_MM = Pattern.compile("([01][0-9]|2[0-3]):([0-5][0-9])");
     
@@ -118,7 +113,7 @@ public class ClubEntity implements Serializable {
         
         int hh = Integer.valueOf(m.group(1));
         int mm = Integer.valueOf(m.group(2));
-        Calendar cal = Calendar.getInstance(getTimeZone());
+        Calendar cal = Calendar.getInstance();
         cal.setTime(from);
         cal.set(Calendar.HOUR_OF_DAY, hh);
         cal.set(Calendar.MINUTE, mm);
