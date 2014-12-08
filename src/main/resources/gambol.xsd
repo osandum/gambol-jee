@@ -99,6 +99,13 @@
             <xs:attribute name="season" type="xs:string" />
             <!-- xs:attribute name="association" type="xs:string" / -->
             <xs:attribute name="source-ref" type="xs:string" use="required" />
+            <xs:attribute name="series" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>
+                        Used only for query results
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
             <xs:attribute name="slug" type="xs:string">
                 <xs:annotation>
                     <xs:documentation>
@@ -117,8 +124,9 @@
             <xs:element name="start-time" minOccurs="1" maxOccurs="1" type="xs:dateTime"/>
             <xs:element name="end-time" minOccurs="1" maxOccurs="1" type="xs:dateTime"/>
             <xs:element name="location" minOccurs="1" maxOccurs="1" type="xs:string"/>
-            <xs:element name="result" minOccurs="0" maxOccurs="1">
-            </xs:element>
+            <xs:element name="result" minOccurs="0" maxOccurs="1" />
+            <xs:element name="match-details" minOccurs="0" maxOccurs="1" type="xs:anyURI" />
+            
         </xs:sequence>
 
         <xs:attribute name="match-number" type="xs:string" />
@@ -171,6 +179,13 @@
         </xs:restriction>
     </xs:simpleType>
           
+    <xs:complexType name="FixtureEvents">
+        <xs:choice maxOccurs="unbounded">
+            <xs:element name="goal" type="g:GoalEvent" />
+            <xs:element name="penalty" type="g:PenaltyEvent" />
+        </xs:choice>
+    </xs:complexType>
+          
     <xs:complexType name="Side">
         <xs:sequence>
             <xs:element name="team" minOccurs="1" maxOccurs="1">
@@ -192,14 +207,7 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="roster" minOccurs="2" maxOccurs="2" type="g:Roster" />
-                <xs:element name="events">
-                    <xs:complexType>
-                        <xs:choice maxOccurs="unbounded">
-                            <xs:element name="goal" type="g:GoalEvent" />
-                            <xs:element name="penalty" type="g:PenaltyEvent" />
-                        </xs:choice>
-                    </xs:complexType>
-                </xs:element>
+                <xs:element name="events" type="g:FixtureEvents" />
             </xs:sequence>
 
             <xs:attribute name="source-ref" type="xs:string" use="required" />
