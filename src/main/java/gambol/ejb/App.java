@@ -22,6 +22,7 @@ import gambol.model.TournamentTeamEntity;
 import gambol.model.TournamentTeamEntity_;
 import gambol.xml.Event;
 import gambol.xml.Fixture;
+import gambol.xml.FixtureEvents;
 import gambol.xml.FixtureSideRole;
 import gambol.xml.Gamesheet;
 import gambol.xml.GoalEvent;
@@ -383,6 +384,10 @@ public class App {
         return em.createQuery(q).getSingleResult();
     }
 
+    public FixtureEntity getFixtureById(long fixtureId) {
+        return em.find(FixtureEntity.class, fixtureId);
+    }
+    
     public List<FixtureEntity> getFixtures(FixturesQueryParam param) {
         CriteriaBuilder builder = em.getCriteriaBuilder();
 
@@ -485,7 +490,7 @@ public class App {
 
     private final static Pattern MMMM_SS = Pattern.compile("(\\d+):(\\d+)");
 
-    private static Integer gameTimeSecond(String mmmm_ss) {
+    public static Integer gameTimeSecond(String mmmm_ss) {
         Matcher m = MMMM_SS.matcher(mmmm_ss);
         if (!m.matches())
             throw new IllegalArgumentException(mmmm_ss);
@@ -494,7 +499,11 @@ public class App {
         return mm * 60 + ss;
     }
 
-    private void updateFixtureEvents(FixtureEntity f, Gamesheet.Events events) {
+    public static String gameTimeCode(Integer gameSecond) {
+        return String.format("%d:%02d", gameSecond / 60, gameSecond % 60);
+    }
+
+    private void updateFixtureEvents(FixtureEntity f, FixtureEvents events) {
         /*
          * The simple-naive strategy: remove all existing events, then add:
          */

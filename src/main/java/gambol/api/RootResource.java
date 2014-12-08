@@ -18,6 +18,7 @@ import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
@@ -90,14 +91,15 @@ public class RootResource {
             @QueryParam("tournament") List<String> tournamentRef,
             @QueryParam("club") List<String> clubRef,
             @QueryParam("home") List<String> homeClubRef,
-            @QueryParam("away") List<String> awayClubRef) {
+            @QueryParam("away") List<String> awayClubRef,
+            @Context UriInfo uriInfo) {
 
         FixturesQueryParam searchParams = qp(start, end, seasonId, seriesId, tournamentRef, clubRef, homeClubRef, awayClubRef);
         List<FixtureEntity> fixtures = gambol.getFixtures(searchParams);
 
         Fixtures res = new Fixtures();
         for (FixtureEntity entity : fixtures) {
-            res.getFixtures().add(TournamentResource.entity2domain(entity));
+            res.getFixtures().add(FixtureResource.entity2domain(entity, uriInfo));
         }
 
         return Response.ok(res).build();
@@ -118,6 +120,13 @@ public class RootResource {
         res.setHomeClubRef(homeClubRef);
         res.setAwayClubRef(awayClubRef);
         return res;
+    }
+
+    @GET
+    @Path("{seasonId}")
+    @Produces(APPLICATION_JSON)
+    public List<Tournament> getSeasonResource(@PathParam("seasonId") String seasonId) {
+        return null;
     }
 
     @GET

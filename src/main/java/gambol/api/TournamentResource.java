@@ -2,13 +2,8 @@ package gambol.api;
 
 import gambol.ejb.App;
 import gambol.model.FixtureEntity;
-import gambol.model.FixtureSideEntity;
-import gambol.model.SeasonEntity;
 import gambol.model.TournamentEntity;
-import gambol.xml.Fixture;
-import gambol.xml.FixtureSideRole;
 import gambol.xml.Fixtures;
-import gambol.xml.Side;
 import gambol.xml.Tournament;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,9 +13,10 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.*;
-import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import static javax.ws.rs.core.MediaType.*;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 /**
  *
@@ -81,14 +77,14 @@ public class TournamentResource {
     @GET
     @Path("fixtures")
     @Produces({APPLICATION_JSON, APPLICATION_XML})
-    public Response getTournamentFixtures() {
+    public Response getTournamentFixtures(@Context UriInfo uriInfo) {
         LOG.log(Level.INFO, ".... {0} {1}", new Object[]{slug, seasonId});
         
         TournamentEntity t = gambol.getTournament(seasonId, slug);
 
         Fixtures res = new Fixtures();
         for (FixtureEntity f : t.getFixtures())
-            res.getFixtures().add(entity2domain(f));
+            res.getFixtures().add(FixtureResource.entity2domain(f, uriInfo));
 
         return Response.ok(res).build();
     }
@@ -103,52 +99,17 @@ public class TournamentResource {
         gambol.updateFixtures(t, fs.getFixtures());
         return Response.ok().build();
     }
-
-    public static Fixture entity2domain(FixtureEntity entity) {
-        if (entity == null)
-            return null;
-        
-        Fixture model = new Fixture();
-        model.setStartTime(entity.getStartTime());
-        model.setEndTime(entity.estimateEndTime());
-        model.getSides().add(entity2domain(FixtureSideRole.HOME, entity.getHomeSide()));
-        model.getSides().add(entity2domain(FixtureSideRole.AWAY, entity.getAwaySide()));
-        model.setMatchNumber(entity.getMatchNumber());
-        model.setSourceRef(entity.getSourceRef());
-        TournamentEntity tournament = entity.getTournament();
-        String tourRef = tournament.getSlug();
-        model.setTournamentRef(tourRef);
-        SeasonEntity season = tournament.getSeason();
-        String seasonRef = season.getId();
-        model.setSeason(seasonRef);
-        
-        return model;
-    }
-
-    public static Side entity2domain(FixtureSideRole role, FixtureSideEntity entity) {
-        if (entity == null)
-            return null;
-        
-        Side model = new Side();
-        model.setRole(role);
-        Side.Team team = new Side.Team();
-        team.setClubRef(entity.getTeam().getClub().getSlug());
-        team.setValue(entity.getTeam().getName());
-        model.setTeam(team);
-        model.setScore(entity.getScore());
-
-        return model;
-    }
     
     public static Tournament entity2domain(TournamentEntity entity) {
         if (entity == null)
             return null;
 
         Tournament model = new Tournament();
-        model.setSeason(entity.getSeason().getName());
+        model.setSeason(entity.getSeason().getId());
         model.setTitle(entity.getName());
         model.setSourceRef(entity.getSourceRef());
-        
+        model.setSeries(entity.getSeries().getSlug());
+
         return model;
     }
 }

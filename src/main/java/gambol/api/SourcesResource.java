@@ -32,33 +32,33 @@ public class SourcesResource {
     @PersistenceContext
     private EntityManager em;
 
-    @Context 
+    @Context
     private UriInfo uriInfo;
-    
+
     @POST
     @Path("tournament")
     @Consumes({APPLICATION_JSON, APPLICATION_XML})
     public Response putTournament(Tournament tt) {
         // Do the work:
         TournamentEntity t = gambol.putTournament(tt);
-        
+
         // Construct resource URL:
-        URI tournamentUri = uriInfo.getBaseUriBuilder().path("tournament/{seasonId}/{tournamentSlug}").build(t.getSeason().getId(), t.getSlug());        
-        
+        URI tournamentUri = uriInfo.getBaseUriBuilder().path("tournament/{seasonId}/{tournamentSlug}").build(t.getSeason().getId(), t.getSlug());
+
         return Response.created(tournamentUri).build();
     }
-    
+
     @POST
     @Path("gamesheet")
     @Consumes({APPLICATION_JSON, APPLICATION_XML})
     public Response putGamesheet(Gamesheet gg) {
         // Do the work:
         FixtureEntity f = gambol.putGamesheet(gg);
-        
+
         // Construct resource URL:
         TournamentEntity t = f.getTournament();
-        URI tournamentUri = uriInfo.getBaseUriBuilder().path("gamesheet/{seasonId}/{tournamentSlug}/{fixtureSlug}").build(t.getSeason().getId(), t.getSlug(), f.getMatchNumber());        
-        
+        URI tournamentUri = uriInfo.getBaseUriBuilder().path("gamesheet/{seasonId}/{tournamentSlug}/{fixtureSlug}").build(t.getSeason().getId(), t.getSlug(), f.getMatchNumber());
+
         return Response.created(tournamentUri).build();
     }
 }
