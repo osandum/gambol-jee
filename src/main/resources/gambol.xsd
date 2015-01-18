@@ -93,6 +93,7 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="title" minOccurs="1" maxOccurs="1" type="xs:string" />
+                <xs:element name="details" minOccurs="0" maxOccurs="1" type="xs:anyURI" />
                 <xs:element name="fixture" minOccurs="0" maxOccurs="unbounded" type="g:Fixture" />
             </xs:sequence>
 
@@ -113,6 +114,7 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
+            <xs:attribute name="arena" type="xs:string"/>
         </xs:complexType>
     </xs:element>
 
@@ -134,6 +136,7 @@
         <xs:attribute name="tournament-ref" type="xs:string" />
         <xs:attribute name="season" type="xs:string" />
         <xs:attribute name="schedule" type="g:ScheduleStatus" />
+        <xs:attribute name="arena" type="xs:string"/>
     </xs:complexType>
     <!-- /xs:element -->
 
