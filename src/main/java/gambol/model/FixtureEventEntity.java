@@ -1,6 +1,7 @@
 package gambol.model;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
@@ -30,6 +31,7 @@ public class FixtureEventEntity implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+
 
     @Column(name = "game_second", nullable = false)
     private Integer gameTimeSecond;
@@ -62,4 +64,16 @@ public class FixtureEventEntity implements Serializable {
         return String.format("[%d] %02d:%02d %s", id, gameTimeSecond / 60, gameTimeSecond % 60, side.getTeam().getName());
     }
 
+/*  public final static Comparator<FixtureEventEntity> BY_TIME = new Comparator<FixtureEventEntity>() {
+        @Override
+        public int compare(FixtureEventEntity e1, FixtureEventEntity e2) {
+            int t1 = e1.getGameTimeSecond();
+            int t2 = e2.getGameTimeSecond();
+            if (t1 != t2)
+                return t1 - t2;
+            
+            
+            
+        }
+    }*/
 }

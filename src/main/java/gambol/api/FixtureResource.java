@@ -20,6 +20,9 @@ import gambol.xml.Player;
 import gambol.xml.PlayerRef;
 import gambol.xml.Roster;
 import gambol.xml.Side;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -75,6 +78,12 @@ public class FixtureResource {
         sheet.getRosters().add(awayR);
         
         FixtureEvents fe = new FixtureEvents();
+        
+        List<FixtureEventEntity> allOfEm = new ArrayList<FixtureEventEntity>();
+        allOfEm.addAll(f.getHomeSide().getEvents());
+        allOfEm.addAll(f.getAwaySide().getEvents());
+        Collections.sort(allOfEm, null);
+                
         for (FixtureEventEntity e : f.getHomeSide().getEvents())
             fe.getGoalsAndPenalties().add(eentity2domain(FixtureSideRole.HOME, e));
         for (FixtureEventEntity e : f.getAwaySide().getEvents())

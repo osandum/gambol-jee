@@ -83,5 +83,4 @@ public class FixturesQueryParam implements Serializable {
         this.awayClubRef = awayClubRef;
     }
     
-    
 }

@@ -71,6 +71,9 @@ public class FixtureEntity implements Serializable {
 
     @Column(length = 16)
     private String matchNumber;
+
+    @ManyToOne
+    private ClubEntity arena;
     
     public TournamentEntity getTournament() {
         return tournament;
@@ -98,6 +101,24 @@ public class FixtureEntity implements Serializable {
     
     public FixtureSideEntity getSide(FixtureSideRole role) {
         return role == AWAY ? getAwaySide() : getHomeSide();
+    }
+
+
+    public ClubEntity getArena() {
+        return arena;
+    }
+
+    public void setArena(ClubEntity location) {
+        this.arena = location;
+    }
+
+    public ClubEntity resolveArena() {
+        ClubEntity a = getArena();
+        if (a == null)
+            a = getTournament().getArena();
+        if (a == null)
+            a = getHomeSide().getTeam().getClub();
+        return a;
     }
 
     public Date getStartTime() {

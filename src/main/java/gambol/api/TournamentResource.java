@@ -2,9 +2,11 @@ package gambol.api;
 
 import gambol.ejb.App;
 import gambol.model.FixtureEntity;
+import gambol.model.SeasonEntity;
 import gambol.model.TournamentEntity;
 import gambol.xml.Fixtures;
 import gambol.xml.Tournament;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
@@ -45,11 +47,16 @@ public class TournamentResource {
 
     @GET
     @Produces({APPLICATION_JSON, APPLICATION_XML})
-    public Tournament getTournament() {
+    public Tournament getTournament(@Context UriInfo uriInfo) {
         LOG.log(Level.INFO, ".... {0} {1}", new Object[]{slug, seasonId});
         
         TournamentEntity t = gambol.getTournament(seasonId, slug);
-        return entity2domain(t);
+        Tournament model = entity2domain(t, uriInfo);
+        
+        for (FixtureEntity ff : t.getFixtures())
+            model.getFixtures().add(FixtureResource.entity2domain(ff, uriInfo));
+        
+        return model;
     }
 
     @PUT
@@ -100,16 +107,18 @@ public class TournamentResource {
         return Response.ok().build();
     }
     
-    public static Tournament entity2domain(TournamentEntity entity) {
+    public static Tournament entity2domain(TournamentEntity entity, UriInfo uriInfo) {
         if (entity == null)
             return null;
 
         Tournament model = new Tournament();
-        model.setSeason(entity.getSeason().getId());
+        SeasonEntity season = entity.getSeason();
+        model.setSeason(season.getId());
         model.setTitle(entity.getName());
         model.setSourceRef(entity.getSourceRef());
         model.setSeries(entity.getSeries().getSlug());
-
+        model.setDetails(uriInfo.getBaseUriBuilder().path(TournamentResource.class).build(season.getId(), entity.getSlug()));
+        
         return model;
     }
 }

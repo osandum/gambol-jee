@@ -148,4 +148,10 @@ public class ClubEntity implements Serializable {
     public void setAliasNames(Set<String> aliases) {
         aliasNames = aliases;
     }
+
+    @Override
+    public String toString() {
+        return "["+id+":"+name+"]";
+    }
+    
 }

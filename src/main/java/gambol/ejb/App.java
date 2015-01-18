@@ -182,10 +182,11 @@ public class App {
             throw new IllegalArgumentException("Invalid tournament name");
         if (slug == null)
             slug = name.toLowerCase().replaceAll("[-_,. ]+", "-");
+        LOG.info("#### updating "+slug+" \""+name+"\"");
 
         String seriesSlug = slug.replaceAll("-[^-]*$", "");
         SeriesEntity series = findOrCreateSeries(seriesSlug);
-
+        
         TournamentEntity entity;
         try {
             entity = findTournamentBySourceRef(sourceRef);
@@ -201,6 +202,13 @@ public class App {
 
         updateFixtures(entity, tt.getFixtures());
 
+        String arenaClubRef = tt.getArena();
+        if (arenaClubRef != null) {
+            ClubEntity arena = findOrCreateClub(arenaClubRef);
+            LOG.info(name + " is held at " + arena);
+            entity.setArena(arena);
+        }
+        
         return entity;
     }
 
@@ -389,6 +397,8 @@ public class App {
     }
     
     public List<FixtureEntity> getFixtures(FixturesQueryParam param) {
+        long t1 = System.currentTimeMillis();
+        
         CriteriaBuilder builder = em.getCriteriaBuilder();
 
         CriteriaQuery<FixtureEntity> q = builder.createQuery(FixtureEntity.class);
@@ -455,6 +465,10 @@ public class App {
 
         List<FixtureEntity> res = em.createQuery(q).getResultList();
 
+        long t2 = System.currentTimeMillis();
+        
+        LOG.info(res.size() + " fixture(s) retrieved ("+(t2-t1)+"ms)");
+        
         return res;
 
 /*

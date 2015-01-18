@@ -80,7 +80,7 @@ public class GoalEventEntity extends FixtureEventEntity {
 
     @Override
     public String toString() {
-        return "["+getId()+" " + getGameTimeSecond()/60 + ":"+getGameTimeSecond()%60+" " + getPlayer() + "]";
+        return "[GOAL:"+getId()+" " + getGameTimeSecond()/60 + ":"+getGameTimeSecond()%60+" " + getPlayer() + "]";
     }
 
     

@@ -14,8 +14,10 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -52,6 +54,9 @@ import org.apache.commons.lang.StringUtils;
 @Path("/")
 public class RootResource {
 
+    @Inject
+    private Logger LOG;
+
     @EJB
     App gambol;
 
@@ -72,10 +77,10 @@ public class RootResource {
     @GET
     @Path("tournaments")
     @Produces({APPLICATION_JSON, APPLICATION_XML})
-    public Response listAllTournaments() {
+    public Response listAllTournaments(@Context UriInfo uriInfo) {
         List<Tournament> res = new LinkedList<Tournament>();
         for (TournamentEntity entity : gambol.getAllTournaments()) {
-            res.add(TournamentResource.entity2domain(entity));
+            res.add(TournamentResource.entity2domain(entity, uriInfo));
         }
         return Response.ok(res.toArray(new Tournament[0])).build();
     }
@@ -122,12 +127,12 @@ public class RootResource {
         return res;
     }
 
-    @GET
+  /*@GET
     @Path("{seasonId}")
     @Produces(APPLICATION_JSON)
     public List<Tournament> getSeasonResource(@PathParam("seasonId") String seasonId) {
         return null;
-    }
+    }*/
 
     @GET
     @Path("events")
@@ -142,6 +147,8 @@ public class RootResource {
             @QueryParam("home") List<String> homeClubRef,
             @QueryParam("away") List<String> awayClubRef) throws ValidationException, IOException {
 
+        LOG.info("### get fullcalendar events...");
+        
         FixturesQueryParam searchParams = qp(start, end, seasonId, seriesId, tournamentRef, clubRef, homeClubRef, awayClubRef);
         List<FixtureEntity> fixtures = gambol.getFixtures(searchParams);
 
@@ -171,6 +178,8 @@ public class RootResource {
             @QueryParam("away") List<String> awayClubRef,
             @QueryParam("calname") String calname,
             @QueryParam("caldesc") String caldesc) throws ValidationException, IOException {
+
+        LOG.info("### get a fixtures calendar...");
 
         FixturesQueryParam searchParams = qp(start, end, seasonId, seriesId, tournamentRef, clubRef, homeClubRef, awayClubRef);
         List<FixtureEntity> fixtures = gambol.getFixtures(searchParams);
@@ -226,11 +235,11 @@ public class RootResource {
 
             evt.getProperties().add(new Description(eventDescr));
 
-            ClubEntity homeClub = f.getHomeSide().getTeam().getClub();
-            if (!StringUtils.isEmpty(homeClub.getAddress()))
-                evt.getProperties().add(new Location(homeClub.getAddress()));
-            if (homeClub.getLatitude() != null && homeClub.getLongitude() != null)
-                evt.getProperties().add(new Geo(homeClub.getLatitude(), homeClub.getLongitude()));
+            ClubEntity arena = f.resolveArena();
+            if (!StringUtils.isEmpty(arena.getAddress()))
+                evt.getProperties().add(new Location(arena.getAddress()));
+            if (arena.getLatitude() != null && arena.getLongitude() != null)
+                evt.getProperties().add(new Geo(arena.getLatitude(), arena.getLongitude()));
 
             cal.getComponents().add(evt);
 

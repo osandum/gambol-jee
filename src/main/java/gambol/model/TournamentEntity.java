@@ -37,7 +37,7 @@ public class TournamentEntity implements Serializable {
 
     @Column(length = 64, nullable = false)
     private String name;
-    
+
     @Column(insertable = false, updatable = false)
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date dateCreated;
@@ -45,14 +45,14 @@ public class TournamentEntity implements Serializable {
     @Column(insertable = false, updatable = false)
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date lastModified;
-    
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }    
+    }
 
     public String getSlug() {
         return slug;
@@ -77,7 +77,7 @@ public class TournamentEntity implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
-    
+
     @PreUpdate
     @PrePersist
     public void updateTimeStamps() {
@@ -94,7 +94,7 @@ public class TournamentEntity implements Serializable {
     public Date getLastModified() {
         return lastModified;
     }
-    
+
     @ManyToOne(optional = false)
     private SeasonEntity season;
 
@@ -105,7 +105,7 @@ public class TournamentEntity implements Serializable {
     public void setSeason(SeasonEntity season) {
         this.season = season;
     }
-    
+
     @ManyToOne(optional = false)
     private SeriesEntity series;
 
@@ -117,6 +117,19 @@ public class TournamentEntity implements Serializable {
         this.series = series;
     }
 
+
+    @ManyToOne
+    private ClubEntity arena;
+
+    public ClubEntity getArena() {
+        return arena;
+    }
+
+    public void setArena(ClubEntity location) {
+        this.arena = location;
+    }
+
+
     @OneToMany(mappedBy = "tournament")
     private List<FixtureEntity> fixtures;
 
@@ -127,7 +140,7 @@ public class TournamentEntity implements Serializable {
     public void setFixtures(List<FixtureEntity> fixtures) {
         this.fixtures = fixtures;
     }
-    
+
     public static TournamentEntity create(SeasonEntity season, SeriesEntity series, String sourceRef) {
         TournamentEntity t = new TournamentEntity();
         t.setSourceRef(sourceRef);

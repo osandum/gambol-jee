@@ -66,7 +66,7 @@ public class PenaltyEventEntity extends FixtureEventEntity {
 
     @Override
     public String toString() {
-        return "["+getId()+" " + getGameTimeSecond()/60 + ":"+getGameTimeSecond()%60+" " + getPlayer() + "]";
+        return "[" + getOffense() + ":"+getId()+" " + getGameTimeSecond()/60 + ":"+getGameTimeSecond()%60+" " + getPlayer() + "]";
     }
     
 }
