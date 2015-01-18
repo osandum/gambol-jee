@@ -160,6 +160,8 @@
             <xs:enumeration value="TRIP" />
             <xs:enumeration value="SLASH" />
             <xs:enumeration value="HOOK" />
+            <xs:enumeration value="HOLD" />
+            <xs:enumeration value="BUTT" />
             <xs:enumeration value="CROSS" />
             <xs:enumeration value="BOARD" />
             <xs:enumeration value="HI-ST" />
@@ -168,6 +170,8 @@
             <xs:enumeration value="ROUGH" />
             <xs:enumeration value="DELAY" />
             <xs:enumeration value="UN-SP" />
+            <xs:enumeration value="BD-CK" />
+            <xs:enumeration value="CHE-H" />
         </xs:restriction>
     </xs:simpleType>
     
