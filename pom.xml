@@ -32,7 +32,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>gambol-docs</artifactId>
-            <version>0.4-SNAPSHOT</version>
+            <version>0.4</version>
         </dependency>
 
         <dependency>
@@ -88,6 +88,13 @@
                 <artifactId>jboss-as-maven-plugin</artifactId>
                 <version>7.1.0.Final</version>
             </plugin>
+
+            <!--plugin>
+                <groupId>org.wildfly.plugins</groupId>
+                <artifactId>wildfly-maven-plugin</artifactId>
+                <version>1.0.2.Final</version>
+            </plugin-->
+            
         </plugins>
 
         <resources>
