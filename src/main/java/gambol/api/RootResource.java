@@ -20,7 +20,6 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
@@ -224,16 +223,16 @@ public class RootResource {
 
         int n = 0;
         for (FixtureEntity f : fixtures) {
-            String eventName = f.getEventTitle();
             DateTime start = new DateTime(f.getStartTime());
             DateTime end = new DateTime(f.estimateEndTime());
-            String eventDescr = f.getEventDescription();
-            VEvent evt = new VEvent(start, end, eventName);
+            String summary = f.getEventTitle();
+            VEvent evt = new VEvent(start, end, summary);
 
             String uid = "GAMBOL:fixture:" + f.getSourceRef();
             evt.getProperties().add(new Uid(uid));
 
-            evt.getProperties().add(new Description(eventDescr));
+            String description = f.getEventDescription();
+            evt.getProperties().add(new Description(description));
 
             ClubEntity arena = f.resolveArena();
             if (!StringUtils.isEmpty(arena.getAddress()))

@@ -17,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import org.apache.commons.lang.StringUtils;
 
 /**
  *
@@ -71,6 +72,12 @@ public class FixtureEntity implements Serializable {
 
     @Column(length = 16)
     private String matchNumber;
+
+    @Column(length = 31)
+    private String titleAnnotation;
+
+    @Column(length = 255)
+    private String desciptionAnnotation;
 
     @ManyToOne
     private ClubEntity arena;
@@ -174,10 +181,28 @@ public class FixtureEntity implements Serializable {
     public void setMatchNumber(String matchNumber) {
         this.matchNumber = matchNumber;
     }
+
+    public String getTitleAnnotation() {
+        return titleAnnotation;
+    }
+
+    public void setTitleAnnotation(String titleAnnotation) {
+        this.titleAnnotation = titleAnnotation;
+    }
+
+    public String getDesciptionAnnotation() {
+        return desciptionAnnotation;
+    }
+
+    public void setDesciptionAnnotation(String desciptionAnnotation) {
+        this.desciptionAnnotation = desciptionAnnotation;
+    }
     
     public String getEventDescription() {
-        // Create the event
-        return tournament.getName() + ", kamp " + matchNumber;
+        String descr = tournament.getName() + ", kamp " + matchNumber;
+        if (!StringUtils.isBlank(desciptionAnnotation))
+            descr += "\n\n" + desciptionAnnotation;
+        return descr;
     }
 
     public String getEventTitle() {
@@ -185,7 +210,10 @@ public class FixtureEntity implements Serializable {
         eventName += " (" + tournament.getSeries().getName() + ")";
         if (homeSide.getScore() != null && awaySide.getScore() != null) {
             eventName += ": " + homeSide.getScore() + "-" + awaySide.getScore();
-        }        
+        }
+        if (!StringUtils.isBlank(titleAnnotation))
+            eventName = titleAnnotation + " " + eventName;
+
         return eventName;
     }
 
