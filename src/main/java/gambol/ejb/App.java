@@ -448,25 +448,32 @@ public class App {
             Join<FixtureSideEntity, TournamentTeamEntity> awayTeam = awaySide.join(FixtureSideEntity_.team);
             Join<TournamentTeamEntity, ClubEntity> awayClub = awayTeam.join(TournamentTeamEntity_.club);
 
-            Set<String> clubRefs = new HashSet<String>();
-            clubRefs.addAll(param.clubRef);
-            clubRefs.addAll(param.homeClubRef);
-            clubRefs.addAll(param.awayClubRef);
+            if (!param.clubRef.isEmpty() || !param.awayClubRef.isEmpty()) {
+                Set<String> clubRefs = new HashSet<String>();
+                clubRefs.addAll(param.clubRef);
+             // clubRefs.addAll(param.homeClubRef);
+                clubRefs.addAll(param.awayClubRef);
                         
-            a.getExpressions().add(
-                    builder.or(homeClub.get(ClubEntity_.slug).in(clubRefs),
-                               awayClub.get(ClubEntity_.slug).in(clubRefs)));
+                a.getExpressions().add(
+                        builder.or(homeClub.get(ClubEntity_.slug).in(clubRefs),
+                                   awayClub.get(ClubEntity_.slug).in(clubRefs)));
+            }
             
             if (!param.homeClubRef.isEmpty() || !param.awayClubRef.isEmpty()) {
                 Join<TournamentEntity, ClubEntity> tournamentArena = tournament.join(TournamentEntity_.arena, JoinType.LEFT);
+                Join<FixtureEntity, ClubEntity> fixtureArena = fixtures.join(FixtureEntity_.arena, JoinType.LEFT);
+                Expression<String> arenaRef = builder.<String>coalesce()
+                        .value(fixtureArena.get(ClubEntity_.slug))
+                        .value(tournamentArena.get(ClubEntity_.slug))
+                        .value(homeClub.get(ClubEntity_.slug));
                 
                 if (!param.homeClubRef.isEmpty()) 
                     // only include fixtures on these clubs' own ice:
-                    a.getExpressions().add(builder.coalesce(tournamentArena.get(ClubEntity_.slug), homeClub.get(ClubEntity_.slug)).in(param.homeClubRef));
+                    a.getExpressions().add(arenaRef.in(param.homeClubRef));
 
                 if (!param.awayClubRef.isEmpty()) 
                     // only include fixtures on foreign ice:
-                    a.getExpressions().add(builder.coalesce(tournamentArena.get(ClubEntity_.slug), homeClub.get(ClubEntity_.slug)).in(param.awayClubRef).not());
+                    a.getExpressions().add(arenaRef.in(param.awayClubRef).not());
             }
         }
         q.where(a);
