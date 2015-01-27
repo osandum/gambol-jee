@@ -34,9 +34,11 @@ import gambol.xml.Side;
 import gambol.xml.Tournament;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -50,7 +52,9 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -403,6 +407,7 @@ public class App {
 
         CriteriaQuery<FixtureEntity> q = builder.createQuery(FixtureEntity.class);
         Root<FixtureEntity> fixtures = q.from(FixtureEntity.class);
+        Join<FixtureEntity, TournamentEntity> tournament = fixtures.join(FixtureEntity_.tournament);
 
         Predicate a = builder.conjunction();
         a.getExpressions().add(builder.equal(fixtures.get(FixtureEntity_.status), ScheduleStatus.CONFIRMED));
@@ -413,7 +418,6 @@ public class App {
             a.getExpressions().add(builder.lessThanOrEqualTo(builder.coalesce(fixtures.get(FixtureEntity_.startTime), fixtures.get(FixtureEntity_.endTime)), param.end));
 
         if (!param.seasonId.isEmpty() || !param.seriesId.isEmpty() || !param.tournamentRef.isEmpty()) {
-            Join<FixtureEntity, TournamentEntity> tournament = fixtures.join(FixtureEntity_.tournament);
             if (!param.seasonId.isEmpty()) {
                 Join<TournamentEntity, SeasonEntity> season = tournament.join(TournamentEntity_.season);
                 a.getExpressions().add(season.get(SeasonEntity_.id).in(param.seasonId));
@@ -433,7 +437,9 @@ public class App {
                 a.getExpressions().add(b);
             }
         }
+        
         if (!param.clubRef.isEmpty() || !param.homeClubRef.isEmpty() || !param.awayClubRef.isEmpty()) {
+            
             Join<FixtureEntity, FixtureSideEntity> homeSide = fixtures.join(FixtureEntity_.homeSide);
             Join<FixtureSideEntity, TournamentTeamEntity> homeTeam = homeSide.join(FixtureSideEntity_.team);
             Join<TournamentTeamEntity, ClubEntity> homeClub = homeTeam.join(TournamentTeamEntity_.club);
@@ -442,22 +448,25 @@ public class App {
             Join<FixtureSideEntity, TournamentTeamEntity> awayTeam = awaySide.join(FixtureSideEntity_.team);
             Join<TournamentTeamEntity, ClubEntity> awayClub = awayTeam.join(TournamentTeamEntity_.club);
 
-            if (!param.clubRef.isEmpty())
-                a.getExpressions().add(
-                        builder.or(homeClub.get(ClubEntity_.slug).in(param.clubRef),
-                                   awayClub.get(ClubEntity_.slug).in(param.clubRef)));
-            if (!param.homeClubRef.isEmpty()) {
-                // List all home-games for the specified club:
-                a.getExpressions().add(homeClub.get(ClubEntity_.slug).in(param.homeClubRef));
-            }
-            if (!param.awayClubRef.isEmpty()) {
-                // List all away-games for the specified club:
-                a.getExpressions().add(awayClub.get(ClubEntity_.slug).in(param.awayClubRef));
-                // ...but skip those against (other teams) in the same club, if any. This
-                // is to avoid the same matches getting listed twice, if a club tournament
-                // schedule is split between home games and away games, e.g. in separate
-                // calendar colors:
-                a.getExpressions().add(homeClub.get(ClubEntity_.slug).in(param.awayClubRef).not());
+            Set<String> clubRefs = new HashSet<String>();
+            clubRefs.addAll(param.clubRef);
+            clubRefs.addAll(param.homeClubRef);
+            clubRefs.addAll(param.awayClubRef);
+                        
+            a.getExpressions().add(
+                    builder.or(homeClub.get(ClubEntity_.slug).in(clubRefs),
+                               awayClub.get(ClubEntity_.slug).in(clubRefs)));
+            
+            if (!param.homeClubRef.isEmpty() || !param.awayClubRef.isEmpty()) {
+                Join<TournamentEntity, ClubEntity> tournamentArena = tournament.join(TournamentEntity_.arena, JoinType.LEFT);
+                
+                if (!param.homeClubRef.isEmpty()) 
+                    // only include fixtures on these clubs' own ice:
+                    a.getExpressions().add(builder.coalesce(tournamentArena.get(ClubEntity_.slug), homeClub.get(ClubEntity_.slug)).in(param.homeClubRef));
+
+                if (!param.awayClubRef.isEmpty()) 
+                    // only include fixtures on foreign ice:
+                    a.getExpressions().add(builder.coalesce(tournamentArena.get(ClubEntity_.slug), homeClub.get(ClubEntity_.slug)).in(param.awayClubRef).not());
             }
         }
         q.where(a);

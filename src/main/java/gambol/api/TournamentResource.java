@@ -6,7 +6,6 @@ import gambol.model.SeasonEntity;
 import gambol.model.TournamentEntity;
 import gambol.xml.Fixtures;
 import gambol.xml.Tournament;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
@@ -117,6 +116,8 @@ public class TournamentResource {
         model.setTitle(entity.getName());
         model.setSourceRef(entity.getSourceRef());
         model.setSeries(entity.getSeries().getSlug());
+        if (entity.getArena() != null) 
+            model.setArena(entity.getArena().getSlug());
         model.setDetails(uriInfo.getBaseUriBuilder().path(TournamentResource.class).build(season.getId(), entity.getSlug()));
         
         return model;
