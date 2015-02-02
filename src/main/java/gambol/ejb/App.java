@@ -414,6 +414,9 @@ public class App {
 
         if (param.start != null)
             a.getExpressions().add(builder.greaterThanOrEqualTo(builder.coalesce(fixtures.get(FixtureEntity_.endTime), fixtures.get(FixtureEntity_.startTime)), param.start));
+        else
+            a.getExpressions().add(builder.isNull(fixtures.get(FixtureEntity_.startTime)).not());
+            
         if (param.end != null)
             a.getExpressions().add(builder.lessThanOrEqualTo(builder.coalesce(fixtures.get(FixtureEntity_.startTime), fixtures.get(FixtureEntity_.endTime)), param.end));
 
