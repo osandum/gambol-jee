@@ -29,7 +29,7 @@ public class TournamentEntity implements Serializable {
     @GeneratedValue
     private Long id;
 
-    @Column(length = 16, nullable = false)
+    @Column(length = 32, nullable = false)
     private String slug;
 
     @Column(length = 16, nullable = false)
