@@ -6,60 +6,91 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 template="/WEB-INF/templates/default.xhtml">        
 
-    
     <ui:define name="app-bar">
         <button class="menu"><img src="images/hamburger.svg" alt="Menu" /></button>
         <h1 class="logo">Istider</h1>
         <section class="app-bar-actions">
-        <!-- Put App Bar Buttons Here -->
+            <!-- Put App Bar Buttons Here -->
         </section>
     </ui:define>
-    
-    
+
+
     <ui:define name="nav-bar">
     </ui:define>
-    
-    
+
+
     <ui:define name="content">
         <style>
-.fc-event.ksf-home {
-	background-color: #036fab;
-	color: white;
-	}
-.fc-event.ksf-away {
-	background-color: #98AAB1;
-	color: white;              
-	}
-            
+            .fc-event.ksf-home {
+                background-color: #036fab;
+                color: white;
+            }
+            .fc-event.ksf-away {
+                background-color: #98AAB1;
+                color: #333333;              
+            }        
+            .fc-content .fc-title { 
+              display: block;
+              white-space: pre-line;
+            }
         </style>
+
         <div id="calendar"></div>
 
-    <script>
-    $(document).ready(function() {
-
-        $('#calendar').fullCalendar({
-            // put your options and callbacks here
-            lang: 'da',
-            firstDay: 1,
-            weekNumbers: true,
-            
-            eventSources: [
+        <script type="text/javascript">
+          //<![CDATA[
+            $(document).ready(function () {
+                var
+                        qs = window.location.href.slice(window.location.href.indexOf('?') + 1),
+                        h = qs.split('&amp;'),
+                        vars = [], hash;
+                for (var i = 0; i < h.length; i++)
                 {
-                    url: "#{request.contextPath}/rs/events?home=ksf",
-                    cache: true,
-                    className: 'ksf-home'
-                },
-                {
-                    url: "#{request.contextPath}/rs/events?away=ksf",
-                    cache: true,
-                    className: 'ksf-away'
+                    hash = h[i].split('=');
+                    vars.push(hash[0]);
+                    vars[hash[0]] = hash[1];
                 }
-            ]
-        });
 
-    });
-    </script>
-        
+                var club = vars['club'];
+
+                $.getJSON('#{request.contextPath}/rs/clubs/' + club,
+                        function (data) {
+                            $(document).prop('title', 'Kampkalender | ' + data.name);
+                            $('h1.logo').text(data.name);
+                        });
+
+
+                // page is now ready, initialize the calendar...
+
+                $('#calendar').fullCalendar({
+                    lang: 'da',
+                    firstDay: 1,
+                    defaultView: 'basicWeek',
+                    weekNumbers: true,
+                    displayEventEnd: true,
+                    timeFormat: 'H:mm',
+                    header: {
+                        left: 'today title',
+                        center: '',
+                        right: 'prev,next basicDay,basicWeek,month'
+                    },
+                    eventSources: [
+                        {
+                            url: "#{request.contextPath}/rs/events?home=" + club,
+                            cache: true,
+                            className: 'ksf-home'
+                        },
+                        {
+                            url: "#{request.contextPath}/rs/events?away=" + club,
+                            cache: true,
+                            className: 'ksf-away'
+                        }]
+                });
+
+            });
+          //]]>
+        </script>
+
     </ui:define>
 
 </ui:composition>
