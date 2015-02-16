@@ -6,26 +6,46 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 template="/WEB-INF/templates/default.xhtml">        
 
+    <ui:define name="app-bar">
+        <button class="menu"><img src="images/hamburger.svg" alt="Menu" /></button>
+        <h1 class="logo">Istider</h1>
+        <section class="app-bar-actions">
+            <!-- Put App Bar Buttons Here -->
+        </section>
+    </ui:define>
+    
     <ui:define name="content">
-        Hejsa from Facelets!
 
-        <h:dataTable var="_club" value="#{gambol.clubs}" rendered="#{not empty gambol.clubs}">
-            <h:column>
-                <f:facet name="header">Id</f:facet>
-                    #{_club.id}
-            </h:column>
-            <h:column>
-                <f:facet name="header">Name</f:facet>
-                    #{_club.name}
-            </h:column>
-            <h:column>
-                <f:facet name="header">REST URL</f:facet>
-                <a href="#{request.contextPath}/rs/clubs/#{_club.slug}">/rs/clubs/#{_club.slug}</a>
-            </h:column>
-            <f:facet name="footer">
-                REST URL for all members: <a href="#{request.contextPath}/rs/clubs">/rs/clubs</a>
-            </f:facet>
-        </h:dataTable>
+        <div class="g-medium--half g-wide--2">
+            <h2>Vest</h2>
+            <ul class="list-links list-links--primary">
+                <li class="list__item"><a href="calendar.jsf?club=esbjerg">Esbjerg</a></li>
+                <li class="list__item"><a href="calendar.jsf?club=frederikshavn">Frederikshavn</a></li>
+                <li class="list__item"><a href="calendar.jsf?club=herning">Herning</a></li>
+                <li class="list__item"><a href="calendar.jsf?club=silkeborg">Silkeborg</a></li>
+                <li class="list__item"><a href="calendar.jsf?club=vojens">Vojens</a></li>
+                <li class="list__item"><a href="calendar.jsf?club=aalborg">Aalborg</a></li>
+                <li class="list__item"><a href="calendar.jsf?club=århus">Århus</a></li>
+            </ul>      
+            <ul class="list-links list-links--primary">
+                <li class="list__item"><a href="calendar.jsf?club=odense">Odense</a></li>
+            </ul>      
+        </div>
+
+        <div class="g-medium--half g-medium--last g-wide--2 g-wide--last">
+            <h2>Øst</h2>
+            <ul class="list-links list-links--primary">
+                <li class="list__item"><a href="calendar.jsf?club=amager">Amager</a></li>
+                <li class="list__item"><a href="calendar.jsf?club=cph-lions">Copenhagen Lions</a></li>
+                <li class="list__item"><a href="calendar.jsf?club=gentofte">Gentofte</a></li>
+                <li class="list__item"><a href="calendar.jsf?club=gladsaxe">Gladsaxe</a></li>
+                <li class="list__item"><a href="calendar.jsf?club=herlev">Herlev</a></li>
+                <li class="list__item"><a href="calendar.jsf?club=hvidovre">Hvidovre</a></li>
+                <li class="list__item"><a href="calendar.jsf?club=ksf">KSF</a></li>
+                <li class="list__item"><a href="calendar.jsf?club=rungsted">Rungsted</a></li>
+                <li class="list__item"><a href="calendar.jsf?club=rødovre">Rødovre</a></li>
+            </ul>      
+        </div>
 
     </ui:define>
 
