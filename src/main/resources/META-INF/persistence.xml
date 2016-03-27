@@ -10,7 +10,7 @@
         data source, this example data source is just for development and testing! -->
         <!-- The datasource is deployed as WEB-INF/gambol-ds.xml, you
         can find it in the source at src/main/webapp/WEB-INF/gambol-ds.xml -->
-        <jta-data-source>java:jboss/datasources/gambolDS</jta-data-source>
+        <jta-data-source>java:jboss/datasources/GambolDS</jta-data-source>
       
         <properties>
             <!-- Properties for Hibernate -->
