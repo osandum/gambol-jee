@@ -1,7 +1,6 @@
 package gambol.model;
 
 import java.io.Serializable;
-import java.util.Comparator;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;

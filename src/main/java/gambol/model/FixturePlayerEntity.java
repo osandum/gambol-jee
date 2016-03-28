@@ -1,28 +1,15 @@
 package gambol.model;
 
-import java.io.Serializable;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 /**
  * @author osa
  */
 @Entity(name = "fixture_player")
-public class FixturePlayerEntity implements Serializable {
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue
-    private Long id;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+@DiscriminatorValue("PLAYER")
+public class FixturePlayerEntity extends FixturePersonEntity {
 
     @ManyToOne(optional = false)
     private FixtureSideEntity side;
@@ -40,18 +27,6 @@ public class FixturePlayerEntity implements Serializable {
         return getSide().getTeam().getClub().getSlug() + ":" + getJerseyNumber() + ":" + getPerson().getLastName().toLowerCase() + ":" + getPerson().getFirstNames().toLowerCase();
     }
     
-
-    @ManyToOne(optional = false)
-    private PersonEntity person;
-
-    public PersonEntity getPerson() {
-        return person;
-    }
-
-    public void setPerson(PersonEntity person) {
-        this.person = person;
-    }
-
 
     private Integer jerseyNumber;
 
@@ -87,7 +62,7 @@ public class FixturePlayerEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "{" + id + ":" + side + " " + jerseyNumber + " " + person + " "+line+":"+pos+"}";
+        return "{" + getId() + ":" + side + " " + jerseyNumber + " " + getPerson() + " "+line+":"+pos+"}";
     }
 
 }

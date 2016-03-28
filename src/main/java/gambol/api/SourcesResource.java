@@ -57,7 +57,7 @@ public class SourcesResource {
 
         // Construct resource URL:
         TournamentEntity t = f.getTournament();
-        URI tournamentUri = uriInfo.getBaseUriBuilder().path("gamesheet/{seasonId}/{tournamentSlug}/{fixtureSlug}").build(t.getSeason().getId(), t.getSlug(), f.getMatchNumber());
+        URI tournamentUri = uriInfo.getBaseUriBuilder().path("gamesheet/{fixtureId}").build(f.getId());
 
         return Response.created(tournamentUri).build();
     }

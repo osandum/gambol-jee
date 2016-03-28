@@ -52,8 +52,8 @@ public class TournamentResource {
         TournamentEntity t = gambol.getTournament(seasonId, slug);
         Tournament model = entity2domain(t, uriInfo);
         
-        for (FixtureEntity ff : t.getFixtures())
-            model.getFixtures().add(FixtureResource.entity2domain(ff, uriInfo));
+//        for (FixtureEntity ff : t.getFixtures())
+//            model.getFixtures().add(FixtureResource.entity2domain(ff, uriInfo));
         
         return model;
     }
@@ -73,7 +73,7 @@ public class TournamentResource {
         t.setSourceRef(tt.getSourceRef());
         t.setSlug(slug);
         t.setSeason(gambol.findOrCreateSeason(seasonId));
-        t.setName(tt.getTitle());
+        t.setName(tt.getValue());
         em.persist(t);
         LOG.info("tournament " + t.getSeason().getName() + "/" + t.getSlug() + " created: " + t);
         
@@ -113,12 +113,12 @@ public class TournamentResource {
         Tournament model = new Tournament();
         SeasonEntity season = entity.getSeason();
         model.setSeason(season.getId());
-        model.setTitle(entity.getName());
+        model.setValue(entity.getName());
         model.setSourceRef(entity.getSourceRef());
         model.setSeries(entity.getSeries().getSlug());
         if (entity.getArena() != null) 
             model.setArena(entity.getArena().getSlug());
-        model.setDetails(uriInfo.getBaseUriBuilder().path(TournamentResource.class).build(season.getId(), entity.getSlug()));
+//      model.setDetails(uriInfo.getBaseUriBuilder().path(TournamentResource.class).build(season.getId(), entity.getSlug()));
         
         return model;
     }
