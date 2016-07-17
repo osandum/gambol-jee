@@ -6,15 +6,19 @@ import gambol.xml.ScheduleStatus;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Logger;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.apache.commons.lang.StringUtils;
@@ -53,12 +57,15 @@ public class FixtureEntity implements Serializable {
     }
 
     @ManyToOne(optional = false)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_tournament"))
     private TournamentEntity tournament;
     
     @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_home"))
     private FixtureSideEntity homeSide;
 
     @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_away"))
     private FixtureSideEntity awaySide;
     
     @Temporal(TemporalType.TIMESTAMP)
@@ -80,6 +87,7 @@ public class FixtureEntity implements Serializable {
     private String desciptionAnnotation;
 
     @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_arena"))
     private ClubEntity arena;
     
     public TournamentEntity getTournament() {
@@ -143,6 +151,19 @@ public class FixtureEntity implements Serializable {
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
+
+
+    @OneToMany(mappedBy = "side")
+    private List<FixtureEventEntity> events;
+
+    public List<FixtureEventEntity> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<FixtureEventEntity> events) {
+        this.events = events;
+    }
+
 
     public Date estimateEndTime() {
         if (getEndTime() != null)

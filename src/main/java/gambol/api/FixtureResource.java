@@ -50,62 +50,54 @@ public class FixtureResource {
 
     @PersistenceContext
     private EntityManager em;
-    
+
     @PathParam("fixtureId")
     private long fixtureId;
 
     @GET
     @Produces({APPLICATION_JSON, APPLICATION_XML})
     public Gamesheet getGamesheet(@Context UriInfo uriInfo) {
-        
+
         FixtureEntity f = gambol.getFixtureById(fixtureId);
         return entity2gamesheet(f, uriInfo);
     }
-    
+
     public static Gamesheet entity2gamesheet(FixtureEntity f, UriInfo uriInfo) {
         Gamesheet sheet = new Gamesheet();
-        
+
         Roster homeR = new Roster();
         homeR.setSide(FixtureSideRole.HOME);
         for (FixturePlayerEntity p : f.getHomeSide().getPlayers())
             homeR.getPlayers().add(pentity2domain(p));
         sheet.getRosters().add(homeR);
-        
+
         Roster awayR = new Roster();
         awayR.setSide(FixtureSideRole.AWAY);
         for (FixturePlayerEntity p : f.getAwaySide().getPlayers())
             awayR.getPlayers().add(pentity2domain(p));
         sheet.getRosters().add(awayR);
-        
+
         FixtureEvents fe = new FixtureEvents();
-        
-        List<FixtureEventEntity> allOfEm = new ArrayList<FixtureEventEntity>();
-        allOfEm.addAll(f.getHomeSide().getEvents());
-        allOfEm.addAll(f.getAwaySide().getEvents());
-        Collections.sort(allOfEm, null);
-                
-        for (FixtureEventEntity e : f.getHomeSide().getEvents())
-            fe.getGoalsAndPenalties().add(eentity2domain(FixtureSideRole.HOME, e));
-        for (FixtureEventEntity e : f.getAwaySide().getEvents())
-            fe.getGoalsAndPenalties().add(eentity2domain(FixtureSideRole.AWAY, e));
-        
+        for (FixtureEventEntity e : f.getEvents())
+            fe.getGoalsAndPenalties().add(eentity2domain(e));
+
 //      Collections.sort(fe.getGoalsAndPenalties());
-        
+
         sheet.setEvents(fe);
-        
+
         sheet.setSourceRef(f.getSourceRef());
-        
+
         return sheet;
     }
-    
-    private static Event eentity2domain(FixtureSideRole side, FixtureEventEntity e) {
+
+    private static Event eentity2domain(FixtureEventEntity e) {
         if (e instanceof GoalEventEntity) {
             GoalEventEntity gee = (GoalEventEntity)e;
             GoalEvent ge = new GoalEvent();
             PlayerRef pr = new PlayerRef();
             pr.setNumber(gee.getPlayer().getJerseyNumber());
             ge.setPlayer(pr);
-            ge.setSide(side);
+            ge.setSide(e.getSide());
             ge.setGameSituation(gee.getGameSituation());
             ge.setTime(App.gameTimeCode(e.getGameTimeSecond()));
             return ge;
@@ -116,7 +108,7 @@ public class FixtureResource {
             PlayerRef pr = new PlayerRef();
             pr.setNumber(pee.getPlayer().getJerseyNumber());
             pe.setPlayer(pr);
-            pe.setSide(side);
+            pe.setSide(e.getSide());
             pe.setOffense(pee.getOffense());
             pe.setMinutes(pee.getPenaltyMinutes());
             pe.setEndTime(App.gameTimeCode(pee.getEndtimeSecond()));
@@ -135,11 +127,11 @@ public class FixtureResource {
         pp.setPos(p.getLineupPosition());
         return pp;
     }
-    
+
     public static Fixture entity2domain(FixtureEntity entity, UriInfo uriInfo) {
         if (entity == null)
             return null;
-        
+
         Fixture model = new Fixture();
         model.setStartTime(entity.getStartTime());
         model.setEndTime(entity.estimateEndTime());
@@ -154,14 +146,14 @@ public class FixtureResource {
         String seasonRef = season.getId();
         model.setSeason(seasonRef);
         model.setMatchDetails(uriInfo.getBaseUriBuilder().path(FixtureResource.class).build(entity.getId()));
-        
+
         return model;
     }
 
     public static Side entity2domain(FixtureSideRole role, FixtureSideEntity entity) {
         if (entity == null)
             return null;
-        
+
         Side model = new Side();
         model.setRole(role);
         Side.Team team = new Side.Team();

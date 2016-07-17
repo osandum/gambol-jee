@@ -226,9 +226,8 @@ public class App {
         TypedQuery<TournamentEntity> allQuery = em.createQuery(all);
         List<TournamentEntity> res = allQuery.getResultList();
 
-        for (TournamentEntity t : res) {
+        for (TournamentEntity t : res)
             t.getFixtures().size();
-        }
 
         return res;
     }
@@ -588,11 +587,7 @@ public class App {
         /*
          * The simple-naive strategy: remove all existing events, then add:
          */
-        for (FixtureEventEntity e : f.getHomeSide().getEvents()) {
-            LOG.info("### " + e + " gone");
-            em.remove(e);
-        }
-        for (FixtureEventEntity e : f.getAwaySide().getEvents()) {
+        for (FixtureEventEntity e : f.getEvents()) {
             LOG.info("### " + e + " gone");
             em.remove(e);
         }
@@ -606,7 +601,7 @@ public class App {
                 GoalEvent ge = (GoalEvent)e;
 
                 GoalEventEntity ee = new GoalEventEntity();
-                ee.setSide(partSide);
+                ee.setSide(e.getSide());
                 ee.setPlayer(fpe);
                 ee.setGameTimeSecond(gameTimeSecond(timeCode));
                 ee.setGameSituation(ge.getGameSituation());
@@ -618,7 +613,7 @@ public class App {
                 PenaltyEvent pe = (PenaltyEvent)e;
                 
                 PenaltyEventEntity ee = new PenaltyEventEntity();
-                ee.setSide(partSide);
+                ee.setSide(e.getSide());
                 ee.setPlayer(fpe);
                 ee.setGameTimeSecond(gameTimeSecond(timeCode));
                 ee.setOffense(pe.getOffense());

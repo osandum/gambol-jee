@@ -1,13 +1,18 @@
 package gambol.model;
 
+import gambol.xml.FixtureSideRole;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 /**
@@ -42,17 +47,30 @@ public class FixtureEventEntity implements Serializable {
     public void setGameTimeSecond(Integer gameTimeSecond) {
         this.gameTimeSecond = gameTimeSecond;
     }
-    
-        
-    @ManyToOne(optional = false)
-    private FixtureSideEntity side;
 
-    public FixtureSideEntity getSide() {
+
+    @Enumerated(EnumType.STRING)
+    private FixtureSideRole side;
+
+    public FixtureSideRole getSide() {
         return side;
     }
 
-    public void setSide(FixtureSideEntity side) {
+    public void setSide(FixtureSideRole side) {
         this.side = side;
+    }
+    
+    
+    @ManyToOne(optional = false)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_fixture"))
+    private FixtureEntity fixture;
+
+    public FixtureEntity getFixture() {
+        return fixture;
+    }
+
+    public void setFixture(FixtureEntity fixture) {
+        this.fixture = fixture;
     }
 
     
@@ -60,7 +78,8 @@ public class FixtureEventEntity implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("[%d] %02d:%02d %s", id, gameTimeSecond / 60, gameTimeSecond % 60, side.getTeam().getName());
+        FixtureSideEntity fs = getFixture().getSide(side);
+        return String.format("[%d] %02d:%02d %s", id, gameTimeSecond / 60, gameTimeSecond % 60, fs.getTeam().getName());
     }
 
 /*  public final static Comparator<FixtureEventEntity> BY_TIME = new Comparator<FixtureEventEntity>() {

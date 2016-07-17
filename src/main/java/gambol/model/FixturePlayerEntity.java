@@ -2,6 +2,8 @@ package gambol.model;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 /**
@@ -12,6 +14,7 @@ import javax.persistence.ManyToOne;
 public class FixturePlayerEntity extends FixturePersonEntity {
 
     @ManyToOne(optional = false)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_side"))
     private FixtureSideEntity side;
 
     public FixtureSideEntity getSide() {

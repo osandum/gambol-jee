@@ -4,8 +4,10 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -32,6 +34,7 @@ public class FixtureSideEntity implements Serializable {
     }
 
     @ManyToOne(optional = false)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_team"))
     private TournamentTeamEntity team;
 
     public TournamentTeamEntity getTeam() {
@@ -54,18 +57,6 @@ public class FixtureSideEntity implements Serializable {
     }
 
     
-    @OneToMany(mappedBy = "side")
-    private List<FixtureEventEntity> events;
-
-    public List<FixtureEventEntity> getEvents() {
-        return events;
-    }
-
-    public void setEvents(List<FixtureEventEntity> events) {
-        this.events = events;
-    }
-
-
     private Integer score;
 
     public Integer getScore() {
