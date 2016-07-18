@@ -1,0 +1,780 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tournament
+    xmlns="http://sandum.net/namespaces/gambol"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    source-ref="DIU:1156" season="2015" slug="u11.1-øst">
+  <!--
+
+                Source: no-source
+                Season: 2015
+                Tournament: U 11 1 ØST
+                Source-Ref: DIU:1156
+                Ref: u11.1-øst-->
+  <title>U 11 1 ØST</title>
+  <fixture source-ref="DIU:1156:36189:rødovre:gladsaxe" schedule="confirmed" match-number="1">
+    <side role="home">
+      <team club-ref="rødovre">Rødovre</team>
+    </side>
+    <side role="away">
+      <team club-ref="gladsaxe">Gladsaxe</team>
+    </side>
+    <start-time>2015-12-24T11:45:00</start-time>
+  </fixture>
+  <fixture source-ref="DIU:1156:36190:herlev:hvidovre" schedule="confirmed" match-number="2">
+    <!-- Match sheet: gamesheet.aspx?gameID=36190-->
+    <diu-match-id>36190</diu-match-id>
+    <side role="home">
+      <team club-ref="herlev">Herlev</team>
+      <score>2</score>
+    </side>
+    <side role="away">
+      <team club-ref="hvidovre">Hvidovre</team>
+      <score>7</score>
+    </side>
+    <start-time>2015-09-06T08:30:00</start-time>
+    <outcome>
+      <home-loss/>
+    </outcome>
+  </fixture>
+  <fixture source-ref="DIU:1156:36191:rungsted:gentofte" schedule="confirmed" match-number="3">
+    <!-- Match sheet: gamesheet.aspx?gameID=36191-->
+    <diu-match-id>36191</diu-match-id>
+    <side role="home">
+      <team club-ref="rungsted">Rungsted</team>
+      <score>2</score>
+    </side>
+    <side role="away">
+      <team club-ref="gentofte">Gentofte Stars</team>
+      <score>6</score>
+    </side>
+    <start-time>2015-09-20T08:00:00</start-time>
+    <outcome>
+      <home-loss/>
+    </outcome>
+  </fixture>
+  <fixture source-ref="DIU:1156:36192:ksf:amager" schedule="confirmed" match-number="4">
+    <!-- Match sheet: gamesheet.aspx?gameID=36192-->
+    <diu-match-id>36192</diu-match-id>
+    <side role="home">
+      <team club-ref="ksf">KSF</team>
+      <score>3</score>
+    </side>
+    <side role="away">
+      <team club-ref="amager">Amar Jets</team>
+      <score>10</score>
+    </side>
+    <start-time>2015-09-26T18:00:00</start-time>
+    <outcome>
+      <home-loss/>
+      <overtime/>
+    </outcome>
+  </fixture>
+  <fixture source-ref="DIU:1156:36193:gentofte:herlev" schedule="confirmed" match-number="5">
+    <!-- Match sheet: gamesheet.aspx?gameID=36193-->
+    <diu-match-id>36193</diu-match-id>
+    <side role="home">
+      <team club-ref="gentofte">Gentofte Stars</team>
+      <score>5</score>
+    </side>
+    <side role="away">
+      <team club-ref="herlev">Herlev</team>
+      <score>3</score>
+    </side>
+    <start-time>2015-12-13T15:25:00</start-time>
+    <outcome>
+      <home-win/>
+    </outcome>
+  </fixture>
+  <fixture source-ref="DIU:1156:36194:hvidovre:rødovre" schedule="confirmed" match-number="6">
+    <!-- Match sheet: gamesheet.aspx?gameID=36194-->
+    <diu-match-id>36194</diu-match-id>
+    <side role="home">
+      <team club-ref="hvidovre">Hvidovre</team>
+      <score>3</score>
+    </side>
+    <side role="away">
+      <team club-ref="rødovre">Rødovre</team>
+      <score>2</score>
+    </side>
+    <start-time>2015-10-03T16:35:00</start-time>
+    <outcome>
+      <home-win/>
+    </outcome>
+  </fixture>
+  <fixture source-ref="DIU:1156:36195:gladsaxe:amager" schedule="confirmed" match-number="7">
+    <side role="home">
+      <team club-ref="gladsaxe">Gladsaxe</team>
+    </side>
+    <side role="away">
+      <team club-ref="amager">Amar Jets</team>
+    </side>
+    <start-time>2015-10-10T08:40:00</start-time>
+  </fixture>
+  <fixture source-ref="DIU:1156:36196:rungsted:ksf" schedule="confirmed" match-number="8">
+    <!-- Match sheet: gamesheet.aspx?gameID=36196-->
+    <diu-match-id>36196</diu-match-id>
+    <side role="home">
+      <team club-ref="rungsted">Rungsted</team>
+      <score>2</score>
+    </side>
+    <side role="away">
+      <team club-ref="ksf">KSF</team>
+      <score>5</score>
+    </side>
+    <start-time>2015-11-14T08:00:00</start-time>
+    <outcome>
+      <home-loss/>
+    </outcome>
+  </fixture>
+  <fixture source-ref="DIU:1156:36197:amager:hvidovre" schedule="confirmed" match-number="9">
+    <!-- Match sheet: gamesheet.aspx?gameID=36197-->
+    <diu-match-id>36197</diu-match-id>
+    <side role="home">
+      <team club-ref="amager">Amar Jets</team>
+      <score>12</score>
+    </side>
+    <side role="away">
+      <team club-ref="hvidovre">Hvidovre</team>
+      <score>2</score>
+    </side>
+    <start-time>2015-11-01T15:00:00</start-time>
+    <outcome>
+      <home-win/>
+    </outcome>
+  </fixture>
+  <fixture source-ref="DIU:1156:36198:rødovre:gentofte" schedule="confirmed" match-number="10">
+    <!-- Match sheet: gamesheet.aspx?gameID=36198-->
+    <diu-match-id>36198</diu-match-id>
+    <side role="home">
+      <team club-ref="rødovre">Rødovre</team>
+      <score>6</score>
+    </side>
+    <side role="away">
+      <team club-ref="gentofte">Gentofte Stars</team>
+      <score>3</score>
+    </side>
+    <start-time>2016-03-01T17:45:00</start-time>
+    <outcome>
+      <home-win/>
+    </outcome>
+  </fixture>
+  <fixture source-ref="DIU:1156:36199:herlev:rungsted" schedule="confirmed" match-number="11">
+    <!-- Match sheet: gamesheet.aspx?gameID=36199-->
+    <diu-match-id>36199</diu-match-id>
+    <side role="home">
+      <team club-ref="herlev">Herlev</team>
+      <score>20</score>
+    </side>
+    <side role="away">
+      <team club-ref="rungsted">Rungsted</team>
+      <score>0</score>
+    </side>
+    <start-time>2015-10-04T09:20:00</start-time>
+    <outcome>
+      <home-win/>
+    </outcome>
+  </fixture>
+  <fixture source-ref="DIU:1156:36200:ksf:gladsaxe" schedule="confirmed" match-number="12">
+    <side role="home">
+      <team club-ref="ksf">KSF</team>
+    </side>
+    <side role="away">
+      <team club-ref="gladsaxe">Gladsaxe</team>
+    </side>
+    <start-time>2015-11-02T18:15:00</start-time>
+  </fixture>
+  <fixture source-ref="DIU:1156:36201:rungsted:rødovre" schedule="confirmed" match-number="13">
+    <!-- Match sheet: gamesheet.aspx?gameID=36201-->
+    <diu-match-id>36201</diu-match-id>
+    <side role="home">
+      <team club-ref="rungsted">Rungsted</team>
+      <score>2</score>
+    </side>
+    <side role="away">
+      <team club-ref="rødovre">Rødovre</team>
+      <score>9</score>
+    </side>
+    <start-time>2015-11-21T08:00:00</start-time>
+    <outcome>
+      <home-loss/>
+    </outcome>
+  </fixture>
+  <fixture source-ref="DIU:1156:36202:gentofte:amager" schedule="confirmed" match-number="14">
+    <!-- Match sheet: gamesheet.aspx?gameID=36202-->
+    <diu-match-id>36202</diu-match-id>
+    <side role="home">
+      <team club-ref="gentofte">Gentofte Stars</team>
+      <score>12</score>
+    </side>
+    <side role="away">
+      <team club-ref="amager">Amar Jets</team>
+      <score>5</score>
+    </side>
+    <start-time>2015-10-10T10:15:00</start-time>
+    <outcome>
+      <home-win/>
+    </outcome>
+  </fixture>
+  <fixture source-ref="DIU:1156:36203:hvidovre:gladsaxe" schedule="none" match-number="15">
+    <side role="home">
+      <team club-ref="hvidovre">Hvidovre</team>
+    </side>
+    <side role="away">
+      <team club-ref="gladsaxe">Gladsaxe</team>
+    </side>
+    <start-time>2015-11-18T00:00:00</start-time>
+  </fixture>
+  <fixture source-ref="DIU:1156:36204:herlev:ksf" schedule="confirmed" match-number="16">
+    <side role="home">
+      <team club-ref="herlev">Herlev</team>
+    </side>
+    <side role="away">
+      <team club-ref="ksf">KSF</team>
+    </side>
+    <start-time>2015-10-31T15:30:00</start-time>
+  </fixture>
+  <fixture source-ref="DIU:1156:36205:gladsaxe:gentofte" schedule="confirmed" match-number="17">
+    <side role="home">
+      <team club-ref="gladsaxe">Gladsaxe</team>
+    </side>
+    <side role="away">
+      <team club-ref="gentofte">Gentofte Stars</team>
+    </side>
+    <start-time>2015-12-12T08:35:00</start-time>
+  </fixture>
+  <fixture source-ref="DIU:1156:36206:amager:rungsted" schedule="confirmed" match-number="18">
+    <!-- Match sheet: gamesheet.aspx?gameID=36206-->
+    <diu-match-id>36206</diu-match-id>
+    <side role="home">
+      <team club-ref="amager">Amar Jets</team>
+      <score>8</score>
+    </side>
+    <side role="away">
+      <team club-ref="rungsted">Rungsted</team>
+      <score>3</score>
+    </side>
+    <start-time>2015-12-20T12:20:00</start-time>
+    <outcome>
+      <home-win/>
+    </outcome>
+  </fixture>
+  <fixture source-ref="DIU:1156:36207:rødovre:herlev" schedule="confirmed" match-number="19">
+    <!-- Match sheet: gamesheet.aspx?gameID=36207-->
+    <diu-match-id>36207</diu-match-id>
+    <side role="home">
+      <team club-ref="rødovre">Rødovre</team>
+      <score>2</score>
+    </side>
+    <side role="away">
+      <team club-ref="herlev">Herlev</team>
+      <score>3</score>
+    </side>
+    <start-time>2015-11-22T11:45:00</start-time>
+    <outcome>
+      <home-loss/>
+    </outcome>
+  </fixture>
+  <fixture source-ref="DIU:1156:36208:ksf:hvidovre" schedule="confirmed" match-number="20">
+    <!-- Match sheet: gamesheet.aspx?gameID=36208-->
+    <diu-match-id>36208</diu-match-id>
+    <side role="home">
+      <team club-ref="ksf">KSF</team>
+      <score>0</score>
+    </side>
+    <side role="away">
+      <team club-ref="hvidovre">Hvidovre</team>
+      <score>5</score>
+    </side>
+    <start-time>2015-10-10T18:00:00</start-time>
+    <outcome>
+      <home-loss/>
+    </outcome>
+  </fixture>
+  <fixture source-ref="DIU:1156:36209:herlev:amager" schedule="confirmed" match-number="21">
+    <side role="home">
+      <team club-ref="herlev">Herlev</team>
+    </side>
+    <side role="away">
+      <team club-ref="amager">Amar Jets</team>
+    </side>
+    <start-time>2015-10-25T11:55:00</start-time>
+  </fixture>
+  <fixture source-ref="DIU:1156:36210:rungsted:gladsaxe" schedule="none" match-number="22">
+    <side role="home">
+      <team club-ref="rungsted">Rungsted</team>
+    </side>
+    <side role="away">
+      <team club-ref="gladsaxe">Gladsaxe</team>
+    </side>
+    <start-time>2015-12-09T00:00:00</start-time>
+  </fixture>
+  <fixture source-ref="DIU:1156:36211:gentofte:hvidovre" schedule="confirmed" match-number="23">
+    <!-- Match sheet: gamesheet.aspx?gameID=36211-->
+    <diu-match-id>36211</diu-match-id>
+    <side role="home">
+      <team club-ref="gentofte">Gentofte Stars</team>
+      <score>11</score>
+    </side>
+    <side role="away">
+      <team club-ref="hvidovre">Hvidovre</team>
+      <score>0</score>
+    </side>
+    <start-time>2015-12-12T13:10:00</start-time>
+    <outcome>
+      <home-win/>
+    </outcome>
+  </fixture>
+  <fixture source-ref="DIU:1156:36212:rødovre:ksf" schedule="confirmed" match-number="24">
+    <!-- Match sheet: gamesheet.aspx?gameID=36212-->
+    <diu-match-id>36212</diu-match-id>
+    <side role="home">
+      <team club-ref="rødovre">Rødovre</team>
+      <score>18</score>
+    </side>
+    <side role="away">
+      <team club-ref="ksf">KSF</team>
+      <score>1</score>
+    </side>
+    <start-time>2015-12-13T08:15:00</start-time>
+    <outcome>
+      <home-win/>
+    </outcome>
+  </fixture>
+  <fixture source-ref="DIU:1156:36213:hvidovre:rungsted" schedule="confirmed" match-number="25">
+    <!-- Match sheet: gamesheet.aspx?gameID=36213-->
+    <diu-match-id>36213</diu-match-id>
+    <side role="home">
+      <team club-ref="hvidovre">Hvidovre</team>
+      <score>9</score>
+    </side>
+    <side role="away">
+      <team club-ref="rungsted">Rungsted</team>
+      <score>2</score>
+    </side>
+    <start-time>2016-03-06T17:45:00</start-time>
+    <outcome>
+      <home-win/>
+    </outcome>
+  </fixture>
+  <fixture source-ref="DIU:1156:36214:gladsaxe:herlev" schedule="none" match-number="26">
+    <side role="home">
+      <team club-ref="gladsaxe">Gladsaxe</team>
+    </side>
+    <side role="away">
+      <team club-ref="herlev">Herlev</team>
+    </side>
+    <start-time>2015-12-30T00:00:00</start-time>
+  </fixture>
+  <fixture source-ref="DIU:1156:36215:amager:rødovre" schedule="confirmed" match-number="27">
+    <!-- Match sheet: gamesheet.aspx?gameID=36215-->
+    <diu-match-id>36215</diu-match-id>
+    <side role="home">
+      <team club-ref="amager">Amar Jets</team>
+      <score>0</score>
+    </side>
+    <side role="away">
+      <team club-ref="rødovre">Rødovre</team>
+      <score>0</score>
+    </side>
+    <start-time>2016-01-02T15:15:00</start-time>
+    <outcome>
+      <draw/>
+    </outcome>
+  </fixture>
+  <fixture source-ref="DIU:1156:36216:ksf:gentofte" schedule="confirmed" match-number="28">
+    <side role="home">
+      <team club-ref="ksf">KSF</team>
+    </side>
+    <side role="away">
+      <team club-ref="gentofte">Gentofte Stars</team>
+    </side>
+    <start-time>2015-12-19T18:00:00</start-time>
+  </fixture>
+  <fixture source-ref="DIU:1156:36217:gladsaxe:rødovre" schedule="none" match-number="29">
+    <side role="home">
+      <team club-ref="gladsaxe">Gladsaxe</team>
+    </side>
+    <side role="away">
+      <team club-ref="rødovre">Rødovre</team>
+    </side>
+    <start-time>2015-12-24T00:00:00</start-time>
+  </fixture>
+  <fixture source-ref="DIU:1156:36218:hvidovre:herlev" schedule="confirmed" match-number="30">
+    <!-- Match sheet: gamesheet.aspx?gameID=36218-->
+    <diu-match-id>36218</diu-match-id>
+    <side role="home">
+      <team club-ref="hvidovre">Hvidovre</team>
+      <score>8</score>
+    </side>
+    <side role="away">
+      <team club-ref="herlev">Herlev</team>
+      <score>4</score>
+    </side>
+    <start-time>2015-12-06T17:45:00</start-time>
+    <outcome>
+      <home-win/>
+    </outcome>
+  </fixture>
+  <fixture source-ref="DIU:1156:36219:gentofte:rungsted" schedule="confirmed" match-number="31">
+    <!-- Match sheet: gamesheet.aspx?gameID=36219-->
+    <diu-match-id>36219</diu-match-id>
+    <side role="home">
+      <team club-ref="gentofte">Gentofte Stars</team>
+      <score>14</score>
+    </side>
+    <side role="away">
+      <team club-ref="rungsted">Rungsted</team>
+      <score>1</score>
+    </side>
+    <start-time>2015-10-31T17:10:00</start-time>
+    <outcome>
+      <home-win/>
+    </outcome>
+  </fixture>
+  <fixture source-ref="DIU:1156:36220:amager:ksf" schedule="confirmed" match-number="32">
+    <!-- Match sheet: gamesheet.aspx?gameID=36220-->
+    <diu-match-id>36220</diu-match-id>
+    <side role="home">
+      <team club-ref="amager">Amar Jets</team>
+      <score>0</score>
+    </side>
+    <side role="away">
+      <team club-ref="ksf">KSF</team>
+      <score>0</score>
+    </side>
+    <start-time>2016-01-03T15:00:00</start-time>
+    <outcome>
+      <draw/>
+    </outcome>
+  </fixture>
+  <fixture source-ref="DIU:1156:36221:herlev:gentofte" schedule="confirmed" match-number="33">
+    <!-- Match sheet: gamesheet.aspx?gameID=36221-->
+    <diu-match-id>36221</diu-match-id>
+    <side role="home">
+      <team club-ref="herlev">Herlev</team>
+      <score>3</score>
+    </side>
+    <side role="away">
+      <team club-ref="gentofte">Gentofte Stars</team>
+      <score>4</score>
+    </side>
+    <start-time>2016-02-27T08:30:00</start-time>
+    <outcome>
+      <home-loss/>
+    </outcome>
+  </fixture>
+  <fixture source-ref="DIU:1156:36222:rødovre:hvidovre" schedule="confirmed" match-number="34">
+    <!-- Match sheet: gamesheet.aspx?gameID=36222-->
+    <diu-match-id>36222</diu-match-id>
+    <side role="home">
+      <team club-ref="rødovre">Rødovre</team>
+      <score>13</score>
+    </side>
+    <side role="away">
+      <team club-ref="hvidovre">Hvidovre</team>
+      <score>3</score>
+    </side>
+    <start-time>2016-01-17T14:45:00</start-time>
+    <outcome>
+      <home-win/>
+    </outcome>
+  </fixture>
+  <fixture source-ref="DIU:1156:36223:amager:gladsaxe" schedule="confirmed" match-number="35">
+    <side role="home">
+      <team club-ref="amager">Amar Jets</team>
+    </side>
+    <side role="away">
+      <team club-ref="gladsaxe">Gladsaxe</team>
+    </side>
+    <start-time>2016-01-30T18:15:00</start-time>
+  </fixture>
+  <fixture source-ref="DIU:1156:36224:ksf:rungsted" schedule="confirmed" match-number="36">
+    <side role="home">
+      <team club-ref="ksf">KSF</team>
+    </side>
+    <side role="away">
+      <team club-ref="rungsted">Rungsted</team>
+    </side>
+    <start-time>2016-02-01T18:15:00</start-time>
+  </fixture>
+  <fixture source-ref="DIU:1156:36225:hvidovre:amager" schedule="confirmed" match-number="37">
+    <!-- Match sheet: gamesheet.aspx?gameID=36225-->
+    <diu-match-id>36225</diu-match-id>
+    <side role="home">
+      <team club-ref="hvidovre">Hvidovre</team>
+      <score>7</score>
+    </side>
+    <side role="away">
+      <team club-ref="amager">Amar Jets</team>
+      <score>3</score>
+    </side>
+    <start-time>2015-12-30T17:45:00</start-time>
+    <outcome>
+      <home-win/>
+    </outcome>
+  </fixture>
+  <fixture source-ref="DIU:1156:36226:gentofte:rødovre" schedule="confirmed" match-number="38">
+    <!-- Match sheet: gamesheet.aspx?gameID=36226-->
+    <diu-match-id>36226</diu-match-id>
+    <side role="home">
+      <team club-ref="gentofte">Gentofte Stars</team>
+      <score>3</score>
+    </side>
+    <side role="away">
+      <team club-ref="rødovre">Rødovre</team>
+      <score>9</score>
+    </side>
+    <start-time>2015-12-18T17:10:00</start-time>
+    <outcome>
+      <home-loss/>
+    </outcome>
+  </fixture>
+  <fixture source-ref="DIU:1156:36227:rungsted:herlev" schedule="confirmed" match-number="39">
+    <!-- Match sheet: gamesheet.aspx?gameID=36227-->
+    <diu-match-id>36227</diu-match-id>
+    <side role="home">
+      <team club-ref="rungsted">Rungsted</team>
+      <score>3</score>
+    </side>
+    <side role="away">
+      <team club-ref="herlev">Herlev</team>
+      <score>6</score>
+    </side>
+    <start-time>2016-03-30T18:30:00</start-time>
+    <outcome>
+      <home-loss/>
+    </outcome>
+  </fixture>
+  <fixture source-ref="DIU:1156:36228:gladsaxe:ksf" schedule="none" match-number="40">
+    <side role="home">
+      <team club-ref="gladsaxe">Gladsaxe</team>
+    </side>
+    <side role="away">
+      <team club-ref="ksf">KSF</team>
+    </side>
+    <start-time>2016-01-27T00:00:00</start-time>
+  </fixture>
+  <fixture source-ref="DIU:1156:36229:rødovre:rungsted" schedule="confirmed" match-number="41">
+    <!-- Match sheet: gamesheet.aspx?gameID=36229-->
+    <diu-match-id>36229</diu-match-id>
+    <side role="home">
+      <team club-ref="rødovre">Rødovre</team>
+      <score>7</score>
+    </side>
+    <side role="away">
+      <team club-ref="rungsted">Rungsted</team>
+      <score>1</score>
+    </side>
+    <start-time>2016-03-08T17:45:00</start-time>
+    <outcome>
+      <home-win/>
+      <overtime/>
+    </outcome>
+  </fixture>
+  <fixture source-ref="DIU:1156:36230:amager:gentofte" schedule="confirmed" match-number="42">
+    <!-- Match sheet: gamesheet.aspx?gameID=36230-->
+    <diu-match-id>36230</diu-match-id>
+    <side role="home">
+      <team club-ref="amager">Amar Jets</team>
+      <score>4</score>
+    </side>
+    <side role="away">
+      <team club-ref="gentofte">Gentofte Stars</team>
+      <score>10</score>
+    </side>
+    <start-time>2015-11-20T18:30:00</start-time>
+    <outcome>
+      <home-loss/>
+    </outcome>
+  </fixture>
+  <fixture source-ref="DIU:1156:36231:gladsaxe:hvidovre" schedule="none" match-number="43">
+    <side role="home">
+      <team club-ref="gladsaxe">Gladsaxe</team>
+    </side>
+    <side role="away">
+      <team club-ref="hvidovre">Hvidovre</team>
+    </side>
+    <start-time>2016-02-10T00:00:00</start-time>
+  </fixture>
+  <fixture source-ref="DIU:1156:36232:ksf:herlev" schedule="confirmed" match-number="44">
+    <!-- Match sheet: gamesheet.aspx?gameID=36232-->
+    <diu-match-id>36232</diu-match-id>
+    <side role="home">
+      <team club-ref="ksf">KSF</team>
+      <score>2</score>
+    </side>
+    <side role="away">
+      <team club-ref="herlev">Herlev</team>
+      <score>18</score>
+    </side>
+    <start-time>2015-11-15T09:00:00</start-time>
+    <outcome>
+      <home-loss/>
+    </outcome>
+  </fixture>
+  <fixture source-ref="DIU:1156:36233:gentofte:gladsaxe" schedule="none" match-number="45">
+    <side role="home">
+      <team club-ref="gentofte">Gentofte Stars</team>
+    </side>
+    <side role="away">
+      <team club-ref="gladsaxe">Gladsaxe</team>
+    </side>
+    <start-time>2016-02-24T00:00:00</start-time>
+  </fixture>
+  <fixture source-ref="DIU:1156:36234:rungsted:amager" schedule="confirmed" match-number="46">
+    <!-- Match sheet: gamesheet.aspx?gameID=36234-->
+    <diu-match-id>36234</diu-match-id>
+    <side role="home">
+      <team club-ref="rungsted">Rungsted</team>
+      <score>3</score>
+    </side>
+    <side role="away">
+      <team club-ref="amager">Amar Jets</team>
+      <score>2</score>
+    </side>
+    <start-time>2016-03-05T09:30:00</start-time>
+    <outcome>
+      <home-win/>
+    </outcome>
+  </fixture>
+  <fixture source-ref="DIU:1156:36235:herlev:rødovre" schedule="confirmed" match-number="47">
+    <!-- Match sheet: gamesheet.aspx?gameID=36235-->
+    <diu-match-id>36235</diu-match-id>
+    <side role="home">
+      <team club-ref="herlev">Herlev</team>
+      <score>1</score>
+    </side>
+    <side role="away">
+      <team club-ref="rødovre">Rødovre</team>
+      <score>2</score>
+    </side>
+    <start-time>2016-02-28T09:10:00</start-time>
+    <outcome>
+      <home-loss/>
+    </outcome>
+  </fixture>
+  <fixture source-ref="DIU:1156:36236:hvidovre:ksf" schedule="confirmed" match-number="48">
+    <!-- Match sheet: gamesheet.aspx?gameID=36236-->
+    <diu-match-id>36236</diu-match-id>
+    <side role="home">
+      <team club-ref="hvidovre">Hvidovre</team>
+      <score>6</score>
+    </side>
+    <side role="away">
+      <team club-ref="ksf">KSF</team>
+      <score>1</score>
+    </side>
+    <start-time>2016-02-21T10:30:00</start-time>
+    <outcome>
+      <home-win/>
+    </outcome>
+  </fixture>
+  <fixture source-ref="DIU:1156:36237:amager:herlev" schedule="confirmed" match-number="49">
+    <!-- Match sheet: gamesheet.aspx?gameID=36237-->
+    <diu-match-id>36237</diu-match-id>
+    <side role="home">
+      <team club-ref="amager">Amar Jets</team>
+      <score>1</score>
+    </side>
+    <side role="away">
+      <team club-ref="herlev">Herlev</team>
+      <score>9</score>
+    </side>
+    <start-time>2016-03-04T17:45:00</start-time>
+    <outcome>
+      <home-loss/>
+      <overtime/>
+    </outcome>
+  </fixture>
+  <fixture source-ref="DIU:1156:36238:gladsaxe:rungsted" schedule="none" match-number="50">
+    <side role="home">
+      <team club-ref="gladsaxe">Gladsaxe</team>
+    </side>
+    <side role="away">
+      <team club-ref="rungsted">Rungsted</team>
+    </side>
+    <start-time>2016-03-03T00:00:00</start-time>
+  </fixture>
+  <fixture source-ref="DIU:1156:36239:hvidovre:gentofte" schedule="confirmed" match-number="51">
+    <!-- Match sheet: gamesheet.aspx?gameID=36239-->
+    <diu-match-id>36239</diu-match-id>
+    <side role="home">
+      <team club-ref="hvidovre">Hvidovre</team>
+      <score>2</score>
+    </side>
+    <side role="away">
+      <team club-ref="gentofte">Gentofte Stars</team>
+      <score>5</score>
+    </side>
+    <start-time>2015-11-14T16:35:00</start-time>
+    <outcome>
+      <home-loss/>
+    </outcome>
+  </fixture>
+  <fixture source-ref="DIU:1156:36240:ksf:rødovre" schedule="confirmed" match-number="52">
+    <!-- Match sheet: gamesheet.aspx?gameID=36240-->
+    <diu-match-id>36240</diu-match-id>
+    <side role="home">
+      <team club-ref="ksf">KSF</team>
+      <score>1</score>
+    </side>
+    <side role="away">
+      <team club-ref="rødovre">Rødovre</team>
+      <score>18</score>
+    </side>
+    <start-time>2016-03-21T18:30:00</start-time>
+    <outcome>
+      <home-loss/>
+    </outcome>
+  </fixture>
+  <fixture source-ref="DIU:1156:36241:rungsted:hvidovre" schedule="confirmed" match-number="53">
+    <!-- Match sheet: gamesheet.aspx?gameID=36241-->
+    <diu-match-id>36241</diu-match-id>
+    <side role="home">
+      <team club-ref="rungsted">Rungsted</team>
+      <score>3</score>
+    </side>
+    <side role="away">
+      <team club-ref="hvidovre">Hvidovre</team>
+      <score>14</score>
+    </side>
+    <start-time>2016-03-13T09:30:00</start-time>
+    <outcome>
+      <home-loss/>
+    </outcome>
+  </fixture>
+  <fixture source-ref="DIU:1156:36242:herlev:gladsaxe" schedule="confirmed" match-number="54">
+    <side role="home">
+      <team club-ref="herlev">Herlev</team>
+    </side>
+    <side role="away">
+      <team club-ref="gladsaxe">Gladsaxe</team>
+    </side>
+    <start-time>2016-03-06T08:00:00</start-time>
+  </fixture>
+  <fixture source-ref="DIU:1156:36243:rødovre:amager" schedule="confirmed" match-number="55">
+    <side role="home">
+      <team club-ref="rødovre">Rødovre</team>
+    </side>
+    <side role="away">
+      <team club-ref="amager">Amar Jets</team>
+    </side>
+    <start-time>2016-03-13T08:00:00</start-time>
+  </fixture>
+  <fixture source-ref="DIU:1156:36244:gentofte:ksf" schedule="confirmed" match-number="56">
+    <!-- Match sheet: gamesheet.aspx?gameID=36244-->
+    <diu-match-id>36244</diu-match-id>
+    <side role="home">
+      <team club-ref="gentofte">Gentofte Stars</team>
+      <score>15</score>
+    </side>
+    <side role="away">
+      <team club-ref="ksf">KSF</team>
+      <score>2</score>
+    </side>
+    <start-time>2015-12-05T10:50:00</start-time>
+    <outcome>
+      <home-win/>
+    </outcome>
+  </fixture>
+</tournament>

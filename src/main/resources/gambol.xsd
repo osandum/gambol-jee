@@ -7,24 +7,24 @@
            elementFormDefault="qualified"
            xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
            jaxb:version="2.1"
-           
+
            xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
            jaxb:extensionBindingPrefixes="xjc">
 
-    <xs:element name="gambol">     
+    <xs:element name="gambol">
         <xs:complexType>
             <xs:choice>
                 <xs:sequence>
                     <xs:element name="section" minOccurs="0" maxOccurs="unbounded" type="g:Section"/>
                 </xs:sequence>
-                <xs:element name="tournament" type="g:Tournament_temp" />
+                <xs:element name="tournament" type="g:TournamentRef" />
                 <!--xs:element name="fixture" type="g:Fixture" /-->
                 <!--xs:element name="gamesheet" type="g:Gamesheet" /-->
             </xs:choice>
-        
+
             <xs:attribute name="season" type="xs:string" />
         </xs:complexType>
-    </xs:element>     
+    </xs:element>
 
     <xs:element name="fixtures">
         <xs:complexType>
@@ -32,28 +32,28 @@
                 <xs:element name="fixture" minOccurs="0" maxOccurs="unbounded" type="g:Fixture"/>
             </xs:sequence>
         </xs:complexType>
-    </xs:element>     
+    </xs:element>
 
-    <xs:element name="tournament-source">
+    <!-- xs:element name="tournament-source">
         <xs:complexType>
             <xs:sequence>
-                
+
                 <xs:element name="fixtures">
                     <xs:complexType>
                         <xs:sequence>
                             <xs:element name="fixture" minOccurs="0" maxOccurs="unbounded" type="g:Fixture"/>
                         </xs:sequence>
                     </xs:complexType>
-                </xs:element>     
+                </xs:element>
             </xs:sequence>
         </xs:complexType>
-    </xs:element>     
+    </xs:element -->
 
     <xs:element name="club">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="name" minOccurs="1" maxOccurs="1" type="xs:string" />
-                
+
                 <xs:element name="address" minOccurs="1" maxOccurs="1">
                     <xs:complexType>
                         <xs:simpleContent>
@@ -64,56 +64,92 @@
                         </xs:simpleContent>
                     </xs:complexType>
                 </xs:element>
-                
-            </xs:sequence> 
-            
+
+            </xs:sequence>
+
             <xs:attribute name="country" type="xs:string" />
         </xs:complexType>
     </xs:element>
-        
+
     <xs:complexType name="Section">
         <xs:sequence>
             <xs:element name="title" minOccurs="1" maxOccurs="1" type="xs:string"/>
-            <xs:element name="tournament" minOccurs="0" maxOccurs="unbounded" type="g:Tournament_temp"/>
+            <xs:element name="tournament" minOccurs="0" maxOccurs="unbounded" type="g:TournamentRef"/>
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="Tournament_temp">
+    <xs:complexType name="ArenaDef">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="slug" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Used only for tournament source uploads
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="TeamDef">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="side" type="g:FixtureSideRole">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Used only for tournament source uploads
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="club-ref" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Used only for tournament source uploads
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="TournamentRef">
         <xs:sequence>
             <xs:element name="title" minOccurs="1" maxOccurs="1" type="xs:string" />
+            <xs:element name="details" minOccurs="0" maxOccurs="1" type="xs:anyURI" />
             <xs:element name="fixture" minOccurs="0" maxOccurs="unbounded" type="g:Fixture" />
         </xs:sequence>
- 
+
         <xs:attribute name="season" type="xs:string" />
-        <xs:attribute name="association" type="xs:string" />
+        <!-- xs:attribute name="association" type="xs:string" / -->
         <xs:attribute name="source-ref" type="xs:string" use="required" />
+        <xs:attribute name="series" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>
+                    Used only for query results
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="arena" type="xs:string"/>
     </xs:complexType>
 
     <xs:element name="tournament">
+        <xs:annotation>
+            <xs:appinfo>
+                <jaxb:class name="TournamentSrc"/>
+            </xs:appinfo>
+        </xs:annotation>
+
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="title" minOccurs="1" maxOccurs="1" type="xs:string" />
-                <xs:element name="details" minOccurs="0" maxOccurs="1" type="xs:anyURI" />
                 <xs:element name="fixture" minOccurs="0" maxOccurs="unbounded" type="g:Fixture" />
             </xs:sequence>
 
             <xs:attribute name="season" type="xs:string" />
-            <!-- xs:attribute name="association" type="xs:string" / -->
+            <xs:attribute name="association" type="xs:string" />
             <xs:attribute name="source-ref" type="xs:string" use="required" />
-            <xs:attribute name="series" type="xs:string">
-                <xs:annotation>
-                    <xs:documentation>
-                        Used only for query results
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-            <xs:attribute name="slug" type="xs:string">
-                <xs:annotation>
-                    <xs:documentation>
-                        Used only for tournament source uploads
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
+            <xs:attribute name="slug" type="xs:string" />
             <xs:attribute name="arena" type="xs:string"/>
         </xs:complexType>
     </xs:element>
@@ -128,7 +164,7 @@
             <xs:element name="location" minOccurs="1" maxOccurs="1" type="xs:string"/>
             <xs:element name="result" minOccurs="0" maxOccurs="1" />
             <xs:element name="match-details" minOccurs="0" maxOccurs="1" type="xs:anyURI" />
-            
+
         </xs:sequence>
 
         <xs:attribute name="match-number" type="xs:string" />
@@ -154,7 +190,7 @@
             <xs:enumeration value="confirmed" />
         </xs:restriction>
     </xs:simpleType>
-    
+
     <xs:simpleType name="GameOffense" final="restriction">
         <xs:restriction base="xs:string">
             <xs:enumeration value="TRIP" />
@@ -174,7 +210,7 @@
             <xs:enumeration value="CHE-H" />
         </xs:restriction>
     </xs:simpleType>
-    
+
     <xs:simpleType name="GameSituation" final="restriction">
         <xs:restriction base="xs:string">
             <xs:enumeration value="EQ" />
@@ -185,14 +221,24 @@
             <xs:enumeration value="GWS" />
         </xs:restriction>
     </xs:simpleType>
-          
+
+    <xs:simpleType name="GamePeriod" final="restriction">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="P1" />
+            <xs:enumeration value="P2" />
+            <xs:enumeration value="P3" />
+            <xs:enumeration value="OVT" />
+            <xs:enumeration value="GWS" />
+        </xs:restriction>
+    </xs:simpleType>
+
     <xs:complexType name="FixtureEvents">
         <xs:choice maxOccurs="unbounded">
             <xs:element name="goal" type="g:GoalEvent" />
             <xs:element name="penalty" type="g:PenaltyEvent" />
         </xs:choice>
     </xs:complexType>
-          
+
     <xs:complexType name="Side">
         <xs:sequence>
             <xs:element name="team" minOccurs="1" maxOccurs="1">
@@ -204,39 +250,70 @@
                     </xs:simpleContent>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="score" minOccurs="0" maxOccurs="1" type="xs:integer" />
-        </xs:sequence> 
- 
+            <xs:element name="score" minOccurs="0" maxOccurs="1" type="xs:nonNegativeInteger" />
+        </xs:sequence>
+
         <xs:attribute name="role" type="g:FixtureSideRole" />
     </xs:complexType>
-        
+
     <xs:element name="gamesheet">
         <xs:complexType>
             <xs:sequence>
+                <xs:element name="tournament" minOccurs="0" maxOccurs="1" type="g:TournamentRef"/>
+                <xs:element name="arena" minOccurs="0" maxOccurs="1" type="g:ArenaDef"/>
+                <xs:element name="start-time" minOccurs="0" maxOccurs="1" type="xs:dateTime"/>
+                <xs:element name="spectators" minOccurs="0" maxOccurs="1" type="xs:nonNegativeInteger"/>
+                <xs:element name="game-period" minOccurs="0" maxOccurs="unbounded" type="g:PeriodSummary"/>
+                <xs:element name="team" minOccurs="0" maxOccurs="2" type="g:TeamDef"/>
                 <xs:element name="roster" minOccurs="2" maxOccurs="2" type="g:Roster" />
                 <xs:element name="events" type="g:FixtureEvents" />
             </xs:sequence>
 
             <xs:attribute name="source-ref" type="xs:string" use="required" />
+            <xs:attribute name="match-number" type="xs:string" />
         </xs:complexType>
     </xs:element>
 
     <xs:complexType name="Roster">
         <xs:sequence>
+            <xs:element name="official" minOccurs="0" maxOccurs="unbounded" type="g:Official" />
             <xs:element name="player" minOccurs="0" maxOccurs="unbounded" type="g:Player" />
-        </xs:sequence> 
- 
+        </xs:sequence>
+
         <xs:attribute name="side" type="g:FixtureSideRole" />
+    </xs:complexType>
+
+    <xs:complexType name="PeriodSummary">
+        <xs:sequence>
+            <xs:element name="goals" type="g:HomeAwayScore" />
+            <xs:element name="attempts" type="g:HomeAwayScore" />
+            <xs:element name="penalty-minutes"  type="g:HomeAwayScore" />
+        </xs:sequence>
+
+        <xs:attribute name="period" type="g:GamePeriod" />
+    </xs:complexType>
+
+    <xs:complexType name="HomeAwayScore">
+        <xs:attribute name="home" type="xs:integer" />
+        <xs:attribute name="away" type="xs:integer" />
     </xs:complexType>
 
     <xs:complexType name="Player">
         <xs:sequence>
             <xs:element name="first-names" type="xs:string" />
             <xs:element name="last-name" minOccurs="0" type="xs:string" />
-        </xs:sequence> 
+        </xs:sequence>
         <xs:attribute name="number" type="xs:positiveInteger" />
         <xs:attribute name="line" type="xs:string" />
         <xs:attribute name="pos" type="xs:string" />
+    </xs:complexType>
+
+    <xs:complexType name="Official">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="role" type="xs:string" />
+            </xs:extension>
+        </xs:simpleContent>
     </xs:complexType>
 
     <xs:complexType name="PlayerRef">
@@ -247,8 +324,8 @@
         <xs:sequence>
             <xs:element name="time" type="xs:string" />
             <xs:element name="player" type="g:PlayerRef" />
-        </xs:sequence> 
-        
+        </xs:sequence>
+
         <xs:attribute name="side" type="g:FixtureSideRole" />
     </xs:complexType>
 
@@ -261,10 +338,10 @@
                         <xs:complexType>
                             <xs:sequence>
                                 <xs:element name="positive" type="g:Participants" />
-                                <xs:element name="negative" type="g:Participants" />                                
+                                <xs:element name="negative" type="g:Participants" />
                             </xs:sequence>
                         </xs:complexType>
-                    </xs:element>                    
+                    </xs:element>
                 </xs:sequence>
 
                 <xs:attribute name="game-situation" type="g:GameSituation" />

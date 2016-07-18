@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<gambol xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://sandum.net/namespaces/gambol"
-        xsi:schemaLocation="http://sandum.net/namespaces/gambol file:/home/osa/KSF/openshift/gambol-docs/src/main/resources/gambol.xsd" >
-    <tournament season="2013/2014">
+    <tournament 
+        xmlns="http://sandum.net/namespaces/gambol"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        season="2013/2014">
         <fixture id="4">
             <!-- Match sheet: http://www.hockeyligaen.dk/gamesheet.aspx?gameID=28824-->
             <diu-match-id>28824</diu-match-id>
@@ -790,4 +791,3 @@
             <result/>
         </fixture>
     </tournament>
-</gambol>

@@ -47,28 +47,9 @@ public class GambolParserTest {
 
         int n = 0;
         for (Section s : cal.getSections())
-            for (TournamentTemp t : s.getTournaments()) 
+            for (TournamentRef t : s.getTournaments()) 
                 ++n;
         
         assertEquals(88, n);
-    }
-
-    @Test
-    public void parseTournament973() throws JAXBException {
-        URL src = getClass().getResource("/sample/tournament-973.xml");
-
-        Unmarshaller um = jaxbContext.createUnmarshaller();
-        Gambol cal = (Gambol)um.unmarshal(src);
-        assertNotNull(cal);
-        
-        int n = 0;
-        for (Fixture f : cal.getTournament().getFixtures()) {
-            Side home = f.getSides().get(0);
-            Side away = f.getSides().get(1);
-            System.out.println(f.getStartTime() + ": " + home.getTeam() + "-" + away.getTeam() + " " + home.getScore() + "-" + away.getScore() + " (" + f.getSourceRef()+")");
-            ++n;
-        }
-        
-        assertEquals(56, n);
     }
 }
