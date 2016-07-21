@@ -22,7 +22,7 @@ public class TournamentScheduleParserTest {
 
     @Before
     public void setUp() throws JAXBException, SAXException {
-        jaxbContext = JAXBContext.newInstance(TournamentSrc.class);
+        jaxbContext = JAXBContext.newInstance(Tournament.class);
 
         assertNotNull(jaxbContext);
 
@@ -30,11 +30,11 @@ public class TournamentScheduleParserTest {
         schema = sf.newSchema(getClass().getResource("/gambol.xsd"));
     }
 
-    private TournamentSrc parseTournament(String path) throws JAXBException {
+    private Tournament parseTournament(String path) throws JAXBException {
         URL src = getClass().getResource(path);
 
         Unmarshaller um = jaxbContext.createUnmarshaller();
-        TournamentSrc cal = (TournamentSrc)um.unmarshal(src);
+        Tournament cal = (Tournament)um.unmarshal(src);
         assertNotNull(cal);
         
         int n = 0;
@@ -50,7 +50,7 @@ public class TournamentScheduleParserTest {
 
     @Test
     public void parseTournament1156() throws JAXBException {
-        TournamentSrc game = parseTournament("/sample/tournament-1156.xml");
+        Tournament game = parseTournament("/sample/tournament-1156.xml");
         assertNotNull(game);
         
         assertEquals(56, game.fixtures.size());
@@ -59,7 +59,7 @@ public class TournamentScheduleParserTest {
 
     @Test
     public void parseTournament973() throws JAXBException {
-        TournamentSrc game = parseTournament("/sample/tournament-973.xml");
+        Tournament game = parseTournament("/sample/tournament-973.xml");
         
         assertEquals(56, game.fixtures.size());
     }

@@ -47,7 +47,7 @@ public class GambolParserTest {
 
         int n = 0;
         for (Section s : cal.getSections())
-            for (TournamentRef t : s.getTournaments()) 
+            for (Tournament t : s.getTournaments()) 
                 ++n;
         
         assertEquals(88, n);

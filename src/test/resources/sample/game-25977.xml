@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <gamesheet xmlns="http://sandum.net/namespaces/gambol" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" source-ref="DIU:871:25977" match-number="52">
-  <tournament season="2012" slug="u9.1-øst" source-ref="DIU:871">
+  <tournament season="2012" source-ref="DIU:871">
       <title>U 9 Rød øst</title>
   </tournament>
   <arena>KSF Arena</arena>

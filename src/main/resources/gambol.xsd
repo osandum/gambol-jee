@@ -17,7 +17,7 @@
                 <xs:sequence>
                     <xs:element name="section" minOccurs="0" maxOccurs="unbounded" type="g:Section"/>
                 </xs:sequence>
-                <xs:element name="tournament" type="g:TournamentRef" />
+                <xs:element name="tournament" type="g:Tournament" />
                 <!--xs:element name="fixture" type="g:Fixture" /-->
                 <!--xs:element name="gamesheet" type="g:Gamesheet" /-->
             </xs:choice>
@@ -74,7 +74,7 @@
     <xs:complexType name="Section">
         <xs:sequence>
             <xs:element name="title" minOccurs="1" maxOccurs="1" type="xs:string"/>
-            <xs:element name="tournament" minOccurs="0" maxOccurs="unbounded" type="g:TournamentRef"/>
+            <xs:element name="tournament" minOccurs="0" maxOccurs="unbounded" type="g:Tournament"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -113,7 +113,7 @@
         </xs:simpleContent>
     </xs:complexType>
 
-    <xs:complexType name="TournamentRef">
+    <xs:complexType name="Tournament">
         <xs:sequence>
             <xs:element name="title" minOccurs="1" maxOccurs="1" type="xs:string" />
             <xs:element name="details" minOccurs="0" maxOccurs="1" type="xs:anyURI" />
@@ -133,26 +133,7 @@
         <xs:attribute name="arena" type="xs:string"/>
     </xs:complexType>
 
-    <xs:element name="tournament">
-        <xs:annotation>
-            <xs:appinfo>
-                <jaxb:class name="TournamentSrc"/>
-            </xs:appinfo>
-        </xs:annotation>
-
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="title" minOccurs="1" maxOccurs="1" type="xs:string" />
-                <xs:element name="fixture" minOccurs="0" maxOccurs="unbounded" type="g:Fixture" />
-            </xs:sequence>
-
-            <xs:attribute name="season" type="xs:string" />
-            <xs:attribute name="association" type="xs:string" />
-            <xs:attribute name="source-ref" type="xs:string" use="required" />
-            <xs:attribute name="slug" type="xs:string" />
-            <xs:attribute name="arena" type="xs:string"/>
-        </xs:complexType>
-    </xs:element>
+    <xs:element name="tournament" type="g:Tournament" />
 
     <!-- xs:element name="fixture" -->
     <xs:complexType name="Fixture">
@@ -259,7 +240,7 @@
     <xs:element name="gamesheet">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="tournament" minOccurs="0" maxOccurs="1" type="g:TournamentRef"/>
+                <xs:element name="tournament" minOccurs="0" maxOccurs="1" type="g:Tournament"/>
                 <xs:element name="arena" minOccurs="0" maxOccurs="1" type="g:ArenaDef"/>
                 <xs:element name="start-time" minOccurs="0" maxOccurs="1" type="xs:dateTime"/>
                 <xs:element name="spectators" minOccurs="0" maxOccurs="1" type="xs:nonNegativeInteger"/>
