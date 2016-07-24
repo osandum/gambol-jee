@@ -19,6 +19,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.apache.commons.lang.StringUtils;
@@ -77,14 +78,14 @@ public class FixtureEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     private ScheduleStatus status;
 
-    @Column(length = 16)
+    @Column(length = 16, name="match_number")
     private String matchNumber;
 
-    @Column(length = 31)
+    @Column(length = 31, name="title")
     private String titleAnnotation;
 
-    @Column(length = 255)
-    private String desciptionAnnotation;
+    @Column(length = 255, name = "description")
+    private String descriptionAnnotation;
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_arena"))
@@ -153,7 +154,8 @@ public class FixtureEntity implements Serializable {
     }
 
 
-    @OneToMany(mappedBy = "side")
+    @OneToMany(mappedBy = "fixture")
+    @OrderBy("gameTimeSecond")
     private List<FixtureEventEntity> events;
 
     public List<FixtureEventEntity> getEvents() {
@@ -212,17 +214,17 @@ public class FixtureEntity implements Serializable {
     }
 
     public String getDesciptionAnnotation() {
-        return desciptionAnnotation;
+        return descriptionAnnotation;
     }
 
     public void setDesciptionAnnotation(String desciptionAnnotation) {
-        this.desciptionAnnotation = desciptionAnnotation;
+        this.descriptionAnnotation = desciptionAnnotation;
     }
     
     public String getEventDescription() {
         String descr = tournament.getName() + ", kamp " + matchNumber;
-        if (!StringUtils.isBlank(desciptionAnnotation))
-            descr += "\n\n" + desciptionAnnotation;
+        if (!StringUtils.isBlank(descriptionAnnotation))
+            descr += "\n\n" + descriptionAnnotation;
         return descr;
     }
 

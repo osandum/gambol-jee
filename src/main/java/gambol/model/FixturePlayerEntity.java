@@ -1,5 +1,6 @@
 package gambol.model;
 
+import java.util.Comparator;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -67,5 +68,4 @@ public class FixturePlayerEntity extends FixturePersonEntity {
     public String toString() {
         return "{" + getId() + ":" + side + " " + jerseyNumber + " " + getPerson() + " "+line+":"+pos+"}";
     }
-
 }

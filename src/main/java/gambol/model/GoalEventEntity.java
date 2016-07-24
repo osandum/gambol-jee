@@ -7,8 +7,9 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 
 /**
@@ -42,8 +43,9 @@ public class GoalEventEntity extends FixtureEventEntity {
     }
 
 
-    @OneToMany
+    @ManyToMany
     @OrderColumn
+    @JoinTable(name = "goal_assist")
     private List<FixturePlayerEntity> assists;
 
     public List<FixturePlayerEntity> getAssists() {
@@ -55,7 +57,8 @@ public class GoalEventEntity extends FixtureEventEntity {
     }
 
 
-    @OneToMany
+    @ManyToMany
+    @JoinTable(name = "goal_participation_pos")
     private Set<FixturePlayerEntity> positiveParticipants;
 
     public Set<FixturePlayerEntity> getPositiveParticipants() {
@@ -67,7 +70,8 @@ public class GoalEventEntity extends FixtureEventEntity {
     }
 
 
-    @OneToMany
+    @ManyToMany
+    @JoinTable(name = "goal_participation_neg")
     private Set<FixturePlayerEntity> negativeParticipants;
 
     public Set<FixturePlayerEntity> getNegativeParticipants() {
@@ -82,6 +86,4 @@ public class GoalEventEntity extends FixtureEventEntity {
     public String toString() {
         return "[GOAL:"+getId()+" " + getGameTimeSecond()/60 + ":"+getGameTimeSecond()%60+" " + getPlayer() + "]";
     }
-
-    
 }

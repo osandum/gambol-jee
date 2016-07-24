@@ -1,6 +1,7 @@
 package gambol.api;
 
 import gambol.ejb.App;
+import gambol.model.ClubEntity;
 import gambol.model.FixtureEntity;
 import gambol.model.FixtureEventEntity;
 import gambol.model.FixturePlayerEntity;
@@ -9,6 +10,7 @@ import gambol.model.GoalEventEntity;
 import gambol.model.PenaltyEventEntity;
 import gambol.model.SeasonEntity;
 import gambol.model.TournamentEntity;
+import gambol.model.TournamentTeamEntity;
 import gambol.xml.Event;
 import gambol.xml.Fixture;
 import gambol.xml.FixtureEvents;
@@ -20,14 +22,13 @@ import gambol.xml.Player;
 import gambol.xml.PlayerRef;
 import gambol.xml.Roster;
 import gambol.xml.Side;
-import java.util.ArrayList;
-import java.util.Collections;
+import gambol.xml.TeamDef;
+import gambol.xml.Tournament;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.ejb.Stateful;
+import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -40,16 +41,15 @@ import javax.ws.rs.core.UriInfo;
 /**
  * @author osa
  */
-@Stateless
-@LocalBean
+@Stateful
 @Path("fixture/{fixtureId}")
 public class FixtureResource {
 
+    @Inject
+    private Logger LOG;
+
     @EJB
     App gambol;
-
-    @PersistenceContext
-    private EntityManager em;
 
     @PathParam("fixtureId")
     private long fixtureId;
@@ -59,6 +59,9 @@ public class FixtureResource {
     public Gamesheet getGamesheet(@Context UriInfo uriInfo) {
 
         FixtureEntity f = gambol.getFixtureById(fixtureId);
+        
+        LOG.info("# fixture "+fixtureId+" loaded: " + f);
+        
         return entity2gamesheet(f, uriInfo);
     }
 
@@ -70,22 +73,34 @@ public class FixtureResource {
         for (FixturePlayerEntity p : f.getHomeSide().getPlayers())
             homeR.getPlayers().add(pentity2domain(p));
         sheet.getRosters().add(homeR);
+        TeamDef homeT = new TeamDef();
+        homeT.setSide(FixtureSideRole.HOME);
+        TournamentTeamEntity ht = f.getHomeSide().getTeam();
+        homeT.setClubRef(ht.getClub().getSlug());
+        homeT.setValue(ht.getName());
+        sheet.getTeams().add(homeT);
 
         Roster awayR = new Roster();
         awayR.setSide(FixtureSideRole.AWAY);
         for (FixturePlayerEntity p : f.getAwaySide().getPlayers())
             awayR.getPlayers().add(pentity2domain(p));
         sheet.getRosters().add(awayR);
+        TeamDef awayT = new TeamDef();
+        awayT.setSide(FixtureSideRole.AWAY);
+        TournamentTeamEntity wt = f.getAwaySide().getTeam();
+        awayT.setClubRef(wt.getClub().getSlug());
+        awayT.setValue(wt.getName());
+        sheet.getTeams().add(awayT);
 
         FixtureEvents fe = new FixtureEvents();
         for (FixtureEventEntity e : f.getEvents())
             fe.getGoalsAndPenalties().add(eentity2domain(e));
 
-//      Collections.sort(fe.getGoalsAndPenalties());
-
         sheet.setEvents(fe);
-
         sheet.setSourceRef(f.getSourceRef());
+        sheet.setMatchNumber(f.getMatchNumber());
+        sheet.setTournament(tentity2domain(f.getTournament()));
+        sheet.setStartTime(f.getStartTime());
 
         return sheet;
     }
@@ -97,6 +112,13 @@ public class FixtureResource {
             PlayerRef pr = new PlayerRef();
             pr.setNumber(gee.getPlayer().getJerseyNumber());
             ge.setPlayer(pr);
+            
+            for (FixturePlayerEntity as : gee.getAssists()) {
+                PlayerRef ar = new PlayerRef();
+                ar.setNumber(as.getJerseyNumber());
+                ge.getAssists().add(ar);
+            }
+            
             ge.setSide(e.getSide());
             ge.setGameSituation(gee.getGameSituation());
             ge.setTime(App.gameTimeCode(e.getGameTimeSecond()));
@@ -162,6 +184,21 @@ public class FixtureResource {
         model.setTeam(team);
         model.setScore(entity.getScore());
 
+        return model;
+    }
+
+    private static Tournament tentity2domain(TournamentEntity entity) {
+        if (entity == null)
+            return null;
+        
+        Tournament model = new Tournament();
+        model.setSeason(entity.getSeason().getId());
+        ClubEntity a = entity.getArena();
+        if (a != null)
+            model.setArena(a.getSlug());
+        model.setSeries(entity.getSeries().getSlug());
+        model.setTitle(entity.getName());
+        
         return model;
     }
 }

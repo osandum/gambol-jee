@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 
 /**
  *
@@ -46,6 +47,7 @@ public class FixtureSideEntity implements Serializable {
     }
 
     @OneToMany(mappedBy = "side")
+    @OrderBy("jerseyNumber")
     private List<FixturePlayerEntity> players;
 
     public List<FixturePlayerEntity> getPlayers() {

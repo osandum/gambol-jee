@@ -9,8 +9,6 @@ import java.net.URI;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -29,9 +27,6 @@ public class SourcesResource {
     @EJB
     App gambol;
 
-    @PersistenceContext
-    private EntityManager em;
-
     @Context
     private UriInfo uriInfo;
 
@@ -40,7 +35,7 @@ public class SourcesResource {
     @Consumes({APPLICATION_JSON, APPLICATION_XML})
     public Response putTournament(Tournament tt) {
         // Do the work:
-        TournamentEntity t = gambol.putTournament(tt);
+        TournamentEntity t = gambol.putTournamentSrc(tt);
 
         // Construct resource URL:
         URI tournamentUri = uriInfo.getBaseUriBuilder().path("tournament/{seasonId}/{tournamentSlug}").build(t.getSeason().getId(), t.getSlug());

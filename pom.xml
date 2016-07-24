@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
@@ -10,7 +10,7 @@
     <version>1.0-SNAPSHOT</version>
 
     <packaging>war</packaging>
-    
+
     <name>as10-ksf.rhcloud.com</name>
     <description>
         Testing the Wildfly AS 10 on OpenShift
@@ -61,10 +61,10 @@
                 <groupId>org.bsc.maven</groupId>
                 <artifactId>maven-processor-plugin</artifactId>
 
-                <!-- 
-                 ! cannot go to version 3 until openshift upgrade their
-                 ! maven to 3.1
-                 ! -->
+                <!--
+                ! cannot go to version 3 until openshift upgrade their
+                ! maven to 3.1
+                ! -->
                 <version>2.2.4</version>
 
                 <executions>
@@ -82,14 +82,14 @@
                     </execution>
                 </executions>
                 <dependencies>
-                    <dependency>        
+                    <dependency>
                         <groupId>org.hibernate</groupId>
                         <artifactId>hibernate-jpamodelgen</artifactId>
                         <version>5.1.0.Final</version>
                     </dependency>
                 </dependencies>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -98,13 +98,13 @@
                     <failOnMissingWebXml>false</failOnMissingWebXml>
 
                     <overlays>
-                      <overlay>
-                        <groupId>gambol</groupId>
-                        <artifactId>gambol-frontend-base</artifactId>
-                        <excludes>
-                          <exclude>WEB-INF/classes/images/sampleimage-dependency.jpg</exclude>
-                        </excludes>
-                      </overlay>
+                        <overlay>
+                            <groupId>gambol</groupId>
+                            <artifactId>gambol-frontend-base</artifactId>
+                            <excludes>
+                                <exclude>WEB-INF/classes/images/sampleimage-dependency.jpg</exclude>
+                            </excludes>
+                        </overlay>
                     </overlays>
                 </configuration>
             </plugin>
@@ -114,7 +114,24 @@
                 <artifactId>wildfly-maven-plugin</artifactId>
                 <version>1.1.0.Alpha7</version>
             </plugin>
-            
+
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>4.0</version>
+                <configuration>
+                    <driver>org.postgresql.Driver</driver>
+                </configuration>
+
+                <dependencies>
+                    <dependency>
+                        <groupId>org.postgresql</groupId>
+                        <artifactId>postgresql</artifactId>
+                        <version>9.4.1208</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
         </plugins>
 
         <resources>
@@ -149,6 +166,15 @@
             </build>
         </profile>
 
+        <profile>
+            <id>dev</id>
+            <properties>
+                <flyway.url>jdbc:postgresql://casa/as10</flyway.url>
+                <flyway.user>as10</flyway.user>
+                <flyway.password>as10</flyway.password>
+                <!-- flyway.schemas>BR_ADM</flyway.schemas -->
+            </properties>
+        </profile>
     </profiles>
 
 

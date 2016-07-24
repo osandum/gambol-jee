@@ -28,6 +28,7 @@ import gambol.xml.Gamesheet;
 import gambol.xml.GoalEvent;
 import gambol.xml.PenaltyEvent;
 import gambol.xml.Player;
+import gambol.xml.PlayerRef;
 import gambol.xml.Roster;
 import gambol.xml.ScheduleStatus;
 import gambol.xml.Side;
@@ -165,7 +166,7 @@ public class App {
     }
 
 
-    public TournamentEntity putTournament(Tournament tt) {
+    public TournamentEntity putTournamentSrc(Tournament tt) {
         String sourceRef = tt.getSourceRef();
         String seasonId = tt.getSeason();
         if (seasonId == null)
@@ -173,7 +174,7 @@ public class App {
         SeasonEntity season = findOrCreateSeason(seasonId);
 
         String slug = tt.getSlug();
-        String name = tt.getValue();
+        String name = tt.getTitle();
         if (name == null)
             throw new IllegalArgumentException("Invalid tournament name");
         if (slug == null)
@@ -196,7 +197,7 @@ public class App {
 
         em.persist(entity);
 
-//      updateFixtures(entity, tt.getFixtures());
+        updateFixtures(entity, tt.getFixtures());
 
         String arenaClubRef = tt.getArena();
         if (arenaClubRef != null) {
@@ -505,10 +506,10 @@ public class App {
     }
 
     public FixtureEntity putGamesheet(Gamesheet gg) {
-        Tournament tt = gg.getTournament();
         
-        TournamentEntity t = putTournament(tt);
-        
+        FixtureEntity f = findFixtureBySourceRef(gg.getSourceRef());
+        TournamentEntity t = f.getTournament();
+                
         TournamentTeamEntity homeTeam = null; 
         TournamentTeamEntity awayTeam = null; 
         for (TeamDef td : gg.getTeams())
@@ -518,16 +519,6 @@ public class App {
                 homeTeam = team;
             else if (td.getSide() == FixtureSideRole.AWAY)
                 awayTeam = team;
-        }
-                
-        FixtureEntity f;
-        try {
-            f = findFixtureBySourceRef(gg.getSourceRef());
-        } catch (NoResultException ex) {
-            f = new FixtureEntity();
-            f.setTournament(t);
-            f.setSourceRef(gg.getSourceRef());
-            em.persist(f);
         }
         
         f.setStartTime(gg.getStartTime());
@@ -557,13 +548,15 @@ public class App {
             f.setAwaySide(awaySide);
         }
 
-        LOG.info("#### updating fixture "+t.getSeason().getId()+"/"+t.getSlug()+"/" + homeTeam.getSlug()+ "-" + awayTeam.getSlug() + " " + f.getStartTime());
+        LOG.info("#### updating fixture "+f);
         
         for (Roster r : gg.getRosters()) {
             FixtureSideRole side = r.getSide();
             LOG.info("     " + side + " roster ======");
             updateFixtureSidePlayers(f, side, r.getPlayers());
         }
+        
+        updateFixtureEvents(f, gg.getEvents());
         
         return f;
     }
@@ -593,26 +586,34 @@ public class App {
         }
         
         for (Event e : events.getGoalsAndPenalties()) {
-            Integer playerNumber = e.getPlayer().getNumber();
+            Integer jerseyNumber = e.getPlayer().getNumber();
             String timeCode = e.getTime();
             FixtureSideEntity partSide = f.getSide(e.getSide());
-            FixturePlayerEntity fpe = partSide.getPlayerByJerseyNumber(e.getPlayer().getNumber());
+            FixturePlayerEntity fpe = partSide.getPlayerByJerseyNumber(jerseyNumber);
             if (e instanceof GoalEvent) {
                 GoalEvent ge = (GoalEvent)e;
 
                 GoalEventEntity ee = new GoalEventEntity();
+                ee.setFixture(f);
                 ee.setSide(e.getSide());
                 ee.setPlayer(fpe);
                 ee.setGameTimeSecond(gameTimeSecond(timeCode));
                 ee.setGameSituation(ge.getGameSituation());
-                em.persist(ee);
                 
+                ee.setAssists(new LinkedList<>());
+                for (PlayerRef a : ge.getAssists()) {
+                    FixturePlayerEntity ape = partSide.getPlayerByJerseyNumber(a.getNumber());                    
+                    ee.getAssists().add(ape);
+                }
+
+                em.persist(ee);                
                 LOG.info("### " + ee + " created");
             }
             else if (e instanceof PenaltyEvent) {
                 PenaltyEvent pe = (PenaltyEvent)e;
                 
                 PenaltyEventEntity ee = new PenaltyEventEntity();
+                ee.setFixture(f);
                 ee.setSide(e.getSide());
                 ee.setPlayer(fpe);
                 ee.setGameTimeSecond(gameTimeSecond(timeCode));

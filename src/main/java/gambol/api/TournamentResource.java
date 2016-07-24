@@ -8,41 +8,43 @@ import gambol.xml.Fixtures;
 import gambol.xml.Tournament;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.*;
+import javax.ws.rs.container.ResourceContext;
 import javax.ws.rs.core.Context;
 import static javax.ws.rs.core.MediaType.*;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 /**
- *
  * @author osa
  */
-//@RequestScoped
-@Stateless
-@LocalBean
+@RequestScoped
 @Path("tournament/{seasonId}/{slug}")
 public class TournamentResource {
 
     private final static Logger LOG = Logger.getLogger(TournamentResource.class.getName());
     
-    @PathParam("seasonId")
     String seasonId;
-
-    @PathParam("slug")
     String slug;
 
-    @EJB
+    @Inject
     App gambol;
 
     @PersistenceContext
     private EntityManager em;
+
+    public TournamentResource() { }
     
+    public TournamentResource(
+            @PathParam("seasonId") String seasonId,  
+            @PathParam("slug")  String slug) {
+        this.seasonId = seasonId;
+        this.slug = slug;
+    }
 
     @GET
     @Produces({APPLICATION_JSON, APPLICATION_XML})
@@ -52,8 +54,8 @@ public class TournamentResource {
         TournamentEntity t = gambol.getTournament(seasonId, slug);
         Tournament model = entity2domain(t, uriInfo);
         
-//        for (FixtureEntity ff : t.getFixtures())
-//            model.getFixtures().add(FixtureResource.entity2domain(ff, uriInfo));
+        for (FixtureEntity ff : t.getFixtures())
+            model.getFixtures().add(FixtureResource.entity2domain(ff, uriInfo));
         
         return model;
     }
@@ -73,7 +75,7 @@ public class TournamentResource {
         t.setSourceRef(tt.getSourceRef());
         t.setSlug(slug);
         t.setSeason(gambol.findOrCreateSeason(seasonId));
-        t.setName(tt.getValue());
+        t.setName(tt.getTitle());
         em.persist(t);
         LOG.info("tournament " + t.getSeason().getName() + "/" + t.getSlug() + " created: " + t);
         
@@ -113,12 +115,12 @@ public class TournamentResource {
         Tournament model = new Tournament();
         SeasonEntity season = entity.getSeason();
         model.setSeason(season.getId());
-        model.setValue(entity.getName());
+        model.setTitle(entity.getName());
         model.setSourceRef(entity.getSourceRef());
         model.setSeries(entity.getSeries().getSlug());
         if (entity.getArena() != null) 
             model.setArena(entity.getArena().getSlug());
-//      model.setDetails(uriInfo.getBaseUriBuilder().path(TournamentResource.class).build(season.getId(), entity.getSlug()));
+        model.setDetails(uriInfo.getBaseUriBuilder().path(TournamentResource.class).build(season.getId(), entity.getSlug()));
         
         return model;
     }
