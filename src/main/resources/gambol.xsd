@@ -113,6 +113,8 @@
         </xs:simpleContent>
     </xs:complexType>
 
+    <xs:element name="tournament" type="g:Tournament" />
+
     <xs:complexType name="Tournament">
         <xs:sequence>
             <xs:element name="title" minOccurs="1" maxOccurs="1" type="xs:string" />
@@ -130,12 +132,18 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
+        <xs:attribute name="slug" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>
+                    Used only for tournament source uploads
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
         <xs:attribute name="arena" type="xs:string"/>
     </xs:complexType>
 
-    <xs:element name="tournament" type="g:Tournament" />
+    <xs:element name="fixture" type="g:Fixture" />
 
-    <!-- xs:element name="fixture" -->
     <xs:complexType name="Fixture">
         <xs:sequence>
             <xs:element name="side" minOccurs="2" maxOccurs="2" type="g:Side" />
@@ -174,21 +182,43 @@
 
     <xs:simpleType name="GameOffense" final="restriction">
         <xs:restriction base="xs:string">
+            <xs:enumeration value="DIVE" />
+            <xs:enumeration value="ABUSE" />
+            <xs:enumeration value="AU-GM" />
+            <xs:enumeration value="BD-CK" />
+
             <xs:enumeration value="TRIP" />
+            <xs:enumeration value="KICK" />
             <xs:enumeration value="SLASH" />
             <xs:enumeration value="HOOK" />
             <xs:enumeration value="HOLD" />
+            <xs:enumeration value="CLIP" />
             <xs:enumeration value="BUTT" />
+            <xs:enumeration value="SPEAR" />
             <xs:enumeration value="CROSS" />
+            <xs:enumeration value="BENCH" />
             <xs:enumeration value="BOARD" />
+            <xs:enumeration value="CHARG" />
             <xs:enumeration value="HI-ST" />
+            <xs:enumeration value="HO-ST" />
+            <xs:enumeration value="HEAD" />
             <xs:enumeration value="ELBOW" />
+            <xs:enumeration value="FIST" />
+            <xs:enumeration value="KNEE" />
             <xs:enumeration value="INTRF" />
             <xs:enumeration value="ROUGH" />
             <xs:enumeration value="DELAY" />
             <xs:enumeration value="UN-SP" />
             <xs:enumeration value="BD-CK" />
+            <xs:enumeration value="CHE-B" />
             <xs:enumeration value="CHE-H" />
+            <xs:enumeration value="IL-EQ" />
+            <xs:enumeration value="TOO-M" />
+            <xs:enumeration value="GA-MI" />
+            <xs:enumeration value="MISC" />
+            <xs:enumeration value="MATCH" />
+
+            <xs:enumeration value="OTHER" />
         </xs:restriction>
     </xs:simpleType>
 
