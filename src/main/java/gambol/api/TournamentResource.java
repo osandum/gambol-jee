@@ -4,10 +4,12 @@ import gambol.ejb.App;
 import gambol.model.FixtureEntity;
 import gambol.model.SeasonEntity;
 import gambol.model.TournamentEntity;
+import gambol.xml.Fixture;
 import gambol.xml.Fixtures;
 import gambol.xml.Tournament;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ejb.Stateful;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -22,13 +24,16 @@ import javax.ws.rs.core.UriInfo;
 /**
  * @author osa
  */
-@RequestScoped
+@Stateful
 @Path("tournament/{seasonId}/{slug}")
 public class TournamentResource {
 
     private final static Logger LOG = Logger.getLogger(TournamentResource.class.getName());
     
+    @PathParam("seasonId")
     String seasonId;
+
+    @PathParam("slug")    
     String slug;
 
     @Inject
@@ -37,19 +42,10 @@ public class TournamentResource {
     @PersistenceContext
     private EntityManager em;
 
-    public TournamentResource() { }
-    
-    public TournamentResource(
-            @PathParam("seasonId") String seasonId,  
-            @PathParam("slug")  String slug) {
-        this.seasonId = seasonId;
-        this.slug = slug;
-    }
-
     @GET
     @Produces({APPLICATION_JSON, APPLICATION_XML})
     public Tournament getTournament(@Context UriInfo uriInfo) {
-        LOG.log(Level.INFO, ".... {0} {1}", new Object[]{slug, seasonId});
+        LOG.log(Level.INFO, ".... {0}/{1}", new Object[]{seasonId, slug});
         
         TournamentEntity t = gambol.getTournament(seasonId, slug);
         Tournament model = entity2domain(t, uriInfo);
@@ -86,7 +82,7 @@ public class TournamentResource {
     @Path("fixtures")
     @Produces({APPLICATION_JSON, APPLICATION_XML})
     public Response getTournamentFixtures(@Context UriInfo uriInfo) {
-        LOG.log(Level.INFO, ".... {0} {1}", new Object[]{slug, seasonId});
+        LOG.log(Level.INFO, ".... {0}/{1}", new Object[]{seasonId, slug});
         
         TournamentEntity t = gambol.getTournament(seasonId, slug);
 
@@ -107,6 +103,20 @@ public class TournamentResource {
         gambol.updateFixtures(t, fs.getFixtures());
         return Response.ok().build();
     }
+
+    @GET
+    @Path("fixture/{matchNumber}")
+    @Produces({APPLICATION_JSON, APPLICATION_XML})
+    public Response getFixture(
+            @PathParam("matchNumber") String matchNumber,
+            @Context UriInfo uriInfo) {
+        LOG.log(Level.INFO, ".... {0} {1}", new Object[]{slug, seasonId});
+
+        FixtureEntity f = gambol.getFixture(seasonId, slug, matchNumber);
+        Fixture res = FixtureResource.entity2domain(f, uriInfo);
+        
+        return Response.ok(res).build();
+    }
     
     public static Tournament entity2domain(TournamentEntity entity, UriInfo uriInfo) {
         if (entity == null)
@@ -115,6 +125,7 @@ public class TournamentResource {
         Tournament model = new Tournament();
         SeasonEntity season = entity.getSeason();
         model.setSeason(season.getId());
+        model.setSlug(entity.getSlug());
         model.setTitle(entity.getName());
         model.setSourceRef(entity.getSourceRef());
         model.setSeries(entity.getSeries().getSlug());

@@ -67,17 +67,17 @@ clubs:
         series:    *ser0
         sourceRef: "DIU:974"
 
-    - &ksf_u11_1_2013 !!gambol.model.TournamentTeamEntity
+    - &ksf_u11_1_2013 !!gambol.model.TeamEntity
         tournament: *u11_1_2013
         slug:      "ksf"
         name:      "KSF"
         club:      *ksf
-    - &rik_u11_1_2013 !!gambol.model.TournamentTeamEntity
+    - &rik_u11_1_2013 !!gambol.model.TeamEntity
         tournament: *u11_1_2013
         slug:      "rik"
         name:      "RIK"
         club:      *rik
-    - &hvik_u11_1_2013 !!gambol.model.TournamentTeamEntity
+    - &hvik_u11_1_2013 !!gambol.model.TeamEntity
         tournament: *u11_1_2013
         slug:      "hvik"
         name:      "HvIK"

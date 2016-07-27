@@ -18,8 +18,8 @@ import gambol.model.SeriesEntity;
 import gambol.model.SeriesEntity_;
 import gambol.model.TournamentEntity;
 import gambol.model.TournamentEntity_;
-import gambol.model.TournamentTeamEntity;
-import gambol.model.TournamentTeamEntity_;
+import gambol.model.TeamEntity;
+import gambol.model.TeamEntity_;
 import gambol.xml.Event;
 import gambol.xml.Fixture;
 import gambol.xml.FixtureEvents;
@@ -35,6 +35,7 @@ import gambol.xml.Side;
 import gambol.xml.TeamDef;
 import gambol.xml.Tournament;
 import java.io.InputStream;
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -42,8 +43,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.ejb.Stateless;
@@ -61,6 +60,9 @@ import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
 /**
@@ -71,8 +73,7 @@ import org.yaml.snakeyaml.Yaml;
 @Stateless
 public class App {
 
-    @Inject
-    private Logger LOG;
+    private final static Logger LOG = LoggerFactory.getLogger(App.class);
 
     @PersistenceContext
     private EntityManager em;
@@ -149,7 +150,7 @@ public class App {
             res.setName(slug);
             res.setFixtureDuration(60);
             em.persist(res);
-            LOG.log(Level.INFO, "{0} created", res);
+            LOG.info("{} created", res);
             return res;
         }
     }
@@ -211,13 +212,15 @@ public class App {
 
     public TournamentEntity getTournament(String seasonId, String slug) {
         CriteriaBuilder builder = em.getCriteriaBuilder();
-        CriteriaQuery<TournamentEntity> query = builder.createQuery(TournamentEntity.class);
-        Root<TournamentEntity> root = query.from(TournamentEntity.class);
-        query.select(root);
-        query.where(
-                builder.equal(root.get("slug"), slug),
-                builder.equal(root.get("season").get("id"), seasonId));
-        return em.createQuery(query).setMaxResults(1).getSingleResult();
+
+        CriteriaQuery<TournamentEntity> q = builder.createQuery(TournamentEntity.class);
+        Root<TournamentEntity> tournaments = q.from(TournamentEntity.class);
+        q.select(tournaments);
+        q.where(
+                builder.equal(tournaments.get(TournamentEntity_.slug), slug),
+                builder.equal(tournaments.get(TournamentEntity_.season).get(SeasonEntity_.id), seasonId));
+
+        return em.createQuery(q).getSingleResult();
     }
 
     public List<TournamentEntity> getAllTournaments() {
@@ -244,7 +247,7 @@ public class App {
 
         for (Object o : oo.get("clubs")) {
             em.persist(o);
-            LOG.log(Level.INFO, "{0} persisted", o);
+            LOG.info("{} persisted", o);
         }
 
         for (Object o : oo.get("fixtures")) {
@@ -252,14 +255,14 @@ public class App {
             em.persist(fixture.getHomeSide());
             em.persist(fixture.getAwaySide());
             em.persist(fixture);
-            LOG.log(Level.INFO, "{0} persisted", fixture);
+            LOG.info("{} persisted", fixture);
         }
     }
 
-    public TournamentTeamEntity findTeam(TournamentEntity tournament, String clubRef, String teamName) {
+    public TeamEntity findTeam(TournamentEntity tournament, String clubRef, String teamName) {
         CriteriaBuilder builder = em.getCriteriaBuilder();
-        CriteriaQuery<TournamentTeamEntity> query = builder.createQuery(TournamentTeamEntity.class);
-        Root<TournamentTeamEntity> root = query.from(TournamentTeamEntity.class);
+        CriteriaQuery<TeamEntity> query = builder.createQuery(TeamEntity.class);
+        Root<TeamEntity> root = query.from(TeamEntity.class);
         query.select(root);
         query.where(builder.equal(root.get("tournament"), tournament),
                 builder.equal(root.get("name"), teamName),
@@ -268,11 +271,11 @@ public class App {
 
     }
 
-    public TournamentTeamEntity findOrCreateTeam(TournamentEntity tournament, String clubRef, String teamName) {
+    public TeamEntity findOrCreateTeam(TournamentEntity tournament, String clubRef, String teamName) {
         try {
             return findTeam(tournament, clubRef, teamName);
         } catch (NoResultException ex) {
-            TournamentTeamEntity res = new TournamentTeamEntity();
+            TeamEntity res = new TeamEntity();
             res.setTournament(tournament);
             ClubEntity club = findOrCreateClub(clubRef);
             res.setClub(club);
@@ -398,6 +401,21 @@ public class App {
         return em.createQuery(q).getSingleResult();
     }
 
+
+    public FixtureEntity getFixture(String seasonId, String slug, String matchNumber) {
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+
+        CriteriaQuery<FixtureEntity> q = builder.createQuery(FixtureEntity.class);
+        Root<FixtureEntity> fixture = q.from(FixtureEntity.class);
+        Path<TournamentEntity> tournament = fixture.get(FixtureEntity_.tournament);
+        Path<SeasonEntity> season = tournament.get(TournamentEntity_.season);
+        q.where(builder.equal(fixture.get(FixtureEntity_.matchNumber), matchNumber),
+                builder.equal(tournament.get(TournamentEntity_.slug), slug),
+                builder.equal(season.get(SeasonEntity_.id), seasonId));
+
+        return em.createQuery(q).getSingleResult();
+    }
+    
     public FixtureEntity getFixtureById(long fixtureId) {
         return em.find(FixtureEntity.class, fixtureId);
     }
@@ -412,46 +430,48 @@ public class App {
         Join<FixtureEntity, TournamentEntity> tournament = fixtures.join(FixtureEntity_.tournament);
 
         Predicate a = builder.conjunction();
-        a.getExpressions().add(builder.equal(fixtures.get(FixtureEntity_.status), ScheduleStatus.CONFIRMED));
+        List<Expression<Boolean>> wheres = a.getExpressions();
+
+        wheres.add(builder.equal(fixtures.get(FixtureEntity_.status), ScheduleStatus.CONFIRMED));
 
         if (param.start != null)
-            a.getExpressions().add(builder.greaterThanOrEqualTo(builder.coalesce(fixtures.get(FixtureEntity_.endTime), fixtures.get(FixtureEntity_.startTime)), param.start));
+            wheres.add(builder.greaterThanOrEqualTo(builder.coalesce(fixtures.get(FixtureEntity_.endTime), fixtures.get(FixtureEntity_.startTime)), param.start));
         else
-            a.getExpressions().add(builder.isNull(fixtures.get(FixtureEntity_.startTime)).not());
+            wheres.add(builder.isNotNull(fixtures.get(FixtureEntity_.startTime)));
             
         if (param.end != null)
-            a.getExpressions().add(builder.lessThanOrEqualTo(builder.coalesce(fixtures.get(FixtureEntity_.startTime), fixtures.get(FixtureEntity_.endTime)), param.end));
+            wheres.add(builder.lessThanOrEqualTo(builder.coalesce(fixtures.get(FixtureEntity_.startTime), fixtures.get(FixtureEntity_.endTime)), param.end));
 
         if (!param.seasonId.isEmpty() || !param.seriesId.isEmpty() || !param.tournamentRef.isEmpty()) {
             if (!param.seasonId.isEmpty()) {
                 Join<TournamentEntity, SeasonEntity> season = tournament.join(TournamentEntity_.season);
-                a.getExpressions().add(season.get(SeasonEntity_.id).in(param.seasonId));
+                wheres.add(season.get(SeasonEntity_.id).in(param.seasonId));
             }
             if (!param.seriesId.isEmpty()) {
                 Path<String> seriesSlug = tournament.join(TournamentEntity_.series).get(SeriesEntity_.slug);
                 Predicate b = builder.disjunction();
                 for (String ss : param.seriesId)
                     b.getExpressions().add(builder.like(seriesSlug, ss + "%"));
-                a.getExpressions().add(b);
+                wheres.add(b);
             }
             if (!param.tournamentRef.isEmpty()) {
                 Path<String> tournamentSlug = tournament.get(TournamentEntity_.slug);
                 Predicate b = builder.disjunction();
                 for (String ts : param.tournamentRef)
                     b.getExpressions().add(builder.like(tournamentSlug, ts + "%"));
-                a.getExpressions().add(b);
+                wheres.add(b);
             }
         }
         
-        if (!param.clubRef.isEmpty() || !param.homeClubRef.isEmpty() || !param.awayClubRef.isEmpty()) {
+        if (!param.clubRef.isEmpty() || !param.homeClubRef.isEmpty() || !param.awayClubRef.isEmpty() || param.hasGamesheet != null) {
             
             Join<FixtureEntity, FixtureSideEntity> homeSide = fixtures.join(FixtureEntity_.homeSide);
-            Join<FixtureSideEntity, TournamentTeamEntity> homeTeam = homeSide.join(FixtureSideEntity_.team);
-            Join<TournamentTeamEntity, ClubEntity> homeClub = homeTeam.join(TournamentTeamEntity_.club);
+            Join<FixtureSideEntity, TeamEntity> homeTeam = homeSide.join(FixtureSideEntity_.team);
+            Join<TeamEntity, ClubEntity> homeClub = homeTeam.join(TeamEntity_.club);
 
             Join<FixtureEntity, FixtureSideEntity> awaySide = fixtures.join(FixtureEntity_.awaySide);
-            Join<FixtureSideEntity, TournamentTeamEntity> awayTeam = awaySide.join(FixtureSideEntity_.team);
-            Join<TournamentTeamEntity, ClubEntity> awayClub = awayTeam.join(TournamentTeamEntity_.club);
+            Join<FixtureSideEntity, TeamEntity> awayTeam = awaySide.join(FixtureSideEntity_.team);
+            Join<TeamEntity, ClubEntity> awayClub = awayTeam.join(TeamEntity_.club);
 
             if (!param.clubRef.isEmpty() || !param.awayClubRef.isEmpty()) {
                 Set<String> clubRefs = new HashSet<String>();
@@ -459,7 +479,7 @@ public class App {
              // clubRefs.addAll(param.homeClubRef);
                 clubRefs.addAll(param.awayClubRef);
                         
-                a.getExpressions().add(
+                wheres.add(
                         builder.or(homeClub.get(ClubEntity_.slug).in(clubRefs),
                                    awayClub.get(ClubEntity_.slug).in(clubRefs)));
             }
@@ -474,12 +494,29 @@ public class App {
                 
                 if (!param.homeClubRef.isEmpty()) 
                     // only include fixtures on these clubs' own ice:
-                    a.getExpressions().add(arenaRef.in(param.homeClubRef));
+                    wheres.add(arenaRef.in(param.homeClubRef));
 
                 if (!param.awayClubRef.isEmpty()) 
                     // only include fixtures on foreign ice:
-                    a.getExpressions().add(arenaRef.in(param.awayClubRef).not());
+                    wheres.add(arenaRef.in(param.awayClubRef).not());
             }
+            
+            if (param.hasGamesheet != null) {
+                // disregard un-scheduled or un-finished games when examining gamesheet status:
+                Expression<Timestamp> now_ = builder.currentTimestamp();
+                wheres.add(builder.equal(fixtures.get(FixtureEntity_.status), ScheduleStatus.CONFIRMED));
+                wheres.add(builder.greaterThan(now_, fixtures.get(FixtureEntity_.endTime)));
+
+                // so far, just check that both sides have players registed:
+                Predicate gs = builder.and(
+                    builder.isNotEmpty(homeSide.get(FixtureSideEntity_.players)),
+                    builder.isNotEmpty(awaySide.get(FixtureSideEntity_.players)));
+                
+                if (!param.hasGamesheet)
+                    gs = gs.not();
+                wheres.add(gs);
+            }
+                
         }
         q.where(a);
         q.orderBy(builder.asc(fixtures.get(FixtureEntity_.startTime)));
@@ -488,7 +525,7 @@ public class App {
 
         long t2 = System.currentTimeMillis();
         
-        LOG.info(res.size() + " fixture(s) retrieved ("+(t2-t1)+"ms)");
+        LOG.info(param + ": " + res.size() + " fixture(s) retrieved ("+(t2-t1)+"ms)");
         
         return res;
 
@@ -510,11 +547,11 @@ public class App {
         FixtureEntity f = findFixtureBySourceRef(gg.getSourceRef());
         TournamentEntity t = f.getTournament();
                 
-        TournamentTeamEntity homeTeam = null; 
-        TournamentTeamEntity awayTeam = null; 
+        TeamEntity homeTeam = null; 
+        TeamEntity awayTeam = null; 
         for (TeamDef td : gg.getTeams())
         {
-            TournamentTeamEntity team = findOrCreateTeam(t, td.getClubRef(), td.getValue());
+            TeamEntity team = findOrCreateTeam(t, td.getClubRef(), td.getValue());
             if (td.getSide() == FixtureSideRole.HOME)
                 homeTeam = team;
             else if (td.getSide() == FixtureSideRole.AWAY)
@@ -618,8 +655,12 @@ public class App {
                 ee.setPlayer(fpe);
                 ee.setGameTimeSecond(gameTimeSecond(timeCode));
                 ee.setOffense(pe.getOffense());
-                ee.setEndtimeSecond(gameTimeSecond(pe.getEndTime()));
                 ee.setPenaltyMinutes(pe.getMinutes());
+                String etx = pe.getEndTime();
+                if (!StringUtils.isEmpty(etx))
+                    ee.setEndtimeSecond(gameTimeSecond(etx));
+                else
+                    ee.setEndtimeSecond(ee.getGameTimeSecond() + 60 * ee.getPenaltyMinutes());
                 
                 em.persist(ee);
                 
@@ -632,7 +673,7 @@ public class App {
         FixtureSideEntity side = fixture.getSide(role);
         LOG.info("### ===== " + side.getTeam().getName() + " ROSTER ======");
         
-        Map<String, FixturePlayerEntity> all = new HashMap<String, FixturePlayerEntity>();
+        Map<String, FixturePlayerEntity> all = new HashMap<>();
         for (FixturePlayerEntity fp : side.getPlayers()) {
             LOG.info("### already seen " + fp.getRef());
             FixturePlayerEntity dupe = all.put(fp.getRef(), fp);

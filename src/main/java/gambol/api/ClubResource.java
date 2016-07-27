@@ -19,7 +19,7 @@ import javax.ws.rs.core.Response;
  * @author osa
  */
 @RequestScoped
-@Path("clubs/{slug}")
+@Path("club/{slug}")
 public class ClubResource {
 
     @PathParam("slug")

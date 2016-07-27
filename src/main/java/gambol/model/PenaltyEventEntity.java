@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 /**
  * @see  http://en.wikipedia.org/wiki/Penalty_(ice_hockey)
@@ -16,6 +17,8 @@ import javax.persistence.ManyToOne;
 @DiscriminatorValue("PLTY")
 public class PenaltyEventEntity extends FixtureEventEntity {
 
+    
+    @NotNull
     @Enumerated(EnumType.STRING)
     private GameOffense offense;
 
@@ -40,6 +43,7 @@ public class PenaltyEventEntity extends FixtureEventEntity {
     }
 
 
+    @NotNull
     @Column(name = "endtime_second") //, nullable = false) wont't fly on single-table inheritance
     private Integer endtimeSecond;
 
@@ -52,6 +56,7 @@ public class PenaltyEventEntity extends FixtureEventEntity {
     }
 
 
+    @NotNull
     @Column(name = "penalty_minutes") //, nullable = false) wont't fly on single-table inheritance
     private Integer penaltyMinutes;
 

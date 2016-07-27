@@ -4,6 +4,7 @@ import gambol.xml.FixtureSideRole;
 import static gambol.xml.FixtureSideRole.AWAY;
 import gambol.xml.ScheduleStatus;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -22,10 +23,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Version;
 import org.apache.commons.lang.StringUtils;
 
 /**
- *
  * @author osa
  */
 @Entity(name = "fixture")
@@ -37,6 +38,9 @@ public class FixtureEntity implements Serializable {
     @Id
     @GeneratedValue
     private Long id;
+
+    @Version
+    private Timestamp lastModified;
 
     @Column(length = 64, nullable = false, unique = true)
     private String sourceRef;
@@ -74,6 +78,10 @@ public class FixtureEntity implements Serializable {
     
     @Temporal(TemporalType.TIMESTAMP)
     private Date endTime;
+
+    @OneToMany(mappedBy = "fixture")
+    @OrderBy("gameTimeSecond")
+    private List<FixtureEventEntity> events;
 
     @Enumerated(EnumType.STRING)
     private ScheduleStatus status;
@@ -119,6 +127,21 @@ public class FixtureEntity implements Serializable {
         return role == AWAY ? getAwaySide() : getHomeSide();
     }
 
+    
+    public boolean isGamesheetLoaded() {
+        if (!ScheduleStatus.CONFIRMED.equals(status))
+            return false; // game not scheduled
+        if (endTime.after(new Date()))
+            return false; // game not finished
+        if (!getHomeSide().isGameDetailsLoaded())
+            return false; // no home players listed
+        if (!getAwaySide().isGameDetailsLoaded())
+            return false; // no away players listed
+        if (getEvents().isEmpty())
+            return false; // no game events listed -- boooring
+        
+        return true;
+    }
 
     public ClubEntity getArena() {
         return arena;
@@ -153,10 +176,6 @@ public class FixtureEntity implements Serializable {
         this.endTime = endTime;
     }
 
-
-    @OneToMany(mappedBy = "fixture")
-    @OrderBy("gameTimeSecond")
-    private List<FixtureEventEntity> events;
 
     public List<FixtureEventEntity> getEvents() {
         return events;

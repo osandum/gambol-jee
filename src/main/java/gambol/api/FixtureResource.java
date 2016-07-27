@@ -10,7 +10,7 @@ import gambol.model.GoalEventEntity;
 import gambol.model.PenaltyEventEntity;
 import gambol.model.SeasonEntity;
 import gambol.model.TournamentEntity;
-import gambol.model.TournamentTeamEntity;
+import gambol.model.TeamEntity;
 import gambol.xml.Event;
 import gambol.xml.Fixture;
 import gambol.xml.FixtureEvents;
@@ -24,7 +24,6 @@ import gambol.xml.Roster;
 import gambol.xml.Side;
 import gambol.xml.TeamDef;
 import gambol.xml.Tournament;
-import java.util.List;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateful;
@@ -34,8 +33,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static javax.ws.rs.core.MediaType.APPLICATION_XML;
+import static javax.ws.rs.core.MediaType.*;
 import javax.ws.rs.core.UriInfo;
 
 /**
@@ -75,7 +73,7 @@ public class FixtureResource {
         sheet.getRosters().add(homeR);
         TeamDef homeT = new TeamDef();
         homeT.setSide(FixtureSideRole.HOME);
-        TournamentTeamEntity ht = f.getHomeSide().getTeam();
+        TeamEntity ht = f.getHomeSide().getTeam();
         homeT.setClubRef(ht.getClub().getSlug());
         homeT.setValue(ht.getName());
         sheet.getTeams().add(homeT);
@@ -87,7 +85,7 @@ public class FixtureResource {
         sheet.getRosters().add(awayR);
         TeamDef awayT = new TeamDef();
         awayT.setSide(FixtureSideRole.AWAY);
-        TournamentTeamEntity wt = f.getAwaySide().getTeam();
+        TeamEntity wt = f.getAwaySide().getTeam();
         awayT.setClubRef(wt.getClub().getSlug());
         awayT.setValue(wt.getName());
         sheet.getTeams().add(awayT);
@@ -167,6 +165,7 @@ public class FixtureResource {
         SeasonEntity season = tournament.getSeason();
         String seasonRef = season.getId();
         model.setSeason(seasonRef);
+        model.setSchedule(entity.getStatus());
         model.setMatchDetails(uriInfo.getBaseUriBuilder().path(FixtureResource.class).build(entity.getId()));
 
         return model;
