@@ -384,7 +384,7 @@
                 <xs:sequence>
                     <xs:element name="minutes" type="xs:nonNegativeInteger" />
                     <xs:element name="offense" type="g:GameOffense" />
-                    <xs:element name="start-time" type="xs:string" />
+                    <xs:element name="start-time" type="xs:string" minOccurs="0" maxOccurs="1" />
                     <xs:element name="end-time" type="xs:string" />
                 </xs:sequence>
             </xs:extension>
