@@ -161,6 +161,7 @@
         <xs:attribute name="tournament-ref" type="xs:string" />
         <xs:attribute name="season" type="xs:string" />
         <xs:attribute name="schedule" type="g:ScheduleStatus" />
+        <xs:attribute name="gamesheet" type="g:GamesheetStatus" />
         <xs:attribute name="arena" type="xs:string"/>
     </xs:complexType>
     <!-- /xs:element -->
@@ -169,6 +170,15 @@
         <xs:restriction base="xs:string">
             <xs:enumeration value="home" />
             <xs:enumeration value="away" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="GamesheetStatus" final="restriction">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ready" />
+            <xs:enumeration value="missing" />
+            <xs:enumeration value="failed" />
+            <xs:enumeration value="future" />
         </xs:restriction>
     </xs:simpleType>
 
@@ -184,6 +194,7 @@
         <xs:restriction base="xs:string">
             <xs:enumeration value="DIVE" />
             <xs:enumeration value="ABUSE" />
+            <xs:enumeration value="AU-MI" />
             <xs:enumeration value="AU-GM" />
             <xs:enumeration value="BD-CK" />
 
@@ -218,6 +229,7 @@
             <xs:enumeration value="MISC" />
             <xs:enumeration value="MATCH" />
 
+            <xs:enumeration value="PEN-S" />
             <xs:enumeration value="OTHER" />
         </xs:restriction>
     </xs:simpleType>
@@ -372,6 +384,7 @@
                 <xs:sequence>
                     <xs:element name="minutes" type="xs:nonNegativeInteger" />
                     <xs:element name="offense" type="g:GameOffense" />
+                    <xs:element name="start-time" type="xs:string" />
                     <xs:element name="end-time" type="xs:string" />
                 </xs:sequence>
             </xs:extension>
