@@ -17,7 +17,6 @@ import javax.persistence.Id;
 import javax.validation.constraints.Size;
 
 /**
- *
  * @author osa
  */
 @Entity(name = "club")
@@ -38,7 +37,7 @@ public class ClubEntity implements Serializable {
     @ElementCollection
     @Column(name = "alias_name", length = 64)
     @CollectionTable(name = "club_alias")
-    private Set<String> aliasNames = new HashSet<String>();
+    private Set<String> aliasNames = new HashSet<>();
 
     @Column(length = 5, name = "ice_curfew")
     private String iceCurfewHHMM;

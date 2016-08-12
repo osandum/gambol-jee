@@ -103,9 +103,8 @@ public class RootResource {
         List<FixtureEntity> fixtures = gambol.getFixtures(searchParams);
 
         Fixtures res = new Fixtures();
-        for (FixtureEntity entity : fixtures) {
+        for (FixtureEntity entity : fixtures)
             res.getFixtures().add(FixtureResource.entity2domain(entity, uriInfo));
-        }
 
         return Response.ok(res).build();
     }

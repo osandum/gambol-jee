@@ -1,6 +1,6 @@
 package gambol.model;
 
-import java.util.Comparator;
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -18,6 +18,14 @@ public class FixturePlayerEntity extends FixturePersonEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_side"))
     private FixtureSideEntity side;
 
+    @Column(length = 3)
+    private String line;
+
+    @Column(length = 3)
+    private String pos;
+
+    private Integer jerseyNumber;
+    
     public FixtureSideEntity getSide() {
         return side;
     }
@@ -32,8 +40,6 @@ public class FixturePlayerEntity extends FixturePersonEntity {
     }
     
 
-    private Integer jerseyNumber;
-
     public Integer getJerseyNumber() {
         return jerseyNumber;
     }
@@ -42,8 +48,6 @@ public class FixturePlayerEntity extends FixturePersonEntity {
         this.jerseyNumber = jerseyNumber;
     }
 
-
-    private String line;
 
     public String getLineupLine() {
         return line;
@@ -54,8 +58,6 @@ public class FixturePlayerEntity extends FixturePersonEntity {
     }
 
     
-    private String pos;
-
     public String getLineupPosition() {
         return pos;
     }
@@ -67,5 +69,10 @@ public class FixturePlayerEntity extends FixturePersonEntity {
     @Override
     public String toString() {
         return "{" + getId() + ":" + side + " " + jerseyNumber + " " + getPerson() + " "+line+":"+pos+"}";
+    }
+
+    @Override
+    public String signature() {
+        return super.signature() + ":PLAYER";
     }
 }

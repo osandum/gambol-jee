@@ -6,6 +6,8 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.ForeignKey;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
@@ -17,10 +19,26 @@ import javax.validation.constraints.NotNull;
 @DiscriminatorValue("PLTY")
 public class PenaltyEventEntity extends FixtureEventEntity {
 
-    
     @NotNull
     @Enumerated(EnumType.STRING)
+    @Column(length = 7)
     private GameOffense offense;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_player"))
+    private FixturePlayerEntity player;
+
+    @NotNull
+    @Column(name = "penalty_minutes") //, nullable = false) wont't fly on single-table inheritance
+    private Integer penaltyMinutes;
+
+    @NotNull
+    @Column(name = "starttime_second")
+    private Integer starttimeSecond;
+
+    @Column(name = "endtime_second")
+    private Integer endtimeSecond;
+
 
     public GameOffense getOffense() {
         return offense;
@@ -31,9 +49,6 @@ public class PenaltyEventEntity extends FixtureEventEntity {
     }
 
 
-    @ManyToOne(optional = false)
-    private FixturePlayerEntity player;
-
     public FixturePlayerEntity getPlayer() {
         return player;
     }
@@ -42,23 +57,23 @@ public class PenaltyEventEntity extends FixtureEventEntity {
         this.player = player;
     }
 
+    public Integer getStarttimeSecond() {
+        return starttimeSecond;
+    }
 
-    @NotNull
-    @Column(name = "endtime_second") //, nullable = false) wont't fly on single-table inheritance
-    private Integer endtimeSecond;
+    public void setStarttimeSecond(Integer sec) {
+        this.starttimeSecond = sec;
+    }
+
 
     public Integer getEndtimeSecond() {
         return endtimeSecond;
     }
 
-    public void setEndtimeSecond(Integer endtime) {
-        this.endtimeSecond = endtime;
+    public void setEndtimeSecond(Integer sec) {
+        this.endtimeSecond = sec;
     }
 
-
-    @NotNull
-    @Column(name = "penalty_minutes") //, nullable = false) wont't fly on single-table inheritance
-    private Integer penaltyMinutes;
 
     public Integer getPenaltyMinutes() {
         return penaltyMinutes;
@@ -71,7 +86,17 @@ public class PenaltyEventEntity extends FixtureEventEntity {
 
     @Override
     public String toString() {
-        return "[" + getOffense() + ":"+getId()+" " + getGameTimeSecond()/60 + ":"+getGameTimeSecond()%60+" " + getPlayer() + "]";
+        return "[" + getOffense() + "("+penaltyMinutes+"):"+getId()+" " + getGameTimeSecond()/60 + ":"+getGameTimeSecond()%60+" " + getPlayer() + "]";
     }
-    
+
+    @Override
+    public String signature() {
+        return super.signature() +
+                String.format(":P:%d:%s:%d:%d:%d", player.getId(), offense, penaltyMinutes, starttimeSecond, endtimeSecond);
+    }
+
+    @Override
+    public boolean usesPlayer(FixturePlayerEntity unused) {
+        return player.equals(unused);
+    }
 }

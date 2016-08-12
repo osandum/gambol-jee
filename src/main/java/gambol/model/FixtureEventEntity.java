@@ -1,6 +1,7 @@
 package gambol.model;
 
 import gambol.xml.FixtureSideRole;
+import static gambol.xml.FixtureSideRole.*;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
@@ -21,7 +22,7 @@ import javax.persistence.ManyToOne;
 @Entity(name = "fixture_event")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "event_type")
-public class FixtureEventEntity implements Serializable {
+public abstract class FixtureEventEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -50,6 +51,7 @@ public class FixtureEventEntity implements Serializable {
 
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 4)
     private FixtureSideRole side;
 
     public FixtureSideRole getSide() {
@@ -81,17 +83,13 @@ public class FixtureEventEntity implements Serializable {
         FixtureSideEntity fs = getFixture().getSide(side);
         return String.format("[%d] %02d:%02d %s", id, gameTimeSecond / 60, gameTimeSecond % 60, fs.getTeam().getName());
     }
+    
+    public String signature() {
+        return String.format("%02d%02d:%s", gameTimeSecond / 60, gameTimeSecond % 60, side.value());
+    }
 
-/*  public final static Comparator<FixtureEventEntity> BY_TIME = new Comparator<FixtureEventEntity>() {
-        @Override
-        public int compare(FixtureEventEntity e1, FixtureEventEntity e2) {
-            int t1 = e1.getGameTimeSecond();
-            int t2 = e2.getGameTimeSecond();
-            if (t1 != t2)
-                return t1 - t2;
-            
-            
-            
-        }
-    }*/
+    public abstract boolean usesPlayer(FixturePlayerEntity unused);
+    
+    public boolean isHome() { return HOME.equals(getSide()); }
+    public boolean isAway() { return AWAY.equals(getSide()); }
 }

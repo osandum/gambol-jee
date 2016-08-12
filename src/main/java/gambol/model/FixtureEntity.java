@@ -2,13 +2,13 @@ package gambol.model;
 
 import gambol.xml.FixtureSideRole;
 import static gambol.xml.FixtureSideRole.AWAY;
+import gambol.xml.GamesheetStatus;
 import gambol.xml.ScheduleStatus;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Logger;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,13 +25,15 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author osa
  */
 @Entity(name = "fixture")
 public class FixtureEntity implements Serializable {
-    private static final Logger LOG = Logger.getLogger(FixtureEntity.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(FixtureEntity.class);
 
     private static final long serialVersionUID = 1L;
     
@@ -65,11 +67,11 @@ public class FixtureEntity implements Serializable {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_tournament"))
     private TournamentEntity tournament;
     
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, optional = false)
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_home"))
     private FixtureSideEntity homeSide;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, optional = false)
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_away"))
     private FixtureSideEntity awaySide;
     
@@ -84,9 +86,14 @@ public class FixtureEntity implements Serializable {
     private List<FixtureEventEntity> events;
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 15, nullable = false)
     private ScheduleStatus status;
 
-    @Column(length = 16, name="match_number")
+    @Enumerated(EnumType.STRING)
+    @Column(length = 15, nullable = false)
+    private GamesheetStatus sheet;
+
+    @Column(length = 15, name="match_number")
     private String matchNumber;
 
     @Column(length = 31, name="title")
@@ -201,7 +208,7 @@ public class FixtureEntity implements Serializable {
         ClubEntity homeClub = getHomeSide().getTeam().getClub();        
         Date curfew = homeClub.curfewAfter(getStartTime());
         if (curfew != null && eet.after(curfew)) {
-            LOG.info(sourceRef + ": culling estimated end-time " + eet + " to " + curfew + " (as per " + homeClub.getName() + " rules)");
+            LOG.info("{}: culling estimated end-time {} to {} (as per {} rules)", sourceRef, eet, curfew, homeClub.getName());
             eet = curfew;
         }
         
@@ -214,6 +221,14 @@ public class FixtureEntity implements Serializable {
 
     public void setStatus(ScheduleStatus status) {
         this.status = status;
+    }
+
+    public GamesheetStatus getSheet() {
+        return sheet;
+    }
+
+    public void setSheet(GamesheetStatus sheet) {
+        this.sheet = sheet;
     }
 
     public String getMatchNumber() {

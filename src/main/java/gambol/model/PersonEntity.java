@@ -66,4 +66,7 @@ public class PersonEntity implements Serializable {
         return "["+id+":" + String.valueOf(lastName).toUpperCase() + ", " + firstNames + "]";
     }
 
+    public boolean isTUC() {
+        return "(ukendt)".equals(firstNames) && "(ukendt)".equals(lastName);
+    }
 }

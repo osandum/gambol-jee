@@ -110,16 +110,16 @@ public class FixtureResource {
             PlayerRef pr = new PlayerRef();
             pr.setNumber(gee.getPlayer().getJerseyNumber());
             ge.setPlayer(pr);
+            ge.setSide(e.getSide());
+            ge.setTime(App.gameTimeCode(e.getGameTimeSecond()));
             
             for (FixturePlayerEntity as : gee.getAssists()) {
                 PlayerRef ar = new PlayerRef();
                 ar.setNumber(as.getJerseyNumber());
                 ge.getAssists().add(ar);
-            }
-            
-            ge.setSide(e.getSide());
+            }            
             ge.setGameSituation(gee.getGameSituation());
-            ge.setTime(App.gameTimeCode(e.getGameTimeSecond()));
+
             return ge;
         }
         if (e instanceof PenaltyEventEntity) {
@@ -129,10 +129,13 @@ public class FixtureResource {
             pr.setNumber(pee.getPlayer().getJerseyNumber());
             pe.setPlayer(pr);
             pe.setSide(e.getSide());
+            pe.setTime(App.gameTimeCode(e.getGameTimeSecond()));
+            
             pe.setOffense(pee.getOffense());
             pe.setMinutes(pee.getPenaltyMinutes());
+            pe.setStartTime(App.gameTimeCode(pee.getStarttimeSecond()));
             pe.setEndTime(App.gameTimeCode(pee.getEndtimeSecond()));
-            pe.setTime(App.gameTimeCode(e.getGameTimeSecond()));
+            
             return pe;
         }
         return null;
@@ -159,6 +162,7 @@ public class FixtureResource {
         model.getSides().add(entity2domain(FixtureSideRole.AWAY, entity.getAwaySide()));
         model.setMatchNumber(entity.getMatchNumber());
         model.setSourceRef(entity.getSourceRef());
+        model.setGamesheet(entity.getSheet());
         TournamentEntity tournament = entity.getTournament();
         String tourRef = tournament.getSlug();
         model.setTournamentRef(tourRef);
