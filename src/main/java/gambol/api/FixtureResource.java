@@ -32,8 +32,10 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import static javax.ws.rs.core.MediaType.*;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 /**
@@ -57,9 +59,11 @@ public class FixtureResource {
     public Gamesheet getGamesheet(@Context UriInfo uriInfo) {
 
         FixtureEntity f = gambol.getFixtureById(fixtureId);
-        
-        LOG.info("# fixture "+fixtureId+" loaded: " + f);
-        
+        if (f == null)
+            throw new WebApplicationException("Not found", Response.Status.NOT_FOUND);
+
+        LOG.info("# fixture loaded: " + f);
+
         return entity2gamesheet(f, uriInfo);
     }
 
@@ -92,7 +96,7 @@ public class FixtureResource {
 
         FixtureEvents fe = new FixtureEvents();
         for (FixtureEventEntity e : f.getEvents())
-            fe.getGoalsAndPenalties().add(eentity2domain(e));
+            fe.getGoalsAndPenalties().add(eentity2domain(e, null));
 
         sheet.setEvents(fe);
         sheet.setSourceRef(f.getSourceRef());
@@ -103,42 +107,50 @@ public class FixtureResource {
         return sheet;
     }
 
-    private static Event eentity2domain(FixtureEventEntity e) {
-        if (e instanceof GoalEventEntity) {
-            GoalEventEntity gee = (GoalEventEntity)e;
-            GoalEvent ge = new GoalEvent();
-            PlayerRef pr = new PlayerRef();
-            pr.setNumber(gee.getPlayer().getJerseyNumber());
-            ge.setPlayer(pr);
-            ge.setSide(e.getSide());
-            ge.setTime(App.gameTimeCode(e.getGameTimeSecond()));
-            
-            for (FixturePlayerEntity as : gee.getAssists()) {
-                PlayerRef ar = new PlayerRef();
-                ar.setNumber(as.getJerseyNumber());
-                ge.getAssists().add(ar);
-            }            
-            ge.setGameSituation(gee.getGameSituation());
-
-            return ge;
-        }
-        if (e instanceof PenaltyEventEntity) {
-            PenaltyEventEntity pee = (PenaltyEventEntity)e;
-            PenaltyEvent pe = new PenaltyEvent();
-            PlayerRef pr = new PlayerRef();
-            pr.setNumber(pee.getPlayer().getJerseyNumber());
-            pe.setPlayer(pr);
-            pe.setSide(e.getSide());
-            pe.setTime(App.gameTimeCode(e.getGameTimeSecond()));
-            
-            pe.setOffense(pee.getOffense());
-            pe.setMinutes(pee.getPenaltyMinutes());
-            pe.setStartTime(App.gameTimeCode(pee.getStarttimeSecond()));
-            pe.setEndTime(App.gameTimeCode(pee.getEndtimeSecond()));
-            
-            return pe;
-        }
+    private static Event eentity2domain(FixtureEventEntity e, UriInfo uriInfo) {
+        if (e instanceof GoalEventEntity)
+            return geentity2domain((GoalEventEntity)e, uriInfo);
+        if (e instanceof PenaltyEventEntity)
+            return peentity2domain((PenaltyEventEntity)e, uriInfo);
         return null;
+    }
+
+    public static PenaltyEvent peentity2domain(PenaltyEventEntity pee, UriInfo uriInfo) {
+        PenaltyEvent pe = new PenaltyEvent();
+        PlayerRef pr = new PlayerRef();
+        pr.setNumber(pee.getPlayer().getJerseyNumber());
+        pe.setPlayer(pr);
+        pe.setSide(pee.getSide());
+        pe.setTime(App.gameTimeCode(pee.getGameTimeSecond()));
+
+        pe.setOffense(pee.getOffense());
+        pe.setMinutes(pee.getPenaltyMinutes());
+        pe.setStartTime(App.gameTimeCode(pee.getStarttimeSecond()));
+        pe.setEndTime(App.gameTimeCode(pee.getEndtimeSecond()));
+
+        return pe;
+    }
+
+    public static GoalEvent geentity2domain(GoalEventEntity gee, UriInfo uriInfo) {
+        GoalEvent ge = new GoalEvent();
+        PlayerRef pr = new PlayerRef();
+        pr.setNumber(gee.getPlayer().getJerseyNumber());
+        ge.setPlayer(pr);
+        ge.setSide(gee.getSide());
+        ge.setTime(App.gameTimeCode(gee.getGameTimeSecond()));
+
+        for (FixturePlayerEntity as : gee.getAssists()) {
+            PlayerRef ar = new PlayerRef();
+            ar.setNumber(as.getJerseyNumber());
+            ge.getAssists().add(ar);
+        }
+        ge.setGameSituation(gee.getGameSituation());
+
+        if (uriInfo != null)
+            ge.setFixture(uriInfo.getBaseUriBuilder().path(FixtureResource.class).build(gee.getFixture().getId()));
+//      ge.s
+
+        return ge;
     }
 
     private static Player pentity2domain(FixturePlayerEntity p) {
@@ -193,7 +205,7 @@ public class FixtureResource {
     private static Tournament tentity2domain(TournamentEntity entity) {
         if (entity == null)
             return null;
-        
+
         Tournament model = new Tournament();
         model.setSeason(entity.getSeason().getId());
         ClubEntity a = entity.getArena();
@@ -201,7 +213,7 @@ public class FixtureResource {
             model.setArena(a.getSlug());
         model.setSeries(entity.getSeries().getSlug());
         model.setTitle(entity.getName());
-        
+
         return model;
     }
 }

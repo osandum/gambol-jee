@@ -6,9 +6,11 @@ import gambol.model.FixtureEntity;
 import gambol.model.FixtureEntity_;
 import gambol.model.FixtureEventEntity;
 import gambol.model.FixturePlayerEntity;
+import gambol.model.FixturePlayerEntity_;
 import gambol.model.FixtureSideEntity;
 import gambol.model.FixtureSideEntity_;
 import gambol.model.GoalEventEntity;
+import gambol.model.GoalEventEntity_;
 import gambol.model.PenaltyEventEntity;
 import gambol.model.PersonEntity;
 import gambol.model.PersonEntity_;
@@ -58,6 +60,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -81,6 +84,10 @@ public class App {
 
     public void sayHello() {
         LOG.info("Yo, environment");
+    }
+    
+    public PersonEntity getPersonById(long personId) {
+        return em.find(PersonEntity.class, personId);
     }
 
     public ClubEntity findClub(String slug) {
@@ -435,6 +442,50 @@ public class App {
         return em.find(FixtureEntity.class, fixtureId);
     }
     
+    public List<GoalEventEntity> getGoalsByPlayer(long personId) {
+        long t1 = System.currentTimeMillis();
+        
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<GoalEventEntity> q = builder.createQuery(GoalEventEntity.class);
+        Root<GoalEventEntity> goal = q.from(GoalEventEntity.class);
+        Join<FixturePlayerEntity, PersonEntity> scorer = goal.join(GoalEventEntity_.player).join(FixturePlayerEntity_.person);
+        //  Join<FixturePlayerEntity, PersonEntity> assist = goal.join(GoalEventEntity_.assists).join(FixturePlayerEntity_.person);
+        Join<GoalEventEntity, FixtureEntity> fixture = goal.join(GoalEventEntity_.fixture);
+        
+        q.where(builder.equal(scorer.get(PersonEntity_.id), personId));
+        q.orderBy(builder.asc(fixture.get(FixtureEntity_.startTime)),
+                  builder.asc(goal.get(GoalEventEntity_.gameTimeSecond)));
+        
+        List<GoalEventEntity> res = em.createQuery(q).getResultList();
+        long t2 = System.currentTimeMillis();
+        
+        LOG.info(personId + ": " + res.size() + " goal(s) retrieved ("+(t2-t1)+"ms)");
+        
+        return res;        
+    }
+    
+    public List<FixturePlayerEntity> getFixturesByPlayer(long personId) {
+        long t1 = System.currentTimeMillis();
+        
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<FixturePlayerEntity> q = builder.createQuery(FixturePlayerEntity.class);
+        Root<FixturePlayerEntity> played = q.from(FixturePlayerEntity.class);
+        Join<FixturePlayerEntity, PersonEntity> player = played.join(FixturePlayerEntity_.person);
+        Join<FixturePlayerEntity, FixtureEntity> fixture = played.join(FixturePlayerEntity_.fixture);
+        
+        q.where(builder.equal(player.get(PersonEntity_.id), personId));
+        q.orderBy(builder.asc(fixture.get(FixtureEntity_.startTime)));
+        
+
+        List<FixturePlayerEntity> res = em.createQuery(q).getResultList();
+
+        long t2 = System.currentTimeMillis();
+        
+        LOG.info(personId + ": " + res.size() + " fixture(s) retrieved ("+(t2-t1)+"ms)");
+        
+        return res;
+    }
+    
     public List<FixtureEntity> getFixtures(FixturesQueryParam param) {
         long t1 = System.currentTimeMillis();
         
@@ -527,7 +578,6 @@ public class App {
                     isMissing = isMissing.not();
                 wheres.add(isMissing);
             }
-                
         }
         q.where(a);
         q.orderBy(builder.asc(fixtures.get(FixtureEntity_.startTime)));

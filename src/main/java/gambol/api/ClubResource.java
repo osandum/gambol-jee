@@ -47,6 +47,7 @@ public class ClubResource {
 
     public static Club entity2domain(ClubEntity entity) {
         Club c = new Club();
+        c.setSlug(entity.getSlug());
         c.setName(entity.getName());
         c.setCountry(entity.getCountryIso2());
         if (entity.getAddress() != null || (entity.getLatitude() != null && entity.getLongitude() != null)) {

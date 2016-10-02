@@ -90,7 +90,7 @@ public class FixturesQueryParam implements Serializable {
     public void setAwayClubRef(List<String> awayClubRef) {
         this.awayClubRef = awayClubRef;
     }
-
+    
     @Override
     public String toString() {
         return "FixturesQueryParam{" + "start=" + start + ", end=" + end + ", seasonId=" + seasonId + ", seriesId=" + seriesId + ", tournamentRef=" + tournamentRef + ", clubRef=" + clubRef + ", homeClubRef=" + homeClubRef + ", awayClubRef=" + awayClubRef + ", sheet=" + hasGamesheet + '}';

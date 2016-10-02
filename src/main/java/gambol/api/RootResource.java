@@ -4,7 +4,7 @@ import gambol.ejb.App;
 import gambol.ejb.FixturesQueryParam;
 import gambol.model.ClubEntity;
 import gambol.model.FixtureEntity;
-import gambol.model.TournamentEntity;
+import gambol.model.SeasonEntity;
 import gambol.util.DateParam;
 import gambol.xml.Club;
 import gambol.xml.Fixtures;
@@ -20,6 +20,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
@@ -63,10 +64,10 @@ public class RootResource {
     @Path("clubs")
     @Produces({APPLICATION_JSON, APPLICATION_XML})
     public List<Club> listAllClubs() {
-        List<Club> res = new LinkedList<Club>();
-        for (ClubEntity entity : gambol.getClubs()) {
+        List<Club> res = new LinkedList<>();
+        gambol.getClubs().stream().forEach((entity) -> {
             res.add(ClubResource.entity2domain(entity));
-        }
+        });
         return res;
     }
 
@@ -76,12 +77,12 @@ public class RootResource {
     @GET
     @Path("tournaments")
     @Produces({APPLICATION_JSON, APPLICATION_XML})
-    public Response listAllTournaments(@Context UriInfo uriInfo) {
-        List<Tournament> res = new LinkedList<Tournament>();
-        for (TournamentEntity entity : gambol.getAllTournaments()) {
+    public List<Tournament> listAllTournaments(@Context UriInfo uriInfo) {
+        List<Tournament> res = new LinkedList<>();
+        gambol.getAllTournaments().stream().forEach((entity) -> {
             res.add(TournamentResource.entity2domain(entity, uriInfo));
-        }
-        return Response.ok(res.toArray(new Tournament[0])).build();
+        });
+        return res; //Response.ok(res.toArray(new Tournament[0])).build();
     }
 
     @GET
@@ -103,8 +104,9 @@ public class RootResource {
         List<FixtureEntity> fixtures = gambol.getFixtures(searchParams);
 
         Fixtures res = new Fixtures();
-        for (FixtureEntity entity : fixtures)
+        fixtures.stream().forEach((entity) -> {
             res.getFixtures().add(FixtureResource.entity2domain(entity, uriInfo));
+        });
 
         return Response.ok(res).build();
     }
