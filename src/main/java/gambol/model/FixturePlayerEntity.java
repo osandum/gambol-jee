@@ -15,9 +15,9 @@ import javax.persistence.UniqueConstraint;
  * @author osa
  */
 @Entity(name = "fixture_person")
-@Table(uniqueConstraints = { 
-    @UniqueConstraint(name = "player_uq", 
-            columnNames={"fixture_id", "side_id", "person_id", "jerseynumber"}) })
+@Table(uniqueConstraints = {
+    @UniqueConstraint(name = "player_uq",
+            columnNames={"fixture_id", "side_id", "person_id", "jerseynumber", "person_role"}) })
 public class FixturePlayerEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -28,7 +28,7 @@ public class FixturePlayerEntity implements Serializable {
     @ManyToOne(optional = false)
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_fixture"))
     private FixtureEntity fixture;
-    
+
     @ManyToOne(optional = false)
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_person"))
     private PersonEntity person;
@@ -40,7 +40,7 @@ public class FixturePlayerEntity implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-    
+
 
     public FixtureEntity getFixture() {
         return fixture;
@@ -57,7 +57,7 @@ public class FixturePlayerEntity implements Serializable {
 
     public void setPerson(PersonEntity person) {
         this.person = person;
-    }    
+    }
 
     @ManyToOne(optional = false)
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_side"))
@@ -70,7 +70,18 @@ public class FixturePlayerEntity implements Serializable {
     private String pos;
 
     private Integer jerseyNumber;
-    
+
+    @Column(name = "person_role")
+    private String personRole;
+
+    public String getPersonRole() {
+      return personRole;
+    }
+
+    public void setPersonRole(String role) {
+      this.personRole = role;
+    }
+
     public FixtureSideEntity getSide() {
         return side;
     }
@@ -79,11 +90,11 @@ public class FixturePlayerEntity implements Serializable {
         this.side = side;
     }
 
-    
+
     public String getRef() {
         return getSide().getTeam().getClub().getSlug() + ":" + getJerseyNumber() + ":" + getPerson().getLastName().toLowerCase() + ":" + getPerson().getFirstNames().toLowerCase();
     }
-    
+
 
     public Integer getJerseyNumber() {
         return jerseyNumber;
@@ -102,7 +113,7 @@ public class FixturePlayerEntity implements Serializable {
         this.line = line;
     }
 
-    
+
     public String getLineupPosition() {
         return pos;
     }
@@ -117,6 +128,6 @@ public class FixturePlayerEntity implements Serializable {
     }
 
     public String signature() {
-        return String.format("%d:%d:PLAYER", getFixture().getId(), person.getId());
+        return String.format("%d:%d:%s", getFixture().getId(), person.getId(), getPersonRole());
     }
 }

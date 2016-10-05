@@ -85,7 +85,7 @@ public class App {
     public void sayHello() {
         LOG.info("Yo, environment");
     }
-    
+
     public PersonEntity getPersonById(long personId) {
         return em.find(PersonEntity.class, personId);
     }
@@ -102,10 +102,10 @@ public class App {
     public ClubEntity findOrCreateClub(String slug) {
         if (StringUtils.isEmpty(slug))
             throw new IllegalArgumentException("no club ref");
-            
+
         try {
             return findClub(slug);
-        } 
+        }
         catch (NoResultException ex) {
             ClubEntity res = new ClubEntity();
             res.setSlug(slug);
@@ -197,7 +197,7 @@ public class App {
 
         String seriesSlug = slug.replaceAll("-[^-]*$", "");
         SeriesEntity series = findOrCreateSeries(seriesSlug);
-        
+
         TournamentEntity entity;
         try {
             entity = findTournamentBySourceRef(sourceRef);
@@ -219,7 +219,7 @@ public class App {
             LOG.info(name + " is held at " + arena);
             entity.setArena(arena);
         }
-        
+
         return entity;
     }
 
@@ -287,7 +287,7 @@ public class App {
     public TeamEntity findOrCreateTeam(TournamentEntity tournament, String clubRef, String teamName) {
         try {
             return findTeam(tournament, clubRef, teamName);
-        } 
+        }
         catch (NoResultException ex) {
             TeamEntity res = new TeamEntity();
             res.setTournament(tournament);
@@ -412,7 +412,7 @@ public class App {
         CriteriaQuery<FixtureEntity> select = builder.createQuery(FixtureEntity.class);
         Root<FixtureEntity> fixtures = select.from(FixtureEntity.class);
         select.where(builder.like(fixtures.get(FixtureEntity_.sourceRef), sourceRef + "%"));
-        
+
         TypedQuery<FixtureEntity> q = em.createQuery(select);
 
         try {
@@ -437,58 +437,58 @@ public class App {
 
         return em.createQuery(q).getSingleResult();
     }
-    
+
     public FixtureEntity getFixtureById(long fixtureId) {
         return em.find(FixtureEntity.class, fixtureId);
     }
-    
+
     public List<GoalEventEntity> getGoalsByPlayer(long personId) {
         long t1 = System.currentTimeMillis();
-        
+
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<GoalEventEntity> q = builder.createQuery(GoalEventEntity.class);
         Root<GoalEventEntity> goal = q.from(GoalEventEntity.class);
         Join<FixturePlayerEntity, PersonEntity> scorer = goal.join(GoalEventEntity_.player).join(FixturePlayerEntity_.person);
         //  Join<FixturePlayerEntity, PersonEntity> assist = goal.join(GoalEventEntity_.assists).join(FixturePlayerEntity_.person);
         Join<GoalEventEntity, FixtureEntity> fixture = goal.join(GoalEventEntity_.fixture);
-        
+
         q.where(builder.equal(scorer.get(PersonEntity_.id), personId));
         q.orderBy(builder.asc(fixture.get(FixtureEntity_.startTime)),
                   builder.asc(goal.get(GoalEventEntity_.gameTimeSecond)));
-        
+
         List<GoalEventEntity> res = em.createQuery(q).getResultList();
         long t2 = System.currentTimeMillis();
-        
+
         LOG.info(personId + ": " + res.size() + " goal(s) retrieved ("+(t2-t1)+"ms)");
-        
-        return res;        
+
+        return res;
     }
-    
+
     public List<FixturePlayerEntity> getFixturesByPlayer(long personId) {
         long t1 = System.currentTimeMillis();
-        
+
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<FixturePlayerEntity> q = builder.createQuery(FixturePlayerEntity.class);
         Root<FixturePlayerEntity> played = q.from(FixturePlayerEntity.class);
         Join<FixturePlayerEntity, PersonEntity> player = played.join(FixturePlayerEntity_.person);
         Join<FixturePlayerEntity, FixtureEntity> fixture = played.join(FixturePlayerEntity_.fixture);
-        
+
         q.where(builder.equal(player.get(PersonEntity_.id), personId));
         q.orderBy(builder.asc(fixture.get(FixtureEntity_.startTime)));
-        
+
 
         List<FixturePlayerEntity> res = em.createQuery(q).getResultList();
 
         long t2 = System.currentTimeMillis();
-        
+
         LOG.info(personId + ": " + res.size() + " fixture(s) retrieved ("+(t2-t1)+"ms)");
-        
+
         return res;
     }
-    
+
     public List<FixtureEntity> getFixtures(FixturesQueryParam param) {
         long t1 = System.currentTimeMillis();
-        
+
         CriteriaBuilder builder = em.getCriteriaBuilder();
 
         CriteriaQuery<FixtureEntity> q = builder.createQuery(FixtureEntity.class);
@@ -504,7 +504,7 @@ public class App {
             wheres.add(builder.greaterThanOrEqualTo(builder.coalesce(fixtures.get(FixtureEntity_.endTime), fixtures.get(FixtureEntity_.startTime)), param.start));
         else
             wheres.add(builder.isNotNull(fixtures.get(FixtureEntity_.startTime)));
-            
+
         if (param.end != null)
             wheres.add(builder.lessThanOrEqualTo(builder.coalesce(fixtures.get(FixtureEntity_.startTime), fixtures.get(FixtureEntity_.endTime)), param.end));
 
@@ -528,9 +528,9 @@ public class App {
                 wheres.add(b);
             }
         }
-        
+
         if (!param.clubRef.isEmpty() || !param.homeClubRef.isEmpty() || !param.awayClubRef.isEmpty() || param.hasGamesheet != null) {
-            
+
             Join<FixtureEntity, FixtureSideEntity> homeSide = fixtures.join(FixtureEntity_.homeSide);
             Join<FixtureSideEntity, TeamEntity> homeTeam = homeSide.join(FixtureSideEntity_.team);
             Join<TeamEntity, ClubEntity> homeClub = homeTeam.join(TeamEntity_.club);
@@ -544,12 +544,12 @@ public class App {
                 clubRefs.addAll(param.clubRef);
              // clubRefs.addAll(param.homeClubRef);
                 clubRefs.addAll(param.awayClubRef);
-                        
+
                 wheres.add(
                         builder.or(homeClub.get(ClubEntity_.slug).in(clubRefs),
                                    awayClub.get(ClubEntity_.slug).in(clubRefs)));
             }
-            
+
             if (!param.homeClubRef.isEmpty() || !param.awayClubRef.isEmpty()) {
                 Join<TournamentEntity, ClubEntity> tournamentArena = tournament.join(TournamentEntity_.arena, JoinType.LEFT);
                 Join<FixtureEntity, ClubEntity> fixtureArena = fixtures.join(FixtureEntity_.arena, JoinType.LEFT);
@@ -557,16 +557,16 @@ public class App {
                         .value(fixtureArena.get(ClubEntity_.slug))
                         .value(tournamentArena.get(ClubEntity_.slug))
                         .value(homeClub.get(ClubEntity_.slug));
-                
-                if (!param.homeClubRef.isEmpty()) 
+
+                if (!param.homeClubRef.isEmpty())
                     // only include fixtures on these clubs' own ice:
                     wheres.add(arenaRef.in(param.homeClubRef));
 
-                if (!param.awayClubRef.isEmpty()) 
+                if (!param.awayClubRef.isEmpty())
                     // only include fixtures on foreign ice:
                     wheres.add(arenaRef.in(param.awayClubRef).not());
             }
-            
+
             if (param.hasGamesheet != null) {
                 // disregard un-scheduled or un-finished games when examining gamesheet status:
                 Expression<Timestamp> now_ = builder.currentTimestamp();
@@ -585,9 +585,9 @@ public class App {
         List<FixtureEntity> res = em.createQuery(q).getResultList();
 
         long t2 = System.currentTimeMillis();
-        
+
         LOG.info(param + ": " + res.size() + " fixture(s) retrieved ("+(t2-t1)+"ms)");
-        
+
         return res;
 
 /*
@@ -604,12 +604,12 @@ public class App {
     }
 
     public FixtureEntity putGamesheet(Gamesheet gg) {
-        
+
         FixtureEntity f = findFixtureBySourceRef(gg.getSourceRef());
         TournamentEntity t = f.getTournament();
 
-        TeamEntity homeTeam = null; 
-        TeamEntity awayTeam = null; 
+        TeamEntity homeTeam = null;
+        TeamEntity awayTeam = null;
         for (TeamDef td : gg.getTeams())
         {
             try {
@@ -623,7 +623,7 @@ public class App {
                 LOG.warn("# fixture {} no {} team - {}", f.getSourceRef(), td.getSide(), ex.getMessage());
             }
         }
-        
+
         if (gg.getStartTime() != null && f.getStartTime() == null) {
             f.setStartTime(gg.getStartTime());
             Calendar d = Calendar.getInstance();
@@ -633,7 +633,7 @@ public class App {
             f.setEndTime(d.getTime());
         }
         f.setStatus(ScheduleStatus.CONFIRMED);
-        
+
         FixtureSideEntity homeSide = f.getHomeSide();
         if (homeSide == null && homeTeam != null) {
             homeSide = new FixtureSideEntity();
@@ -652,14 +652,14 @@ public class App {
         }
 
         LOG.info("#### updating fixture "+f);
-        
+
         for (Roster r : gg.getRosters())
             updateFixtureRoster(f, r.getSide(), r.getPlayers());
-        
+
         updateFixtureEvents(f, gg.getEvents());
 
         f.setSheet(GamesheetStatus.READY);
-                
+
         return f;
     }
 
@@ -682,7 +682,7 @@ public class App {
         Map<String, FixtureEventEntity> all = new HashMap<>();
         for (FixtureEventEntity ee : f.getEvents())
             all.put(ee.signature(), ee);
-        
+
         int homeGoals = 0, awayGoals = 0, totalEvents = 0;
         for (Event e : events.getGoalsAndPenalties()) {
             ++totalEvents;
@@ -696,6 +696,7 @@ public class App {
                 fpe.setSide(partSide);
                 fpe.setFixture(f);
                 fpe.setPerson(unknownPlayer());
+                fpe.setPersonRole("PLAYER");
                 em.persist(fpe);
                 partSide.getPlayers().add(fpe);
                 LOG.warn("player #{} not found in {} - attributing {} event to The Unknown Citizen", jerseyNumber, partSide.getTeam().getName(), e.getTime());
@@ -711,19 +712,19 @@ public class App {
                 ee.setGameSituation(ge.getGameSituation());
                 if (ee.getGameSituation() == null)
                     ee.setGameSituation(GameSituation.EQ);
-                
+
                 ee.setAssists(new LinkedList<>());
                 for (PlayerRef a : ge.getAssists()) {
-                    FixturePlayerEntity ape = partSide.getPlayerByJerseyNumber(a.getNumber());                    
+                    FixturePlayerEntity ape = partSide.getPlayerByJerseyNumber(a.getNumber());
                     ee.getAssists().add(ape);
                 }
 
-                if (all.remove(ee.signature()) == null) {                
-                    em.persist(ee);                
+                if (all.remove(ee.signature()) == null) {
+                    em.persist(ee);
                     LOG.info("{} created", ee.signature());
                 }
                 else {
-                    LOG.debug("{} seen", ee.signature());                    
+                    LOG.debug("{} seen", ee.signature());
                 }
 
                 if (ee.isHome())
@@ -733,7 +734,7 @@ public class App {
             }
             else if (e instanceof PenaltyEvent) {
                 PenaltyEvent pe = (PenaltyEvent)e;
-                
+
                 PenaltyEventEntity ee = new PenaltyEventEntity();
                 ee.setFixture(f);
                 ee.setSide(e.getSide());
@@ -755,26 +756,26 @@ public class App {
                 catch (IllegalArgumentException ex) {
                     ee.setEndtimeSecond(ee.getStarttimeSecond() + 60 * ee.getPenaltyMinutes());
                 }
-                
-                if (all.remove(ee.signature()) == null) {                
-                    em.persist(ee);                
+
+                if (all.remove(ee.signature()) == null) {
+                    em.persist(ee);
                     LOG.info("{} created", ee.signature());
                 }
                 else {
-                    LOG.debug("{} seen", ee.signature());                    
+                    LOG.debug("{} seen", ee.signature());
                 }
             }
         }
 
         if (totalEvents == 0) {
             LOG.warn("{}: no game events in gamesheet", f.getSourceRef());
-        }        
+        }
         else {
             if (f.getHomeSide().getScore() == null)
                 f.getHomeSide().setScore(homeGoals);
             if (f.getAwaySide().getScore() == null)
                 f.getAwaySide().setScore(awayGoals);
-            
+
             if (f.getHomeSide().getScore() == homeGoals && f.getAwaySide().getScore() == awayGoals) {
                 LOG.debug("{}: game score unchanged: ({}-{})", f.getSourceRef(),  homeGoals, awayGoals);
             }
@@ -787,8 +788,8 @@ public class App {
                 f.getAwaySide().setScore(awayGoals);
             }
         }
-        
-        
+
+
         for (FixtureEventEntity ee : all.values()) {
             LOG.info("### {} gone", ee.signature());
             em.remove(ee);
@@ -798,7 +799,7 @@ public class App {
     private void updateFixtureRoster(FixtureEntity fixture, FixtureSideRole role, List<Player> players) {
         FixtureSideEntity side = fixture.getSide(role);
         LOG.debug("===== " + side.getTeam().getName() + " ROSTER ======");
-        
+
         Map<String, FixturePlayerEntity> all = new HashMap<>();
         for (FixturePlayerEntity fp : side.getPlayers()) {
             LOG.debug("already seen " + fp.getRef());
@@ -819,7 +820,7 @@ public class App {
             }
             else if (!jerseys.add(p.getNumber())) {
                 LOG.info("{} duplicate jersey #{} - ignored", p, p.getNumber());
-                continue;                
+                continue;
             }
 
             String playerRef = side.getTeam().getClub().getSlug() + ":" + p.getNumber() + ":" + String.valueOf(p.getLastName()).toLowerCase() + ":" + String.valueOf(p.getFirstNames()).toLowerCase();
@@ -873,16 +874,16 @@ public class App {
         return em.createQuery(query).setMaxResults(1).getSingleResult();
     }
 
-    
+
     private final static Player UNKNOWN_PLAYER = new Player() {{
         setFirstNames("(ukendt)");
         setLastName("(ukendt)");
     }};
-    
+
     private PersonEntity unknownPlayer() {
         return findOrCreatePlayerPerson(UNKNOWN_PLAYER);
     }
-    
+
     private PersonEntity findOrCreatePlayerPerson(Player p) {
         try {
             return findPlayerPerson(p);
@@ -904,6 +905,7 @@ public class App {
         fp.setSide(f.getSide(r));
         fp.setPerson(pe);
         fp.setJerseyNumber(p.getNumber());
+        fp.setPersonRole("PLAYER");
         return fp;
     }
 }
