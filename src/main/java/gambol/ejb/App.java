@@ -60,7 +60,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.ListJoin;
+import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -529,6 +529,7 @@ public class App {
             }
         }
 
+        Order order = builder.asc(fixtures.get(FixtureEntity_.startTime));
         if (!param.clubRef.isEmpty() || !param.homeClubRef.isEmpty() || !param.awayClubRef.isEmpty() || param.hasGamesheet != null) {
 
             Join<FixtureEntity, FixtureSideEntity> homeSide = fixtures.join(FixtureEntity_.homeSide);
@@ -573,14 +574,17 @@ public class App {
                 wheres.add(builder.equal(fixtures.get(FixtureEntity_.status), ScheduleStatus.CONFIRMED));
                 wheres.add(builder.greaterThan(now_, fixtures.get(FixtureEntity_.startTime)));
 
-                Predicate isMissing = builder.equal(fixtures.get(FixtureEntity_.sheet), GamesheetStatus.MISSING);
-                if (param.hasGamesheet)
-                    isMissing = isMissing.not();
-                wheres.add(isMissing);
+                if (param.hasGamesheet) {
+                    wheres.add(builder.equal(fixtures.get(FixtureEntity_.sheet), GamesheetStatus.READY));
+                }
+                else {
+                    wheres.add(builder.equal(fixtures.get(FixtureEntity_.sheet), GamesheetStatus.MISSING));
+                    order = builder.desc(fixtures.get(FixtureEntity_.startTime));
+                }
             }
         }
         q.where(a);
-        q.orderBy(builder.asc(fixtures.get(FixtureEntity_.startTime)));
+        q.orderBy(order);
 
         List<FixtureEntity> res = em.createQuery(q).getResultList();
 
