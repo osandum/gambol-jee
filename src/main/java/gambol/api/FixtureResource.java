@@ -96,7 +96,7 @@ public class FixtureResource {
 
         FixtureEvents fe = new FixtureEvents();
         for (FixtureEventEntity e : f.getEvents())
-            fe.getGoalsAndPenalties().add(eentity2domain(e, null));
+            fe.getGoalsAndPenalties().add(e.asXml(null));
 
         sheet.setEvents(fe);
         sheet.setSourceRef(f.getSourceRef());
@@ -105,52 +105,6 @@ public class FixtureResource {
         sheet.setStartTime(f.getStartTime());
 
         return sheet;
-    }
-
-    private static Event eentity2domain(FixtureEventEntity e, UriInfo uriInfo) {
-        if (e instanceof GoalEventEntity)
-            return geentity2domain((GoalEventEntity)e, uriInfo);
-        if (e instanceof PenaltyEventEntity)
-            return peentity2domain((PenaltyEventEntity)e, uriInfo);
-        return null;
-    }
-
-    public static PenaltyEvent peentity2domain(PenaltyEventEntity pee, UriInfo uriInfo) {
-        PenaltyEvent pe = new PenaltyEvent();
-        PlayerRef pr = new PlayerRef();
-        pr.setNumber(pee.getPlayer().getJerseyNumber());
-        pe.setPlayer(pr);
-        pe.setSide(pee.getSide());
-        pe.setTime(App.gameTimeCode(pee.getGameTimeSecond()));
-
-        pe.setOffense(pee.getOffense());
-        pe.setMinutes(pee.getPenaltyMinutes());
-        pe.setStartTime(App.gameTimeCode(pee.getStarttimeSecond()));
-        pe.setEndTime(App.gameTimeCode(pee.getEndtimeSecond()));
-
-        return pe;
-    }
-
-    public static GoalEvent geentity2domain(GoalEventEntity gee, UriInfo uriInfo) {
-        GoalEvent ge = new GoalEvent();
-        PlayerRef pr = new PlayerRef();
-        pr.setNumber(gee.getPlayer().getJerseyNumber());
-        ge.setPlayer(pr);
-        ge.setSide(gee.getSide());
-        ge.setTime(App.gameTimeCode(gee.getGameTimeSecond()));
-
-        for (FixturePlayerEntity as : gee.getAssists()) {
-            PlayerRef ar = new PlayerRef();
-            ar.setNumber(as.getJerseyNumber());
-            ge.getAssists().add(ar);
-        }
-        ge.setGameSituation(gee.getGameSituation());
-
-        if (uriInfo != null)
-            ge.setFixture(uriInfo.getBaseUriBuilder().path(FixtureResource.class).build(gee.getFixture().getId()));
-//      ge.s
-
-        return ge;
     }
 
     private static Player pentity2domain(FixturePlayerEntity p) {

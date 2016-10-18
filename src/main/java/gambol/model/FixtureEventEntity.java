@@ -1,5 +1,6 @@
 package gambol.model;
 
+import gambol.xml.Event;
 import gambol.xml.FixtureSideRole;
 import static gambol.xml.FixtureSideRole.*;
 import java.io.Serializable;
@@ -15,6 +16,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.ws.rs.core.UriInfo;
 
 /**
  * @author osa
@@ -89,6 +91,7 @@ public abstract class FixtureEventEntity implements Serializable {
     }
 
     public abstract boolean usesPlayer(FixturePlayerEntity unused);
+    public abstract Event asXml(UriInfo uriInfo);
     
     public boolean isHome() { return HOME.equals(getSide()); }
     public boolean isAway() { return AWAY.equals(getSide()); }

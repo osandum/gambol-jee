@@ -1,6 +1,10 @@
 package gambol.model;
 
+import gambol.ejb.App;
+import gambol.xml.Event;
 import gambol.xml.GameOffense;
+import gambol.xml.PenaltyEvent;
+import gambol.xml.PlayerRef;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -10,6 +14,7 @@ import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.core.UriInfo;
 
 /**
  * @see  http://en.wikipedia.org/wiki/Penalty_(ice_hockey)
@@ -98,5 +103,22 @@ public class PenaltyEventEntity extends FixtureEventEntity {
     @Override
     public boolean usesPlayer(FixturePlayerEntity unused) {
         return player.equals(unused);
+    }
+
+    public Event asXml(UriInfo uriInfo) {
+        PenaltyEvent pe = new PenaltyEvent();
+
+        PlayerRef pr = new PlayerRef();
+        pr.setNumber(getPlayer().getJerseyNumber());
+        pe.setPlayer(pr);
+        pe.setSide(getSide());
+        pe.setTime(GameTime.format(getGameTimeSecond()));
+
+        pe.setOffense(getOffense());
+        pe.setMinutes(getPenaltyMinutes());
+        pe.setStartTime(GameTime.format(getStarttimeSecond()));
+        pe.setEndTime(GameTime.format(getEndtimeSecond()));
+
+        return pe;
     }
 }

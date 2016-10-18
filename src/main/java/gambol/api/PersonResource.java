@@ -97,7 +97,7 @@ public class PersonResource {
         
         for (GoalEventEntity ge : gambol.getGoalsByPlayer(p.getId())) {
             FixtureEntity fixture = ge.getFixture();
-            res.getGoalsAndPenalties().add(FixtureResource.geentity2domain(ge, uriInfo));
+            res.getGoalsAndPenalties().add(ge.asXml(uriInfo));
 
             TournamentEntity tournament = fixture.getTournament();
             Date date = fixture.getStartTime();

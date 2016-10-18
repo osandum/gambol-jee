@@ -1,8 +1,12 @@
 package gambol.model;
 
+import gambol.api.FixtureResource;
+import gambol.ejb.App;
+import gambol.xml.Event;
 import gambol.xml.GameSituation;
+import gambol.xml.GoalEvent;
+import gambol.xml.PlayerRef;
 import java.util.List;
-import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -15,6 +19,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OrderColumn;
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.core.UriInfo;
 
 /**
  * @author osa
@@ -105,4 +110,27 @@ public class GoalEventEntity extends FixtureEventEntity {
     public boolean usesPlayer(FixturePlayerEntity unused) {
         return player.equals(unused) || assists.contains(unused);
     }    
+
+    @Override
+    public Event asXml(UriInfo uriInfo) {
+        GoalEvent ge = new GoalEvent();
+
+        PlayerRef pr = new PlayerRef();
+        pr.setNumber(getPlayer().getJerseyNumber());
+        ge.setPlayer(pr);
+        ge.setSide(getSide());
+        ge.setTime(GameTime.format(getGameTimeSecond()));
+
+        for (FixturePlayerEntity as : getAssists()) {
+            PlayerRef ar = new PlayerRef();
+            ar.setNumber(as.getJerseyNumber());
+            ge.getAssists().add(ar);
+        }
+        ge.setGameSituation(getGameSituation());
+
+        if (uriInfo != null)
+            ge.setFixture(uriInfo.getBaseUriBuilder().path(FixtureResource.class).build(getFixture().getId()));
+
+        return ge;
+    }
 }

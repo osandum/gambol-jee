@@ -22,6 +22,7 @@ import gambol.model.TournamentEntity;
 import gambol.model.TournamentEntity_;
 import gambol.model.TeamEntity;
 import gambol.model.TeamEntity_;
+import gambol.model.GameTime;
 import gambol.xml.Event;
 import gambol.xml.Fixture;
 import gambol.xml.FixtureEvents;
@@ -47,8 +48,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.ejb.Stateless;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -667,21 +666,6 @@ public class App {
         return f;
     }
 
-    private final static Pattern MMMM_SS = Pattern.compile("(\\d+):(\\d+)");
-
-    public static Integer gameTimeSecond(String mmmm_ss) {
-        Matcher m = MMMM_SS.matcher(mmmm_ss);
-        if (!m.matches())
-            throw new IllegalArgumentException(mmmm_ss);
-        int mm = Integer.parseInt(m.group(1));
-        int ss = Integer.parseInt(m.group(2));
-        return mm * 60 + ss;
-    }
-
-    public static String gameTimeCode(Integer gs) {
-        return gs == null ? null : String.format("%d:%02d", gs / 60, gs % 60);
-    }
-
     private void updateFixtureEvents(FixtureEntity f, FixtureEvents events) {
         Map<String, FixtureEventEntity> all = new HashMap<>();
         for (FixtureEventEntity ee : f.getEvents())
@@ -712,7 +696,7 @@ public class App {
                 ee.setFixture(f);
                 ee.setSide(e.getSide());
                 ee.setPlayer(fpe);
-                ee.setGameTimeSecond(gameTimeSecond(timeCode));
+                ee.setGameTimeSecond(GameTime.parse(timeCode));
                 ee.setGameSituation(ge.getGameSituation());
                 if (ee.getGameSituation() == null)
                     ee.setGameSituation(GameSituation.EQ);
@@ -743,19 +727,19 @@ public class App {
                 ee.setFixture(f);
                 ee.setSide(e.getSide());
                 ee.setPlayer(fpe);
-                ee.setGameTimeSecond(gameTimeSecond(timeCode));
+                ee.setGameTimeSecond(GameTime.parse(timeCode));
                 ee.setOffense(pe.getOffense());
                 ee.setPenaltyMinutes(pe.getMinutes());
                 String stx = pe.getStartTime();
                 try {
-                    ee.setStarttimeSecond(gameTimeSecond(stx));
+                    ee.setStarttimeSecond(GameTime.parse(stx));
                 }
                 catch (IllegalArgumentException ex) {
                     ee.setStarttimeSecond(ee.getGameTimeSecond());
                 }
                 String etx = pe.getEndTime();
                 try {
-                    ee.setEndtimeSecond(gameTimeSecond(etx));
+                    ee.setEndtimeSecond(GameTime.parse(etx));
                 }
                 catch (IllegalArgumentException ex) {
                     ee.setEndtimeSecond(ee.getStarttimeSecond() + 60 * ee.getPenaltyMinutes());
