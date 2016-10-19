@@ -323,22 +323,25 @@ public class App {
     public void updateFixtures(TournamentEntity t, List<Fixture> fixtures) {
         // Uh-oh, this thing leaves orphaned FixtureSideEntity rows behind.
 
+        // 1) read all fixtures currently in the database, mapped by sourceRef
         Map<String, FixtureEntity> all = new HashMap<>();
         for (FixtureEntity f : t.getFixtures())
             all.put(f.getSourceRef(), f);
 
-        List<FixtureEntity> nf = new LinkedList<>();
+        // 2) traverse the input list of fixtures. Lookup (and remove) in map from
+        //    step above, and insert or update fixture in database accordingly
         for (Fixture fo : fixtures) {
             FixtureEntity f = all.remove(fo.getSourceRef());
             if (f == null) {
                 // new fixture
                 f = new FixtureEntity();
                 f.setTournament(t);
+                f.setSheet(GamesheetStatus.MISSING);
                 domain2entity(fo, f);
                 em.persist(f);
-                nf.add(f);
                 LOG.info(fo.getSourceRef() + " not found: new fixture created: " + f);
-            } else {
+            } 
+            else {
                 // existing fixture, update:
                 f.setTournament(t);
                 domain2entity(fo, f);
@@ -346,6 +349,7 @@ public class App {
             }
         }
 
+        // 3) delete fixtures, if any, still remaining in map from step 1).
         for (FixtureEntity f : all.values()) {
             em.remove(f);
             LOG.info(f.getSourceRef() + ": history");

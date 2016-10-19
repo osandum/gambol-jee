@@ -1,6 +1,5 @@
 package gambol.model;
 
-import gambol.ejb.App;
 import gambol.xml.Event;
 import gambol.xml.GameOffense;
 import gambol.xml.PenaltyEvent;

@@ -1,7 +1,6 @@
 package gambol.model;
 
 import gambol.api.FixtureResource;
-import gambol.ejb.App;
 import gambol.xml.Event;
 import gambol.xml.GameSituation;
 import gambol.xml.GoalEvent;
