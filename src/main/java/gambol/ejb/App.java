@@ -169,11 +169,15 @@ public class App {
 
 
     public List<ClubEntity> getClubs() {
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+
         // OMG!
-        CriteriaQuery<ClubEntity> cq = em.getCriteriaBuilder().createQuery(ClubEntity.class);
-        CriteriaQuery<ClubEntity> all = cq.select(cq.from(ClubEntity.class)); //.orderBy(Ord);
-        TypedQuery<ClubEntity> allQuery = em.createQuery(all);
-        List<ClubEntity> clubs = allQuery.getResultList();
+        CriteriaQuery<ClubEntity> q = builder.createQuery(ClubEntity.class);
+        Root<ClubEntity> club = q.from(ClubEntity.class);
+        q.orderBy(builder.asc(club.get(ClubEntity_.country)),
+                   builder.asc(club.get(ClubEntity_.name)));
+
+        List<ClubEntity> clubs = em.createQuery(q).getResultList();
 
         return clubs;
     }
