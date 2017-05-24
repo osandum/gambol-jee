@@ -42,7 +42,7 @@
         <dependency>
             <groupId>gambol</groupId>
             <artifactId>gambol-frontend-base</artifactId>
-            <version>0.1</version>
+            <version>0.1-SNAPSHOT</version>
             <type>war</type>
             <scope>runtime</scope>
         </dependency>
@@ -193,6 +193,14 @@
         <repository>
             <id>gambol-docs-mvn-repo</id>
             <url>https://raw.github.com/osandum/gambol-docs/mvn-repo/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>gambol-frontend-base-mvn-repo</id>
+            <url>https://raw.github.com/osandum/gambol-frontend-base/mvn-repo/</url>
             <snapshots>
                 <enabled>true</enabled>
                 <updatePolicy>always</updatePolicy>
