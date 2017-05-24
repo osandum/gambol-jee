@@ -13,7 +13,7 @@
 
     <name>as10-ksf.rhcloud.com</name>
     <description>
-        Testing the Wildfly AS 10 on OpenShift
+        Testing the Wildfly AS 10 on OpenShift 3
     </description>
 
     <properties>
@@ -169,7 +169,7 @@
                         <version>2.4</version>
                         <configuration>
                             <failOnMissingWebXml>false</failOnMissingWebXml>
-                            <outputDirectory>deployments</outputDirectory>
+                            <outputDirectory>target</outputDirectory>
                             <warName>ROOT</warName>
                         </configuration>
                     </plugin>
@@ -190,31 +190,14 @@
 
 
     <repositories>
-
         <repository>
-            <id>sandum-release</id>
-            <name>Inhouse Internal Release Repository</name>
-            <url>http://casa.sandum.net/repo/release</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-
-        <repository>
-            <id>sandum-snapshot</id>
-            <name>Inhouse Internal Snapshot Repository</name>
-            <url>http://casa.sandum.net/repo/snapshot</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
+            <id>gambol-docs-mvn-repo</id>
+            <url>https://raw.github.com/osandum/gambol-docs/mvn-repo/</url>
             <snapshots>
                 <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
             </snapshots>
         </repository>
-
     </repositories>
 
 </project>
