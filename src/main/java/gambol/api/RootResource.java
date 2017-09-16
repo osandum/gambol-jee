@@ -4,7 +4,6 @@ import gambol.ejb.App;
 import gambol.ejb.FixturesQueryParam;
 import gambol.model.ClubEntity;
 import gambol.model.FixtureEntity;
-import gambol.model.TournamentEntity;
 import gambol.util.DateParam;
 import gambol.xml.Club;
 import gambol.xml.Fixtures;
@@ -63,10 +62,10 @@ public class RootResource {
     @Path("clubs")
     @Produces({APPLICATION_JSON, APPLICATION_XML})
     public List<Club> listAllClubs() {
-        List<Club> res = new LinkedList<Club>();
-        for (ClubEntity entity : gambol.getClubs()) {
+        List<Club> res = new LinkedList<>();
+        gambol.getClubs().stream().forEach((entity) -> {
             res.add(ClubResource.entity2domain(entity));
-        }
+        });
         return res;
     }
 
@@ -76,12 +75,12 @@ public class RootResource {
     @GET
     @Path("tournaments")
     @Produces({APPLICATION_JSON, APPLICATION_XML})
-    public Response listAllTournaments(@Context UriInfo uriInfo) {
-        List<Tournament> res = new LinkedList<Tournament>();
-        for (TournamentEntity entity : gambol.getAllTournaments()) {
+    public List<Tournament> listAllTournaments(@Context UriInfo uriInfo) {
+        List<Tournament> res = new LinkedList<>();
+        gambol.getAllTournaments().stream().forEach((entity) -> {
             res.add(TournamentResource.entity2domain(entity, uriInfo));
-        }
-        return Response.ok(res.toArray(new Tournament[0])).build();
+        });
+        return res; //Response.ok(res.toArray(new Tournament[0])).build();
     }
 
     @GET
@@ -90,6 +89,7 @@ public class RootResource {
     public Response getFixtures(
             @QueryParam("start") DateParam start,
             @QueryParam("end") DateParam end,
+            @QueryParam("sheet") Boolean hasGamesheet,
             @QueryParam("season") List<String> seasonId,
             @QueryParam("series") List<String> seriesId,
             @QueryParam("tournament") List<String> tournamentRef,
@@ -98,13 +98,13 @@ public class RootResource {
             @QueryParam("away") List<String> awayClubRef,
             @Context UriInfo uriInfo) {
 
-        FixturesQueryParam searchParams = qp(start, end, seasonId, seriesId, tournamentRef, clubRef, homeClubRef, awayClubRef);
+        FixturesQueryParam searchParams = qp(start, end, hasGamesheet, seasonId, seriesId, tournamentRef, clubRef, homeClubRef, awayClubRef);
         List<FixtureEntity> fixtures = gambol.getFixtures(searchParams);
 
         Fixtures res = new Fixtures();
-        for (FixtureEntity entity : fixtures) {
+        fixtures.stream().forEach((entity) -> {
             res.getFixtures().add(FixtureResource.entity2domain(entity, uriInfo));
-        }
+        });
 
         return Response.ok(res).build();
     }
@@ -113,10 +113,11 @@ public class RootResource {
         return p == null ? null : p.getValue();
     }
 
-    private static FixturesQueryParam qp(DateParam start, DateParam end, List<String> seasonId, List<String> seriesId, List<String> tournamentRef, List<String> clubRef, List<String> homeClubRef, List<String> awayClubRef) {
+    private static FixturesQueryParam qp(DateParam start, DateParam end, Boolean sheet, List<String> seasonId, List<String> seriesId, List<String> tournamentRef, List<String> clubRef, List<String> homeClubRef, List<String> awayClubRef) {
         FixturesQueryParam res = new FixturesQueryParam();
         res.setStart(u(start));
         res.setEnd(u(end));
+        res.setGamesheet(sheet);
         res.setSeasonId(seasonId);
         res.setSeriesId(seriesId);
         res.setTournamentRef(tournamentRef);
@@ -139,6 +140,7 @@ public class RootResource {
     public List<FullCalendarEvent> getFixturesFullCalendarEvents(
             @QueryParam("start") DateParam start,
             @QueryParam("end") DateParam end,
+            @QueryParam("sheet") Boolean hasGamesheet,
             @QueryParam("season") List<String> seasonId,
             @QueryParam("series") List<String> seriesId,
             @QueryParam("tournament") List<String> tournamentRef,
@@ -148,7 +150,7 @@ public class RootResource {
 
         LOG.info("### get fullcalendar events...");
         
-        FixturesQueryParam searchParams = qp(start, end, seasonId, seriesId, tournamentRef, clubRef, homeClubRef, awayClubRef);
+        FixturesQueryParam searchParams = qp(start, end, hasGamesheet, seasonId, seriesId, tournamentRef, clubRef, homeClubRef, awayClubRef);
         List<FixtureEntity> fixtures = gambol.getFixtures(searchParams);
 
         List<FullCalendarEvent> res = new LinkedList<FullCalendarEvent>();
@@ -169,6 +171,7 @@ public class RootResource {
     public Response getFixturesCalendar(
             @QueryParam("start") DateParam start,
             @QueryParam("end") DateParam end,
+            @QueryParam("sheet") Boolean hasGamesheet,
             @QueryParam("season") List<String> seasonId,
             @QueryParam("series") List<String> seriesId,
             @QueryParam("tournament") List<String> tournamentRef,
@@ -180,7 +183,7 @@ public class RootResource {
 
         LOG.info("### get a fixtures calendar...");
 
-        FixturesQueryParam searchParams = qp(start, end, seasonId, seriesId, tournamentRef, clubRef, homeClubRef, awayClubRef);
+        FixturesQueryParam searchParams = qp(start, end, hasGamesheet, seasonId, seriesId, tournamentRef, clubRef, homeClubRef, awayClubRef);
         List<FixtureEntity> fixtures = gambol.getFixtures(searchParams);
 
         Calendar cal = getCalendar(fixtures, calname, caldesc);

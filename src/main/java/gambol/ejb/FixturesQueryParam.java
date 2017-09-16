@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 
 /**
- *
  * @author osa
  */
 public class FixturesQueryParam implements Serializable {
@@ -18,6 +17,7 @@ public class FixturesQueryParam implements Serializable {
     List<String> clubRef;
     List<String> homeClubRef;
     List<String> awayClubRef;
+    Boolean hasGamesheet;
 
     public Date getStart() {
         return start;
@@ -33,6 +33,14 @@ public class FixturesQueryParam implements Serializable {
 
     public void setEnd(Date end) {
         this.end = end;
+    }
+
+    public Boolean hasGamesheet() {
+        return hasGamesheet;
+    }
+
+    public void setGamesheet(Boolean gamesheet) {
+        this.hasGamesheet = gamesheet;
     }
 
     public List<String> getSeasonId() {
@@ -83,4 +91,8 @@ public class FixturesQueryParam implements Serializable {
         this.awayClubRef = awayClubRef;
     }
     
+    @Override
+    public String toString() {
+        return "FixturesQueryParam{" + "start=" + start + ", end=" + end + ", seasonId=" + seasonId + ", seriesId=" + seriesId + ", tournamentRef=" + tournamentRef + ", clubRef=" + clubRef + ", homeClubRef=" + homeClubRef + ", awayClubRef=" + awayClubRef + ", sheet=" + hasGamesheet + '}';
+    }
 }

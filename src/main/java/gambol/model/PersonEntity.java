@@ -15,7 +15,7 @@ import javax.persistence.TemporalType;
 @Entity(name = "person")
 public class PersonEntity implements Serializable {
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue
     private Long id;
@@ -27,13 +27,13 @@ public class PersonEntity implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-    
+
     @Column(length = 64, nullable = false)
     private String firstNames;
-    
+
     @Column(length = 64, nullable = false)
     private String lastName;
-    
+
     @Temporal(TemporalType.DATE)
     private Date yearOfBirth;
 
@@ -61,9 +61,25 @@ public class PersonEntity implements Serializable {
         this.yearOfBirth = yearOfBirth;
     }
 
+
+  /*private List<? extends FixturePersonEntity> fixturesPlayes;
+
+    @OneToMany(mappedBy = "person")
+    public List<? extends FixturePersonEntity> getFixturesPlayed() {
+        return fixturesPlayes;
+    }
+
+    public void setFixturesPlayed(List<? extends FixturePersonEntity> fps) {
+        this.fixturesPlayes = fps;
+    }*/
+
+
     @Override
     public String toString() {
         return "["+id+":" + String.valueOf(lastName).toUpperCase() + ", " + firstNames + "]";
     }
 
+    public boolean isTUC() {
+        return "(ukendt)".equals(firstNames) && "(ukendt)".equals(lastName);
+    }
 }

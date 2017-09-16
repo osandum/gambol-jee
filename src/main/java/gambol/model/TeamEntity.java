@@ -10,12 +10,11 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 /**
- *
  * @author osa
  */
-@Entity(name = "tournament_team")
+@Entity(name = "team")
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames={"slug", "tournament_id", "name"}) })
-public class TournamentTeamEntity implements Serializable {
+public class TeamEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id

@@ -9,8 +9,7 @@ import java.net.URI;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -18,6 +17,8 @@ import javax.ws.rs.core.Context;
 import static javax.ws.rs.core.MediaType.*;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author osa
@@ -26,11 +27,10 @@ import javax.ws.rs.core.UriInfo;
 @LocalBean
 @Path("source")
 public class SourcesResource {
+    private final static Logger LOG = LoggerFactory.getLogger(SourcesResource.class);
+    
     @EJB
     App gambol;
-
-    @PersistenceContext
-    private EntityManager em;
 
     @Context
     private UriInfo uriInfo;
@@ -40,25 +40,45 @@ public class SourcesResource {
     @Consumes({APPLICATION_JSON, APPLICATION_XML})
     public Response putTournament(Tournament tt) {
         // Do the work:
-        TournamentEntity t = gambol.putTournament(tt);
+        TournamentEntity t = gambol.putTournamentSrc(tt);
 
         // Construct resource URL:
         URI tournamentUri = uriInfo.getBaseUriBuilder().path("tournament/{seasonId}/{tournamentSlug}").build(t.getSeason().getId(), t.getSlug());
 
-        return Response.created(tournamentUri).build();
+        LOG.info("New schedule: {}", tournamentUri);
+        
+        return Response
+                .created(tournamentUri)
+                .entity("Upload complete. See: " + tournamentUri + "\n")
+                .build();
     }
 
     @POST
     @Path("gamesheet")
     @Consumes({APPLICATION_JSON, APPLICATION_XML})
-    public Response putGamesheet(Gamesheet gg) {
+    public Response putGamesheet(@Valid Gamesheet gg) {
+        Tournament tt = gg.getTournament();
+        if (tt == null) {
+            LOG.warn("# invalid gamesheet {}", gg.getSourceRef());
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity("Invalid gamesheet\n")
+                    .build();
+        }
+        LOG.info("# loading gamesheet {} {}", gg.getSourceRef(), tt.getSeason());
+        
         // Do the work:
         FixtureEntity f = gambol.putGamesheet(gg);
 
         // Construct resource URL:
         TournamentEntity t = f.getTournament();
-        URI tournamentUri = uriInfo.getBaseUriBuilder().path("gamesheet/{seasonId}/{tournamentSlug}/{fixtureSlug}").build(t.getSeason().getId(), t.getSlug(), f.getMatchNumber());
+        URI sheetUri = uriInfo.getBaseUriBuilder().path("fixture/{fixtureId}").build(f.getId());
 
-        return Response.created(tournamentUri).build();
+        LOG.info("# new gamesheet: {}", sheetUri);
+        
+        return Response
+                .created(sheetUri)
+                .entity("Upload complete. See: " + sheetUri + "\n")
+                .build();
     }
 }

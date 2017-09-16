@@ -1,12 +1,19 @@
 package gambol.model;
 
+import gambol.xml.Event;
 import gambol.xml.GameOffense;
+import gambol.xml.PenaltyEvent;
+import gambol.xml.PlayerRef;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.ForeignKey;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.core.UriInfo;
 
 /**
  * @see  http://en.wikipedia.org/wiki/Penalty_(ice_hockey)
@@ -16,8 +23,26 @@ import javax.persistence.ManyToOne;
 @DiscriminatorValue("PLTY")
 public class PenaltyEventEntity extends FixtureEventEntity {
 
+    @NotNull
     @Enumerated(EnumType.STRING)
+    @Column(length = 7)
     private GameOffense offense;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_player"))
+    private FixturePlayerEntity player;
+
+    @NotNull
+    @Column(name = "penalty_minutes") //, nullable = false) wont't fly on single-table inheritance
+    private Integer penaltyMinutes;
+
+    @NotNull
+    @Column(name = "starttime_second")
+    private Integer starttimeSecond;
+
+    @Column(name = "endtime_second")
+    private Integer endtimeSecond;
+
 
     public GameOffense getOffense() {
         return offense;
@@ -28,9 +53,6 @@ public class PenaltyEventEntity extends FixtureEventEntity {
     }
 
 
-    @ManyToOne(optional = false)
-    private FixturePlayerEntity player;
-
     public FixturePlayerEntity getPlayer() {
         return player;
     }
@@ -39,21 +61,23 @@ public class PenaltyEventEntity extends FixtureEventEntity {
         this.player = player;
     }
 
+    public Integer getStarttimeSecond() {
+        return starttimeSecond;
+    }
 
-    @Column(name = "endtime_second") //, nullable = false) wont't fly on single-table inheritance
-    private Integer endtimeSecond;
+    public void setStarttimeSecond(Integer sec) {
+        this.starttimeSecond = sec;
+    }
+
 
     public Integer getEndtimeSecond() {
         return endtimeSecond;
     }
 
-    public void setEndtimeSecond(Integer endtime) {
-        this.endtimeSecond = endtime;
+    public void setEndtimeSecond(Integer sec) {
+        this.endtimeSecond = sec;
     }
 
-
-    @Column(name = "penalty_minutes") //, nullable = false) wont't fly on single-table inheritance
-    private Integer penaltyMinutes;
 
     public Integer getPenaltyMinutes() {
         return penaltyMinutes;
@@ -66,7 +90,34 @@ public class PenaltyEventEntity extends FixtureEventEntity {
 
     @Override
     public String toString() {
-        return "[" + getOffense() + ":"+getId()+" " + getGameTimeSecond()/60 + ":"+getGameTimeSecond()%60+" " + getPlayer() + "]";
+        return "[" + getOffense() + "("+penaltyMinutes+"):"+getId()+" " + getGameTimeSecond()/60 + ":"+getGameTimeSecond()%60+" " + getPlayer() + "]";
     }
-    
+
+    @Override
+    public String signature() {
+        return super.signature() +
+                String.format(":P:%d:%s:%d:%d:%d", player.getId(), offense, penaltyMinutes, starttimeSecond, endtimeSecond);
+    }
+
+    @Override
+    public boolean usesPlayer(FixturePlayerEntity unused) {
+        return player.equals(unused);
+    }
+
+    public Event asXml(UriInfo uriInfo) {
+        PenaltyEvent pe = new PenaltyEvent();
+
+        PlayerRef pr = new PlayerRef();
+        pr.setNumber(getPlayer().getJerseyNumber());
+        pe.setPlayer(pr);
+        pe.setSide(getSide());
+        pe.setTime(GameTime.format(getGameTimeSecond()));
+
+        pe.setOffense(getOffense());
+        pe.setMinutes(getPenaltyMinutes());
+        pe.setStartTime(GameTime.format(getStarttimeSecond()));
+        pe.setEndTime(GameTime.format(getEndtimeSecond()));
+
+        return pe;
+    }
 }

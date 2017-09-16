@@ -1,6 +1,7 @@
 package gambol.model;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -13,8 +14,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
 import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
 
 /**
  *
@@ -38,13 +39,10 @@ public class TournamentEntity implements Serializable {
     @Column(length = 64, nullable = false)
     private String name;
 
-    @Column(insertable = false, updatable = false)
-    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    private Date dateCreated;
+    private Timestamp dateCreated;
 
-    @Column(insertable = false, updatable = false)
-    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    private Date lastModified;
+    @Version
+    private Timestamp lastModified;
 
     public Long getId() {
         return id;
@@ -81,10 +79,8 @@ public class TournamentEntity implements Serializable {
     @PreUpdate
     @PrePersist
     public void updateTimeStamps() {
-        lastModified = new Date();
-        if (dateCreated == null) {
-            dateCreated = new Date();
-        }
+        if (dateCreated == null)
+            dateCreated = new Timestamp(System.currentTimeMillis());
     }
 
     public Date getDateCreated() {

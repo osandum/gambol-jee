@@ -67,17 +67,17 @@ clubs:
         series:    *ser0
         sourceRef: "DIU:974"
 
-    - &ksf_u11_1_2013 !!gambol.model.TournamentTeamEntity
+    - &ksf_u11_1_2013 !!gambol.model.TeamEntity
         tournament: *u11_1_2013
         slug:      "ksf"
         name:      "KSF"
         club:      *ksf
-    - &rik_u11_1_2013 !!gambol.model.TournamentTeamEntity
+    - &rik_u11_1_2013 !!gambol.model.TeamEntity
         tournament: *u11_1_2013
         slug:      "rik"
         name:      "RIK"
         club:      *rik
-    - &hvik_u11_1_2013 !!gambol.model.TournamentTeamEntity
+    - &hvik_u11_1_2013 !!gambol.model.TeamEntity
         tournament: *u11_1_2013
         slug:      "hvik"
         name:      "HvIK"
@@ -98,6 +98,8 @@ fixtures:
         startTime: 2013-10-05 13:45:00 +2
         endTime:   2013-10-05 15:15:00 +2
         sourceRef: "DIU:974:8"
+        status: CONFIRMED
+        sheet: MISSING
     
     - !!gambol.model.FixtureEntity
         tournament: *u11_1_2013
@@ -112,4 +114,6 @@ fixtures:
         startTime: 2013-12-07 18:25:00 +1
         endTime:   2013-12-07 19:55:00 +1
         sourceRef: "DIU:974:20"
+        status: CONFIRMED
+        sheet: MISSING
         

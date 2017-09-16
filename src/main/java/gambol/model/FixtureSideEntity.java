@@ -2,12 +2,16 @@ package gambol.model;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.logging.Logger;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -16,7 +20,7 @@ import javax.persistence.OneToMany;
 @Entity(name = "fixture_side")
 public class FixtureSideEntity implements Serializable {
 
-    private static Logger LOG = Logger.getLogger(FixtureSideEntity.class.getName());
+    private final static Logger LOG = LoggerFactory.getLogger(FixtureSideEntity.class);
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -32,17 +36,19 @@ public class FixtureSideEntity implements Serializable {
     }
 
     @ManyToOne(optional = false)
-    private TournamentTeamEntity team;
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_team"))
+    private TeamEntity team;
 
-    public TournamentTeamEntity getTeam() {
+    public TeamEntity getTeam() {
         return team;
     }
 
-    public void setTeam(TournamentTeamEntity team) {
+    public void setTeam(TeamEntity team) {
         this.team = team;
     }
 
     @OneToMany(mappedBy = "side")
+    @OrderBy("jerseyNumber")
     private List<FixturePlayerEntity> players;
 
     public List<FixturePlayerEntity> getPlayers() {
@@ -54,18 +60,6 @@ public class FixtureSideEntity implements Serializable {
     }
 
     
-    @OneToMany(mappedBy = "side")
-    private List<FixtureEventEntity> events;
-
-    public List<FixtureEventEntity> getEvents() {
-        return events;
-    }
-
-    public void setEvents(List<FixtureEventEntity> events) {
-        this.events = events;
-    }
-
-
     private Integer score;
 
     public Integer getScore() {
@@ -86,8 +80,12 @@ public class FixtureSideEntity implements Serializable {
             if (n.equals(fpe.getJerseyNumber()))
                 return fpe;
 
-        LOG.info("??? " + n + " not in " + team);
+        LOG.info("??? {} not in {}", n, team);
         return null;
     }
+ 
     
+    public boolean isGameDetailsLoaded() {
+        return !getPlayers().isEmpty();
+    }
 }

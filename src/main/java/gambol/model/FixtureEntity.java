@@ -2,36 +2,47 @@ package gambol.model;
 
 import gambol.xml.FixtureSideRole;
 import static gambol.xml.FixtureSideRole.AWAY;
+import gambol.xml.GamesheetStatus;
 import gambol.xml.ScheduleStatus;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.logging.Logger;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Version;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author osa
  */
 @Entity(name = "fixture")
 public class FixtureEntity implements Serializable {
-    private static final Logger LOG = Logger.getLogger(FixtureEntity.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(FixtureEntity.class);
 
     private static final long serialVersionUID = 1L;
     
     @Id
     @GeneratedValue
     private Long id;
+
+    @Version
+    private Timestamp lastModified;
 
     @Column(length = 64, nullable = false, unique = true)
     private String sourceRef;
@@ -53,12 +64,15 @@ public class FixtureEntity implements Serializable {
     }
 
     @ManyToOne(optional = false)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_tournament"))
     private TournamentEntity tournament;
     
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_home"))
     private FixtureSideEntity homeSide;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_away"))
     private FixtureSideEntity awaySide;
     
     @Temporal(TemporalType.TIMESTAMP)
@@ -67,19 +81,29 @@ public class FixtureEntity implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date endTime;
 
+    @OneToMany(mappedBy = "fixture")
+    @OrderBy("gameTimeSecond")
+    private List<FixtureEventEntity> events;
+
     @Enumerated(EnumType.STRING)
+    @Column(length = 15, nullable = false)
     private ScheduleStatus status;
 
-    @Column(length = 16)
+    @Enumerated(EnumType.STRING)
+    @Column(length = 15, nullable = false)
+    private GamesheetStatus sheet;
+
+    @Column(length = 15, name="match_number")
     private String matchNumber;
 
-    @Column(length = 31)
+    @Column(length = 31, name="title")
     private String titleAnnotation;
 
-    @Column(length = 255)
-    private String desciptionAnnotation;
+    @Column(length = 255, name = "description")
+    private String descriptionAnnotation;
 
     @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_arena"))
     private ClubEntity arena;
     
     public TournamentEntity getTournament() {
@@ -110,6 +134,21 @@ public class FixtureEntity implements Serializable {
         return role == AWAY ? getAwaySide() : getHomeSide();
     }
 
+    
+    public boolean isGamesheetLoaded() {
+        if (!ScheduleStatus.CONFIRMED.equals(status))
+            return false; // game not scheduled
+        if (endTime.after(new Date()))
+            return false; // game not finished
+        if (!getHomeSide().isGameDetailsLoaded())
+            return false; // no home players listed
+        if (!getAwaySide().isGameDetailsLoaded())
+            return false; // no away players listed
+        if (getEvents().isEmpty())
+            return false; // no game events listed -- boooring
+        
+        return true;
+    }
 
     public ClubEntity getArena() {
         return arena;
@@ -144,6 +183,16 @@ public class FixtureEntity implements Serializable {
         this.endTime = endTime;
     }
 
+
+    public List<FixtureEventEntity> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<FixtureEventEntity> events) {
+        this.events = events;
+    }
+
+
     public Date estimateEndTime() {
         if (getEndTime() != null)
             return getEndTime();
@@ -159,7 +208,7 @@ public class FixtureEntity implements Serializable {
         ClubEntity homeClub = getHomeSide().getTeam().getClub();        
         Date curfew = homeClub.curfewAfter(getStartTime());
         if (curfew != null && eet.after(curfew)) {
-            LOG.info(sourceRef + ": culling estimated end-time " + eet + " to " + curfew + " (as per " + homeClub.getName() + " rules)");
+            LOG.info("{}: culling estimated end-time {} to {} (as per {} rules)", sourceRef, eet, curfew, homeClub.getName());
             eet = curfew;
         }
         
@@ -172,6 +221,14 @@ public class FixtureEntity implements Serializable {
 
     public void setStatus(ScheduleStatus status) {
         this.status = status;
+    }
+
+    public GamesheetStatus getSheet() {
+        return sheet;
+    }
+
+    public void setSheet(GamesheetStatus sheet) {
+        this.sheet = sheet;
     }
 
     public String getMatchNumber() {
@@ -191,17 +248,17 @@ public class FixtureEntity implements Serializable {
     }
 
     public String getDesciptionAnnotation() {
-        return desciptionAnnotation;
+        return descriptionAnnotation;
     }
 
     public void setDesciptionAnnotation(String desciptionAnnotation) {
-        this.desciptionAnnotation = desciptionAnnotation;
+        this.descriptionAnnotation = desciptionAnnotation;
     }
     
     public String getEventDescription() {
         String descr = tournament.getName() + ", kamp " + matchNumber;
-        if (!StringUtils.isBlank(desciptionAnnotation))
-            descr += "\n\n" + desciptionAnnotation;
+        if (!StringUtils.isBlank(descriptionAnnotation))
+            descr += "\n\n" + descriptionAnnotation;
         return descr;
     }
 

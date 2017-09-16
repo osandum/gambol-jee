@@ -1,15 +1,24 @@
 package gambol.model;
 
+import gambol.api.FixtureResource;
+import gambol.xml.Event;
 import gambol.xml.GameSituation;
+import gambol.xml.GoalEvent;
+import gambol.xml.PlayerRef;
 import java.util.List;
-import java.util.Set;
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.ForeignKey;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.core.UriInfo;
 
 /**
  * @author osa
@@ -18,8 +27,19 @@ import javax.persistence.OrderColumn;
 @DiscriminatorValue("GOAL")
 public class GoalEventEntity extends FixtureEventEntity {
 
+    @NotNull
     @Enumerated(EnumType.STRING)
+    @Column(name = "game_situation", length = 7)
     private GameSituation gameSituation;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_player"))
+    private FixturePlayerEntity player;
+
+    @ManyToMany
+    @OrderColumn
+    @JoinTable(name = "goal_assist")
+    private List<FixturePlayerEntity> assists;
 
     public GameSituation getGameSituation() {
         return gameSituation;
@@ -30,9 +50,6 @@ public class GoalEventEntity extends FixtureEventEntity {
     }
 
 
-    @ManyToOne(optional = false)
-    private FixturePlayerEntity player;
-
     public FixturePlayerEntity getPlayer() {
         return player;
     }
@@ -42,10 +59,6 @@ public class GoalEventEntity extends FixtureEventEntity {
     }
 
 
-    @OneToMany
-    @OrderColumn
-    private List<FixturePlayerEntity> assists;
-
     public List<FixturePlayerEntity> getAssists() {
         return assists;
     }
@@ -54,10 +67,15 @@ public class GoalEventEntity extends FixtureEventEntity {
         this.assists = players;
     }
 
-
-    @OneToMany
+/*    
+    @ManyToMany
+    @JoinTable(name = "goal_part_positive")
     private Set<FixturePlayerEntity> positiveParticipants;
 
+    @ManyToMany
+    @JoinTable(name = "goal_part_negative")
+    private Set<FixturePlayerEntity> negativeParticipants;
+    
     public Set<FixturePlayerEntity> getPositiveParticipants() {
         return positiveParticipants;
     }
@@ -67,9 +85,6 @@ public class GoalEventEntity extends FixtureEventEntity {
     }
 
 
-    @OneToMany
-    private Set<FixturePlayerEntity> negativeParticipants;
-
     public Set<FixturePlayerEntity> getNegativeParticipants() {
         return negativeParticipants;
     }
@@ -77,11 +92,44 @@ public class GoalEventEntity extends FixtureEventEntity {
     public void setNegativeParticipants(Set<FixturePlayerEntity> players) {
         this.negativeParticipants = players;
     }
+*/
 
     @Override
     public String toString() {
         return "[GOAL:"+getId()+" " + getGameTimeSecond()/60 + ":"+getGameTimeSecond()%60+" " + getPlayer() + "]";
     }
 
-    
+    @Override
+    public String signature() {
+        return super.signature() +
+                String.format(":G:%d", player.getId());
+    }
+
+    @Override
+    public boolean usesPlayer(FixturePlayerEntity unused) {
+        return player.equals(unused) || assists.contains(unused);
+    }    
+
+    @Override
+    public Event asXml(UriInfo uriInfo) {
+        GoalEvent ge = new GoalEvent();
+
+        PlayerRef pr = new PlayerRef();
+        pr.setNumber(getPlayer().getJerseyNumber());
+        ge.setPlayer(pr);
+        ge.setSide(getSide());
+        ge.setTime(GameTime.format(getGameTimeSecond()));
+
+        for (FixturePlayerEntity as : getAssists()) {
+            PlayerRef ar = new PlayerRef();
+            ar.setNumber(as.getJerseyNumber());
+            ge.getAssists().add(ar);
+        }
+        ge.setGameSituation(getGameSituation());
+
+        if (uriInfo != null)
+            ge.setFixture(uriInfo.getBaseUriBuilder().path(FixtureResource.class).build(getFixture().getId()));
+
+        return ge;
+    }
 }
