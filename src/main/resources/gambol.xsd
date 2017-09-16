@@ -34,6 +34,8 @@
         </xs:complexType>
     </xs:element>
 
+    <xs:element name="fixture-events" type="g:FixtureEvents" />
+
     <!-- xs:element name="tournament-source">
         <xs:complexType>
             <xs:sequence>
@@ -68,6 +70,7 @@
             </xs:sequence>
 
             <xs:attribute name="country" type="xs:string" />
+            <xs:attribute name="slug" type="xs:string" />
         </xs:complexType>
     </xs:element>
 
@@ -219,12 +222,14 @@
             <xs:enumeration value="INTRF" />
             <xs:enumeration value="ROUGH" />
             <xs:enumeration value="DELAY" />
+            <xs:enumeration value="EMBEL" />
             <xs:enumeration value="UN-SP" />
             <xs:enumeration value="BD-CK" />
             <xs:enumeration value="CHE-B" />
             <xs:enumeration value="CHE-H" />
             <xs:enumeration value="IL-EQ" />
             <xs:enumeration value="TOO-M" />
+
             <xs:enumeration value="GA-MI" />
             <xs:enumeration value="MISC" />
             <xs:enumeration value="MATCH" />
@@ -321,14 +326,23 @@
         <xs:attribute name="away" type="xs:integer" />
     </xs:complexType>
 
-    <xs:complexType name="Player">
+    <xs:element name="person" type="g:Person" />
+
+    <xs:complexType name="Person">
         <xs:sequence>
             <xs:element name="first-names" type="xs:string" />
             <xs:element name="last-name" minOccurs="0" type="xs:string" />
         </xs:sequence>
-        <xs:attribute name="number" type="xs:positiveInteger" />
-        <xs:attribute name="line" type="xs:string" />
-        <xs:attribute name="pos" type="xs:string" />
+    </xs:complexType>
+
+    <xs:complexType name="Player">
+        <xs:complexContent>
+            <xs:extension base="g:Person">
+                <xs:attribute name="number" type="xs:positiveInteger" />
+                <xs:attribute name="line" type="xs:string" />
+                <xs:attribute name="pos" type="xs:string" />
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
 
     <xs:complexType name="Official">
@@ -347,6 +361,7 @@
         <xs:sequence>
             <xs:element name="time" type="xs:string" />
             <xs:element name="player" type="g:PlayerRef" />
+            <xs:element name="fixture" minOccurs="0" maxOccurs="1" type="xs:anyURI" />
         </xs:sequence>
 
         <xs:attribute name="side" type="g:FixtureSideRole" />
