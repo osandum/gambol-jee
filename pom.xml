@@ -42,7 +42,7 @@
         <dependency>
             <groupId>gambol</groupId>
             <artifactId>gambol-frontend-base</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <version>0.2-SNAPSHOT</version>
             <type>war</type>
             <scope>runtime</scope>
         </dependency>
@@ -73,9 +73,9 @@
                 <artifactId>maven-processor-plugin</artifactId>
 
                 <!--
-                 ! cannot go to version 3 until openshift upgrade their
-                 ! maven to 3.1
-                 ! -->
+                ! cannot go to version 3 until openshift upgrade their
+                ! maven to 3.1
+                ! -->
                 <version>2.2.4</version>
 
                 <executions>
@@ -169,7 +169,7 @@
                         <version>2.4</version>
                         <configuration>
                             <failOnMissingWebXml>false</failOnMissingWebXml>
-                            <outputDirectory>target</outputDirectory>
+                            <outputDirectory>deployments</outputDirectory>
                             <warName>ROOT</warName>
                         </configuration>
                     </plugin>
@@ -191,20 +191,27 @@
 
     <repositories>
         <repository>
-            <id>gambol-docs-mvn-repo</id>
-            <url>https://raw.github.com/osandum/gambol-docs/mvn-repo/</url>
-            <snapshots>
+            <id>osandum-github-release</id>
+            <name>Sandum.Net repo on github</name>
+            <releases>
                 <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
             </snapshots>
+            <url>https://raw.github.com/osandum/mvn-repo/releases</url>
         </repository>
         <repository>
-            <id>gambol-frontend-base-mvn-repo</id>
-            <url>https://raw.github.com/osandum/gambol-frontend-base/mvn-repo/</url>
+            <id>osandum-github-snapshot</id>
+            <name>Sandum.Net repo on github</name>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
             <snapshots>
                 <enabled>true</enabled>
                 <updatePolicy>always</updatePolicy>
             </snapshots>
+            <url>https://raw.github.com/osandum/mvn-repo/snapshots</url>
         </repository>
     </repositories>
 
