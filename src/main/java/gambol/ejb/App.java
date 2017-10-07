@@ -143,6 +143,11 @@ public class App {
         return em.createQuery(all).getResultList();
     }
 
+    public List<SeriesEntity> getSeries() {
+        CriteriaQuery<SeriesEntity> cq = em.getCriteriaBuilder().createQuery(SeriesEntity.class);
+        CriteriaQuery<SeriesEntity> all = cq.select(cq.from(SeriesEntity.class)); //.orderBy(Ord);
+        return em.createQuery(all).getResultList();
+    }
 
     private SeriesEntity findSeries(String slug) {
         CriteriaBuilder builder = em.getCriteriaBuilder();
@@ -312,6 +317,12 @@ public class App {
         if (slug.length() > maxLength)
             slug = slug.substring(0, maxLength);
         return slug;
+    }
+
+    public void updateOrCreateSeries(String slug, SeriesEntity s) {
+        SeriesEntity entity = findOrCreateSeries(slug);
+        entity.setName(s.getName());
+        entity.setFixtureDuration(s.getFixtureDuration());
     }
 
     public void updateOrCreateClub(String slug, ClubEntity c) {

@@ -7,6 +7,7 @@ import gambol.model.FixtureEntity;
 import gambol.util.DateParam;
 import gambol.xml.Club;
 import gambol.xml.Fixtures;
+import gambol.xml.Series;
 import gambol.xml.Tournament;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -57,6 +58,17 @@ public class RootResource {
 
     @EJB
     App gambol;
+
+    @GET
+    @Path("series")
+    @Produces({APPLICATION_JSON, APPLICATION_XML})
+    public List<Series> listAllSeries() {
+        List<Series> res = new LinkedList<>();
+        gambol.getSeries().stream().forEach((entity) -> {
+            res.add(SeriesResource.entity2domain(entity));
+        });
+        return res;
+    }
 
     @GET
     @Path("clubs")
