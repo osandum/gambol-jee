@@ -372,26 +372,25 @@ public class App {
     private void delete(FixtureEntity f) {
         if (f == null)
             return;
-        delete(f.getHomeSide());
-        delete(f.getAwaySide());
+//      clear(f.getHomeSide());
+//      clear(f.getAwaySide());
         em.remove(f);
         LOG.info("{}: gone", f.getSourceRef());
     }
 
-    private void delete(FixtureSideEntity s) {
+    private void clear(FixtureSideEntity s) {
         if (s == null)
             return;
         s.getPlayers().forEach((p) -> { delete(p); });
-        em.remove(s);
     }
 
     private void delete(FixturePlayerEntity p) {
         if (p == null)
             return;
 
-        PersonEntity person = p.getPerson();
+        LOG.info("{} gone ({}, {})", p.getJerseyNumber(), p.getPerson().getLastName(), p.getPerson().getFirstNames());
+
         em.remove(p);        
-        LOG.info("{} {}, {} gone", p.getJerseyNumber(), person.getLastName(), person.getFirstNames());
     }
     
     
