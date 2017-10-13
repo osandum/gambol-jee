@@ -367,7 +367,7 @@ public class App {
         // 3) delete fixtures, if any, still remaining in map from step 1).
         for (FixtureEntity f : all.values()) {
             em.remove(f);
-            LOG.info(f.getSourceRef() + ": history");
+            LOG.info(f.getSourceRef() + ": gone");
         }
     }
 
