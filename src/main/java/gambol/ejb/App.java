@@ -365,12 +365,36 @@ public class App {
         }
 
         // 3) delete fixtures, if any, still remaining in map from step 1).
-        for (FixtureEntity f : all.values()) {
-            em.remove(f);
-            LOG.info(f.getSourceRef() + ": gone");
-        }
+        for (FixtureEntity f : all.values())
+            delete(f);
     }
 
+    private void delete(FixtureEntity f) {
+        if (f == null)
+            return;
+        delete(f.getHomeSide());
+        delete(f.getAwaySide());
+        em.remove(f);
+        LOG.info("{}: gone", f.getSourceRef());
+    }
+
+    private void delete(FixtureSideEntity s) {
+        if (s == null)
+            return;
+        s.getPlayers().forEach((p) -> { delete(p); });
+        em.remove(s);
+    }
+
+    private void delete(FixturePlayerEntity p) {
+        if (p == null)
+            return;
+
+        PersonEntity person = p.getPerson();
+        em.remove(p);        
+        LOG.info("{} {}, {} gone", p.getJerseyNumber(), person.getLastName(), person.getFirstNames());
+    }
+    
+    
     private void domain2entity(Fixture f, FixtureEntity entity) {
         entity.setStatus(f.getSchedule());
         entity.setStartTime(f.getStartTime());
