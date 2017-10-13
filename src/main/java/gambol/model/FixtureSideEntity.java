@@ -2,6 +2,7 @@ package gambol.model;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
@@ -47,7 +48,7 @@ public class FixtureSideEntity implements Serializable {
         this.team = team;
     }
 
-    @OneToMany(mappedBy = "side", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "side", orphanRemoval = true)
     @OrderBy("jerseyNumber")
     private List<FixturePlayerEntity> players;
 
