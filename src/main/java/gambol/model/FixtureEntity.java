@@ -81,7 +81,7 @@ public class FixtureEntity implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date endTime;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fixture", orphanRemoval = true)
+    @OneToMany(mappedBy = "fixture", orphanRemoval = true)
     @OrderBy("gameTimeSecond")
     private List<FixtureEventEntity> events;
 

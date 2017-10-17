@@ -355,7 +355,7 @@ public class App {
                 domain2entity(fo, f);
                 em.persist(f);
                 LOG.info(fo.getSourceRef() + " not found: new fixture created: " + f);
-            } 
+            }
             else {
                 // existing fixture, update:
                 f.setTournament(t);
@@ -366,14 +366,22 @@ public class App {
 
         // 3) delete fixtures, if any, still remaining in map from step 1).
         for (FixtureEntity f : all.values()) {
-            f.getHomeSide().getPlayers().clear();
-            f.getAwaySide().getPlayers().clear();
-            em.remove(f);
+            // this all *shuould* be achievable with cascade = ALL and
+            // orphanRemoval = true in some combination, but I didn't manage
+            // to get it working, so here we go handheld:
+            for (FixtureEventEntity fe : f.getEvents())
+                em.remove(fe);
+            for (FixturePlayerEntity fp : f.getHomeSide().getPlayers())
+                em.remove(fp);
+            for (FixturePlayerEntity fp : f.getAwaySide().getPlayers())
+                em.remove(fp);
             LOG.info("{}: gone", f.getSourceRef());
+
+            em.remove(f);
         }
     }
-    
-    
+
+
     private void domain2entity(Fixture f, FixtureEntity entity) {
         entity.setStatus(f.getSchedule());
         entity.setStartTime(f.getStartTime());
@@ -699,17 +707,24 @@ public class App {
             Integer jerseyNumber = e.getPlayer().getNumber();
             String timeCode = e.getTime();
             FixtureSideEntity partSide = f.getSide(e.getSide());
+            LOG.info("!!! {} at {}", jerseyNumber, timeCode);
             FixturePlayerEntity fpe = partSide.getPlayerByJerseyNumber(jerseyNumber);
             if (fpe == null) {
                 fpe = new FixturePlayerEntity();
                 fpe.setJerseyNumber(jerseyNumber);
                 fpe.setSide(partSide);
                 fpe.setFixture(f);
-                fpe.setPerson(unknownPlayer());
-                fpe.setPersonRole("PLAYER");
+                if (jerseyNumber == 9001) {
+                    fpe.setPerson(teamOffender());
+                    fpe.setPersonRole("TEAM");                    
+                }
+                else {
+                    fpe.setPerson(unknownPlayer());
+                    fpe.setPersonRole("PLAYER");
+                    LOG.warn("player #{} not found in {} - attributing {} event to The Unknown Citizen", jerseyNumber, partSide.getTeam().getName(), e.getTime());
+                }
                 em.persist(fpe);
                 partSide.getPlayers().add(fpe);
-                LOG.warn("player #{} not found in {} - attributing {} event to The Unknown Citizen", jerseyNumber, partSide.getTeam().getName(), e.getTime());
             }
             if (e instanceof GoalEvent) {
                 GoalEvent ge = (GoalEvent)e;
@@ -892,6 +907,15 @@ public class App {
 
     private PersonEntity unknownPlayer() {
         return findOrCreatePlayerPerson(UNKNOWN_PLAYER);
+    }
+
+    private final static Player TEAM_OFFENDER = new Player() {{
+        setFirstNames("(holdstraf)");
+        setLastName("");
+    }};
+
+    private PersonEntity teamOffender() {
+        return findOrCreatePlayerPerson(TEAM_OFFENDER);
     }
 
     private PersonEntity findOrCreatePlayerPerson(Player p) {

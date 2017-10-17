@@ -48,7 +48,7 @@ public class FixtureSideEntity implements Serializable {
         this.team = team;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "side", orphanRemoval = true)
+    @OneToMany(mappedBy = "side")
     @OrderBy("jerseyNumber")
     private List<FixturePlayerEntity> players;
 
