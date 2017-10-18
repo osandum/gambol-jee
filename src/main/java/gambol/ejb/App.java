@@ -23,6 +23,7 @@ import gambol.model.TournamentEntity_;
 import gambol.model.TeamEntity;
 import gambol.model.TeamEntity_;
 import gambol.model.GameTime;
+import gambol.model.PenaltyEventEntity_;
 import gambol.xml.Event;
 import gambol.xml.Fixture;
 import gambol.xml.FixtureEvents;
@@ -493,6 +494,28 @@ public class App {
         return res;
     }
 
+    public List<PenaltyEventEntity> getPenaltiesByPlayer(long personId) {
+        long t1 = System.currentTimeMillis();
+
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<PenaltyEventEntity> q = builder.createQuery(PenaltyEventEntity.class);
+        Root<PenaltyEventEntity> penalties = q.from(PenaltyEventEntity.class);
+        Join<FixturePlayerEntity, PersonEntity> scorer = penalties.join(PenaltyEventEntity_.player).join(FixturePlayerEntity_.person);
+        //  Join<FixturePlayerEntity, PersonEntity> assist = goal.join(GoalEventEntity_.assists).join(FixturePlayerEntity_.person);
+        Join<PenaltyEventEntity, FixtureEntity> fixture = penalties.join(PenaltyEventEntity_.fixture);
+
+        q.where(builder.equal(scorer.get(PersonEntity_.id), personId));
+        q.orderBy(builder.asc(fixture.get(FixtureEntity_.startTime)),
+                  builder.asc(penalties.get(GoalEventEntity_.gameTimeSecond)));
+
+        List<PenaltyEventEntity> res = em.createQuery(q).getResultList();
+        long t2 = System.currentTimeMillis();
+
+        LOG.info(personId + ": " + res.size() + " penalties(s) retrieved ("+(t2-t1)+"ms)");
+
+        return res;
+    }
+
     public List<FixturePlayerEntity> getFixturesByPlayer(long personId) {
         long t1 = System.currentTimeMillis();
 
@@ -511,6 +534,39 @@ public class App {
         long t2 = System.currentTimeMillis();
 
         LOG.info(personId + ": " + res.size() + " fixture(s) retrieved ("+(t2-t1)+"ms)");
+
+        return res;
+    }
+
+    public List<PersonEntity> getPlayers(PlayersQueryParam param) {
+        long t1 = System.currentTimeMillis();
+        
+        CriteriaBuilder b = em.getCriteriaBuilder();
+        CriteriaQuery<PersonEntity> q = b.createQuery(PersonEntity.class);
+        Root<PersonEntity> people = q.from(PersonEntity.class);
+
+        Predicate a = b.conjunction();
+        List<Expression<Boolean>> wheres = a.getExpressions();
+        
+        if (param.getFirstName() != null)
+            wheres.add(
+                b.like(
+                    b.upper(people.get(PersonEntity_.firstNames)), 
+                    "%" + param.getFirstName().toUpperCase() + "%"
+                ));
+        if (param.getLastName() != null)
+            wheres.add(
+                b.like(
+                    b.upper(people.get(PersonEntity_.lastName)), 
+                    "%" + param.getLastName().toUpperCase() + "%"
+                ));
+        
+        q.where(a);
+        List<PersonEntity> res = em.createQuery(q).getResultList();
+
+        long t2 = System.currentTimeMillis();
+
+        LOG.info(param + ": " + res.size() + " person(s) retrieved ("+(t2-t1)+"ms)");
 
         return res;
     }
@@ -707,7 +763,6 @@ public class App {
             Integer jerseyNumber = e.getPlayer().getNumber();
             String timeCode = e.getTime();
             FixtureSideEntity partSide = f.getSide(e.getSide());
-            LOG.info("!!! {} at {}", jerseyNumber, timeCode);
             FixturePlayerEntity fpe = partSide.getPlayerByJerseyNumber(jerseyNumber);
             if (fpe == null) {
                 fpe = new FixturePlayerEntity();
@@ -781,6 +836,8 @@ public class App {
                 catch (IllegalArgumentException ex) {
                     ee.setEndtimeSecond(ee.getStarttimeSecond() + 60 * ee.getPenaltyMinutes());
                 }
+                if (ee.getOffense() == null)
+                    throw new IllegalArgumentException("unrecognized offense: " + ee.toString());
 
                 if (all.remove(ee.signature()) == null) {
                     em.persist(ee);

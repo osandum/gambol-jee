@@ -5,6 +5,7 @@ import gambol.model.FixtureEntity;
 import gambol.model.FixturePlayerEntity;
 import gambol.model.FixtureSideEntity;
 import gambol.model.GoalEventEntity;
+import gambol.model.PenaltyEventEntity;
 import gambol.model.PersonEntity;
 import gambol.model.TournamentEntity;
 import gambol.xml.FixtureEvents;
@@ -107,10 +108,40 @@ public class PersonResource {
         return Response.ok(res).build();
     }
 
-    private Person entity2person(PersonEntity p, UriInfo uriInfo) {
+    @GET
+    @Path("penalties")
+    @Produces({APPLICATION_JSON, APPLICATION_XML})
+    public Response getPenalties(@Context UriInfo uriInfo) {
+
+        PersonEntity p = gambol.getPersonById(personId);
+        if (p == null)
+            throw new WebApplicationException("Not found", Response.Status.NOT_FOUND);
+
+        FixtureEvents res = new FixtureEvents();
+        
+        for (PenaltyEventEntity pe : gambol.getPenaltiesByPlayer(p.getId())) {
+            FixtureEntity fixture = pe.getFixture();
+            res.getGoalsAndPenalties().add(pe.asXml(uriInfo));
+
+            TournamentEntity tournament = fixture.getTournament();
+            Date date = fixture.getStartTime();
+            FixtureSideEntity home = fixture.getHomeSide();
+            FixtureSideEntity away = fixture.getAwaySide();
+            
+            LOG.info(date + " " + tournament.getSeries().getName() + "("+ tournament.getSeason().getName() +") " + home.getTeam().getName() + "-" + away.getTeam().getName() + ": "+ + pe.getGameTimeSecond() + " " + pe.getOffense() + ":" + pe.getPenaltyMinutes());
+        }
+        
+        return Response.ok(res).build();
+    }
+
+    public static Person entity2person(PersonEntity p, UriInfo uriInfo) {
+        if (p == null)
+            return null;
+
         Person xo = new Person();
         xo.setFirstNames(p.getFirstNames());
         xo.setLastName(p.getLastName());
+        xo.setDetails(uriInfo.getBaseUriBuilder().path(PersonResource.class).build(p.getId()));
         return xo;
     }
     
