@@ -7,7 +7,7 @@
 
     <groupId>gambol</groupId>
     <artifactId>gambol-docs</artifactId>
-    <version>0.5</version>
+    <version>0.6-SNAPSHOT</version>
 
     <organization>
         <name>Sandum.Net</name>
@@ -16,16 +16,14 @@
 
     <distributionManagement>
         <repository>
-            <id>sandum-release</id>
-            <name>Inhouse Internal Release Repository</name>
-            <url>scp://sandum.net/usr/share/maven2_repositories/release</url>
+            <id>sandum-repo</id>
+            <name>Sandum.Net Snapshot Repository</name>
+            <url>git:releases://git@github.com:osandum/mvn-repo.git</url>
         </repository>
-
         <snapshotRepository>
-            <id>sandum-snapshot</id>
-            <name>Inhouse Internal Snapshot Repository</name>
-            <url>scp://sandum.net/usr/share/maven2_repositories/snapshot</url>
-            <uniqueVersion>false</uniqueVersion>
+            <id>sandum-repo</id>
+            <name>Sandum.Net Snapshot Repository</name>
+            <url>git:snapshots://git@github.com:osandum/mvn-repo.git</url>
         </snapshotRepository>
     </distributionManagement>
 
@@ -35,12 +33,18 @@
         <maven.compiler.target>1.7</maven.compiler.target>
     </properties>
 
+    <pluginRepositories>
+        <pluginRepository>
+            <id>synergian-repo</id>
+            <url>https://raw.github.com/synergian/wagon-git/releases</url>
+        </pluginRepository>
+    </pluginRepositories>
     <build>
         <plugins>
             <plugin>
                 <groupId>org.jvnet.jaxb2.maven2</groupId>
                 <artifactId>maven-jaxb2-plugin</artifactId>
-                <version>0.13.1</version>
+                <version>0.13.2</version>
                 <executions>
                     <execution>
                         <goals>
@@ -68,14 +72,21 @@
                     </schemaFiles>
                 </configuration>
             </plugin -->
+
         </plugins>
 
         <extensions>
+            <!-- enable scp://sandum.net/.../snapshot -->
             <extension>
-                <!-- enable scp://sandum.net/.../snapshot -->
                 <groupId>org.apache.maven.wagon</groupId>
-                <artifactId>wagon-ssh</artifactId>
-                <version>2.10</version>
+                <artifactId>wagon-ssh-external</artifactId>
+                <version>3.0.0</version>
+            </extension>
+
+            <extension>
+                <groupId>ar.com.synergian</groupId>
+                <artifactId>wagon-git</artifactId>
+                <version>0.2.5</version>
             </extension>
         </extensions>
     </build>
