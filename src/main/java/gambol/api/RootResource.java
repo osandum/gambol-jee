@@ -103,11 +103,10 @@ public class RootResource {
     @Produces({APPLICATION_JSON, APPLICATION_XML})
     public List<Person> findPlayer(
             @Context UriInfo uriInfo,
-            @QueryParam("firstName") String firstName,
-            @QueryParam("lastName") String lastName,
+            @QueryParam("name") String name,
             @QueryParam("club") String clubRef) {
         
-        PlayersQueryParam searchParams =  playerQ(firstName, lastName);
+        PlayersQueryParam searchParams =  playerQ(name);
         List<PersonEntity> people = gambol.getPlayers(searchParams);
         
         
@@ -148,10 +147,9 @@ public class RootResource {
         return p == null ? null : p.getValue();
     }
 
-    private static PlayersQueryParam playerQ(String firstName, String lastName) {
+    private static PlayersQueryParam playerQ(String name) {
         PlayersQueryParam res = new PlayersQueryParam();
-        res.setFirstName(firstName);
-        res.setLastName(lastName);
+        res.setName(name);
         return res;
     }
 

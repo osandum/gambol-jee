@@ -6,25 +6,16 @@ import java.util.Date;
  * @author osa
  */
 public class PlayersQueryParam {
-    String firstName;
-    String lastName;
+    String name;
     Date yearOfBirth;
     FixturesQueryParam playedGamesQuery;
 
-    public String getFirstName() {
-        return firstName;
+    public String getName() {
+        return name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Date getYearOfBirth() {
@@ -45,6 +36,6 @@ public class PlayersQueryParam {
 
     @Override
     public String toString() {
-        return "PlayersQueryParam{" + "firstName=" + firstName + ", lastName=" + lastName + ", yearOfBirth=" + yearOfBirth + ", playedGamesQuery=" + playedGamesQuery + '}';
+        return "PlayersQueryParam{" + "name=" + name + ", yearOfBirth=" + yearOfBirth + ", playedGamesQuery=" + playedGamesQuery + '}';
     }
 }

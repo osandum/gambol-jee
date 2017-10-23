@@ -542,27 +542,33 @@ public class App {
         long t1 = System.currentTimeMillis();
         
         CriteriaBuilder b = em.getCriteriaBuilder();
+                
         CriteriaQuery<PersonEntity> q = b.createQuery(PersonEntity.class);
         Root<PersonEntity> people = q.from(PersonEntity.class);
 
+        Expression<String> _firstName = b.upper(b.function("unaccent", String.class, people.get(PersonEntity_.firstNames)));
+        Expression<String> _lastName = b.upper(b.function("unaccent", String.class, people.get(PersonEntity_.lastName)));
+        
         Predicate a = b.conjunction();
         List<Expression<Boolean>> wheres = a.getExpressions();
         
-        if (param.getFirstName() != null)
-            wheres.add(
-                b.like(
-                    b.upper(people.get(PersonEntity_.firstNames)), 
-                    "%" + param.getFirstName().toUpperCase() + "%"
-                ));
-        if (param.getLastName() != null)
-            wheres.add(
-                b.like(
-                    b.upper(people.get(PersonEntity_.lastName)), 
-                    "%" + param.getLastName().toUpperCase() + "%"
-                ));
+        int s = 0;
+        if (param.getName() != null) 
+            for (String n : param.getName().split("\\h+"))
+            {
+                String p = n.toUpperCase().trim();
+                s += p.length();
+                wheres
+                    .add(b.or(b.like(_firstName, "%" + p + "%"), b.like(_lastName, "%" + p + "%")));
+            }
+        
+        if (s < 3)
+            throw new IllegalArgumentException("query at least three characters");
         
         q.where(a);
-        List<PersonEntity> res = em.createQuery(q).getResultList();
+        q.orderBy(b.asc(_lastName), b.asc(_firstName));
+        List<PersonEntity> res = 
+                em.createQuery(q).setMaxResults(101).getResultList();
 
         long t2 = System.currentTimeMillis();
 
