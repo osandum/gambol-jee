@@ -169,6 +169,18 @@
     </xs:complexType>
     <!-- /xs:element -->
 
+    <xs:element name="series" type="g:Series" />
+
+    <xs:complexType name="Series">
+        <xs:sequence>
+            <xs:element name="name" minOccurs="1" maxOccurs="1" type="xs:string"/>
+            <xs:element name="duration" minOccurs="0" maxOccurs="1" type="xs:nonNegativeInteger"/>
+        </xs:sequence>
+
+        <xs:attribute name="slug" type="xs:string" />
+    </xs:complexType>
+    <!-- /xs:element -->
+
     <xs:simpleType name="FixtureSideRole" final="restriction">
         <xs:restriction base="xs:string">
             <xs:enumeration value="home" />
@@ -197,6 +209,7 @@
         <xs:restriction base="xs:string">
             <xs:enumeration value="DIVE" />
             <xs:enumeration value="ABUSE" />
+            <xs:enumeration value="TAUNT" />
             <xs:enumeration value="AU-MI" />
             <xs:enumeration value="AU-GM" />
             <xs:enumeration value="BD-CK" />
@@ -215,6 +228,8 @@
             <xs:enumeration value="CHARG" />
             <xs:enumeration value="HI-ST" />
             <xs:enumeration value="HO-ST" />
+            <xs:enumeration value="BR-ST" />
+            <xs:enumeration value="THR-S" />
             <xs:enumeration value="HEAD" />
             <xs:enumeration value="ELBOW" />
             <xs:enumeration value="FIST" />
@@ -222,13 +237,17 @@
             <xs:enumeration value="INTRF" />
             <xs:enumeration value="ROUGH" />
             <xs:enumeration value="DELAY" />
+            <xs:enumeration value="REFUS" />
             <xs:enumeration value="EMBEL" />
+            <xs:enumeration value="DE-GK" />            
             <xs:enumeration value="UN-SP" />
             <xs:enumeration value="BD-CK" />
             <xs:enumeration value="CHE-B" />
             <xs:enumeration value="CHE-H" />
+            <xs:enumeration value="IL-ST" />
             <xs:enumeration value="IL-EQ" />
             <xs:enumeration value="TOO-M" />
+            <xs:enumeration value="P-OUT" />
 
             <xs:enumeration value="GA-MI" />
             <xs:enumeration value="MISC" />
@@ -311,6 +330,13 @@
         <xs:attribute name="side" type="g:FixtureSideRole" />
     </xs:complexType>
 
+    <xs:complexType name="Signup">
+        <xs:attribute name="season" type="xs:string" />
+        <xs:attribute name="series" type="xs:string" />
+        <xs:attribute name="club-ref" type="xs:string" />
+        <xs:attribute name="person-ref" type="xs:string" />
+    </xs:complexType>
+
     <xs:complexType name="PeriodSummary">
         <xs:sequence>
             <xs:element name="goals" type="g:HomeAwayScore" />
@@ -332,6 +358,7 @@
         <xs:sequence>
             <xs:element name="first-names" type="xs:string" />
             <xs:element name="last-name" minOccurs="0" type="xs:string" />
+            <xs:element name="details" minOccurs="0" maxOccurs="1" type="xs:anyURI" />
         </xs:sequence>
     </xs:complexType>
 
