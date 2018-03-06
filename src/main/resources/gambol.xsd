@@ -231,6 +231,7 @@
             <xs:enumeration value="BR-ST" />
             <xs:enumeration value="THR-S" />
             <xs:enumeration value="HEAD" />
+            <xs:enumeration value="HELM" />
             <xs:enumeration value="ELBOW" />
             <xs:enumeration value="FIST" />
             <xs:enumeration value="KNEE" />
@@ -360,6 +361,7 @@
             <xs:element name="last-name" minOccurs="0" type="xs:string" />
             <xs:element name="details" minOccurs="0" maxOccurs="1" type="xs:anyURI" />
         </xs:sequence>
+        <xs:attribute name="slug" type="xs:string" />
     </xs:complexType>
 
     <xs:complexType name="Player">
