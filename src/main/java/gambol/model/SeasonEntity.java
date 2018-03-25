@@ -10,7 +10,7 @@ import javax.persistence.Id;
  * @author osa
  */
 @Entity(name = "season")
-public class SeasonEntity implements Serializable {
+public class SeasonEntity implements Serializable, Comparable<SeasonEntity> {
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -36,4 +36,14 @@ public class SeasonEntity implements Serializable {
         this.name = name;
     }
     
+
+    @Override
+    public String toString() {
+        return "["+id+":" + name + "]";
+    }
+
+    @Override
+    public int compareTo(SeasonEntity s) {
+        return id.compareTo(s.id);
+    }
 }

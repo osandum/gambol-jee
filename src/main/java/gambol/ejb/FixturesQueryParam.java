@@ -9,15 +9,18 @@ import java.util.List;
  */
 public class FixturesQueryParam implements Serializable {
 
-    Date start; 
-    Date end; 
-    List<String> seasonId; 
-    List<String> seriesId; 
+    Date start;
+    Date end;
+    List<String> seasonId;
+    List<String> seriesId;
     List<String> tournamentRef;
     List<String> clubRef;
     List<String> homeClubRef;
     List<String> awayClubRef;
     Boolean hasGamesheet;
+    String lastFixtureRef;
+    Integer maxResults;
+    Boolean reverseChrono;
 
     public Date getStart() {
         return start;
@@ -90,9 +93,33 @@ public class FixturesQueryParam implements Serializable {
     public void setAwayClubRef(List<String> awayClubRef) {
         this.awayClubRef = awayClubRef;
     }
-    
+
+    public String getLastFixtureRef() {
+        return lastFixtureRef;
+    }
+
+    public void setLastFixtureRef(String ref) {
+        this.lastFixtureRef = ref;
+    }
+
+    public Integer getMaxResults() {
+        return maxResults;
+    }
+
+    public void setMaxResults(Integer maxResults) {
+        this.maxResults = maxResults;
+    }
+
+    public Boolean getReverseChrono() {
+        return reverseChrono;
+    }
+
+    public void setReverseChrono(Boolean reverse) {
+        this.reverseChrono = reverse;
+    }
+
     @Override
     public String toString() {
-        return "FixturesQueryParam{" + "start=" + start + ", end=" + end + ", seasonId=" + seasonId + ", seriesId=" + seriesId + ", tournamentRef=" + tournamentRef + ", clubRef=" + clubRef + ", homeClubRef=" + homeClubRef + ", awayClubRef=" + awayClubRef + ", sheet=" + hasGamesheet + '}';
+        return "FixturesQueryParam{" + "start=" + start + ", end=" + end + ", seasonId=" + seasonId + ", seriesId=" + seriesId + ", tournamentRef=" + tournamentRef + ", clubRef=" + clubRef + ", homeClubRef=" + homeClubRef + ", awayClubRef=" + awayClubRef + ", sheet=" + hasGamesheet + ", after=" + lastFixtureRef + ", max=" + maxResults + '}';
     }
 }

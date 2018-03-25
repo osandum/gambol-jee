@@ -6,14 +6,19 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.PostLoad;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Size;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author osa
  */
 @Entity(name = "person")
 public class PersonEntity implements Serializable {
+    private static final Logger LOG = LoggerFactory.getLogger(PersonEntity.class);
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -26,6 +31,25 @@ public class PersonEntity implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @Size(min = 1, max = 16)
+    @Column(length = 16, nullable = false, unique = true)
+    private String slug;
+
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+    
+    @PostLoad
+    public void fixupSlug() {
+        if (slug == null) {
+            LOG.info("{}, {}: null slug", lastName, firstNames);
+        }
     }
 
     @Column(length = 64, nullable = false)

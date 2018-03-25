@@ -11,6 +11,7 @@ import gambol.model.TournamentEntity;
 import gambol.xml.FixtureEvents;
 import gambol.xml.Fixtures;
 import gambol.xml.Person;
+import gambol.xml.Player;
 import java.util.Date;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
@@ -31,7 +32,7 @@ import javax.ws.rs.core.UriInfo;
  * @author osa
  */
 @Stateful
-@Path("person/{personId}")
+@Path("person/{slug}")
 public class PersonResource {
 
     @Inject
@@ -40,18 +41,18 @@ public class PersonResource {
     @EJB
     App gambol;
 
-    @PathParam("personId")
-    private long personId;
+    @PathParam("slug")
+    private String slug;
 
     @GET
     @Produces({APPLICATION_JSON, APPLICATION_XML})
     public Person getPerson(@Context UriInfo uriInfo) {
 
-        PersonEntity p = gambol.getPersonById(personId);
+        PersonEntity p = gambol.findPerson(slug);
         if (p == null)
             throw new WebApplicationException("Not found", Response.Status.NOT_FOUND);
         
-        LOG.info("# person "+personId+" loaded: " + p);
+        LOG.info("# person "+slug+" loaded: " + p);
         
         return entity2person(p, uriInfo);
     }
@@ -61,7 +62,7 @@ public class PersonResource {
     @Produces({APPLICATION_JSON, APPLICATION_XML})
     public Response getFixtures(@Context UriInfo uriInfo) {
 
-        PersonEntity p = gambol.getPersonById(personId);
+        PersonEntity p = gambol.findPerson(slug);
         if (p == null)
             throw new WebApplicationException("Not found", Response.Status.NOT_FOUND);
 
@@ -87,7 +88,7 @@ public class PersonResource {
     @Produces({APPLICATION_JSON, APPLICATION_XML})
     public Response getGoals(@Context UriInfo uriInfo) {
 
-        PersonEntity p = gambol.getPersonById(personId);
+        PersonEntity p = gambol.findPerson(slug);
         if (p == null)
             throw new WebApplicationException("Not found", Response.Status.NOT_FOUND);
 
@@ -113,7 +114,7 @@ public class PersonResource {
     @Produces({APPLICATION_JSON, APPLICATION_XML})
     public Response getPenalties(@Context UriInfo uriInfo) {
 
-        PersonEntity p = gambol.getPersonById(personId);
+        PersonEntity p = gambol.findPerson(slug);
         if (p == null)
             throw new WebApplicationException("Not found", Response.Status.NOT_FOUND);
 
@@ -141,8 +142,21 @@ public class PersonResource {
         Person xo = new Person();
         xo.setFirstNames(p.getFirstNames());
         xo.setLastName(p.getLastName());
-        xo.setDetails(uriInfo.getBaseUriBuilder().path(PersonResource.class).build(p.getId()));
+        xo.setSlug(p.getSlug());
+        xo.setDetails(uriInfo.getBaseUriBuilder().path(PersonResource.class).build(p.getSlug()));
         return xo;
     }
     
+
+    static Player entity2player(FixturePlayerEntity fp, UriInfo uriInfo) {
+        if (fp == null)
+            return null;
+
+        Player xo = new Player();
+        PersonEntity p = fp.getPerson();
+        xo.setFirstNames(p.getFirstNames());
+        xo.setLastName(p.getLastName());
+        xo.setDetails(uriInfo.getBaseUriBuilder().path(PersonResource.class).build(p.getSlug()));
+        return xo;
+    }
 }

@@ -42,28 +42,36 @@ import gambol.xml.TeamDef;
 import gambol.xml.Tournament;
 import java.io.InputStream;
 import java.sql.Timestamp;
+import java.text.Normalizer;
 import java.util.Calendar;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.regex.Pattern;
 import javax.ejb.Stateless;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Tuple;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,12 +98,21 @@ public class App {
         return em.find(PersonEntity.class, personId);
     }
 
+    public PersonEntity findPerson(String slug) {
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<PersonEntity> query = builder.createQuery(PersonEntity.class);
+        Root<PersonEntity> root = query.from(PersonEntity.class);
+        query.select(root);
+        query.where(builder.equal(root.get(PersonEntity_.slug), slug));
+        return em.createQuery(query).setMaxResults(1).getSingleResult();
+    }
+
     public ClubEntity findClub(String slug) {
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<ClubEntity> query = builder.createQuery(ClubEntity.class);
         Root<ClubEntity> root = query.from(ClubEntity.class);
         query.select(root);
-        query.where(builder.equal(root.get("slug"), slug));
+        query.where(builder.equal(root.get(ClubEntity_.slug), slug));
         return em.createQuery(query).setMaxResults(1).getSingleResult();
     }
 
@@ -538,22 +555,113 @@ public class App {
         return res;
     }
 
-    public List<PersonEntity> getPlayers(PlayersQueryParam param) {
+    public Map<PersonEntity, Map<ClubEntity, Set<SeasonEntity>>> getPlayers(PlayersQueryParam param) {
         long t1 = System.currentTimeMillis();
-        
-        CriteriaBuilder b = em.getCriteriaBuilder();
-                
-        CriteriaQuery<PersonEntity> q = b.createQuery(PersonEntity.class);
-        Root<PersonEntity> people = q.from(PersonEntity.class);
 
-        Expression<String> _firstName = b.upper(b.function("unaccent", String.class, people.get(PersonEntity_.firstNames)));
-        Expression<String> _lastName = b.upper(b.function("unaccent", String.class, people.get(PersonEntity_.lastName)));
-        
+        CriteriaBuilder b = em.getCriteriaBuilder();
+        CriteriaQuery<Tuple> tq = b.createTupleQuery();
+
+        Root<FixturePlayerEntity> fp = tq.from(FixturePlayerEntity.class);
+
+        Path<PersonEntity> _person = fp.get(FixturePlayerEntity_.person);
+        Path<FixtureSideEntity> _side = fp.get(FixturePlayerEntity_.side);
+        Path<TeamEntity> _team = _side.get(FixtureSideEntity_.team);
+        Path<ClubEntity> _club = _team.get(TeamEntity_.club);
+        Path<TournamentEntity> _tournament = _team.get(TeamEntity_.tournament);
+        Path<SeasonEntity> _season = _tournament.get(TournamentEntity_.season);
+
+        tq.select(b.tuple(_person, _club, _season)).distinct(true);
+
+        Expression<String> _firstName = b.upper(b.function("unaccent", String.class, _person.get(PersonEntity_.firstNames)));
+        Expression<String> _lastName = b.upper(b.function("unaccent", String.class, _person.get(PersonEntity_.lastName)));
         Predicate a = b.conjunction();
         List<Expression<Boolean>> wheres = a.getExpressions();
-        
+
         int s = 0;
-        if (param.getName() != null) 
+        if (param.getName() != null) {
+            for (String n : param.getName().split("\\h+"))
+            {
+                String p = unaccent(n).toUpperCase().trim();
+                s += p.length();
+                wheres
+                    .add(b.or(b.like(_firstName, "%" + p + "%"), b.like(_lastName, "%" + p + "%")));
+            }
+        }
+
+        if (s < 3)
+            throw new IllegalArgumentException("query at least three characters");
+
+        tq.where(a);
+      //tq.orderBy(b.asc(_lastName), b.asc(_firstName));
+
+        List<Tuple> res = em.createQuery(tq).setMaxResults(1001).getResultList();
+
+        Comparator<PersonEntity> byLastName = (PersonEntity p1, PersonEntity p2) -> {
+            return p1.getLastName().compareToIgnoreCase(p2.getLastName());
+        };
+        Comparator<PersonEntity> byFirstName = (PersonEntity p1, PersonEntity p2) -> {
+            return p1.getFirstNames().compareToIgnoreCase(p2.getFirstNames());
+        };
+        Map<PersonEntity,Map<ClubEntity,Set<SeasonEntity>>> rr = 
+                new TreeMap<>(byLastName.thenComparing(byFirstName));
+        res.stream().forEach((entity) -> {
+            PersonEntity person = (PersonEntity)entity.get(0);
+            ClubEntity club = (ClubEntity)entity.get(1);
+            SeasonEntity season = (SeasonEntity)entity.get(2);
+
+            Map<ClubEntity, Set<SeasonEntity>> pp = rr.get(person);
+            if (pp == null) {
+                pp = new HashMap<>();
+                rr.put(person, pp);
+            }
+            Set<SeasonEntity> cc = pp.get(club);
+            if (cc == null) {
+                cc = new TreeSet<>();
+                pp.put(club, cc);
+            }
+            cc.add(season);
+        });
+
+
+        long t2 = System.currentTimeMillis();
+
+        LOG.info(param + ": " + res.size() + " player(s) retrieved ("+(t2-t1)+"ms)");
+
+        return rr;
+    }
+
+    private final static Pattern DIACRIT = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+    private final static Pattern LIG_A = Pattern.compile("[æÆ]");
+    private final static Pattern LIG_O = Pattern.compile("[øØꟹŒœ]");
+    
+    private static String unaccent(String s) {
+        String decomposed = Normalizer.normalize(s, Normalizer.Form.NFD);
+        LOG.info("# decompose('{}') = '{}'", s, decomposed);
+        String reduced = DIACRIT.matcher(decomposed).replaceAll("");
+        reduced = LIG_A.matcher(reduced).replaceAll("a");
+        reduced = LIG_O.matcher(reduced).replaceAll("o");
+        LOG.info("# reduce('{}') = '{}'", decomposed, reduced);
+        return reduced;
+    }    
+    
+    public List<FixturePlayerEntity> getPlayers__(PlayersQueryParam param) {
+        long t1 = System.currentTimeMillis();
+
+        CriteriaBuilder b = em.getCriteriaBuilder();
+
+        CriteriaQuery<FixturePlayerEntity> q = b.createQuery(FixturePlayerEntity.class);
+        Root<FixturePlayerEntity> players = q.from(FixturePlayerEntity.class);
+
+        Path<PersonEntity> person = players.get(FixturePlayerEntity_.person);
+        Path<FixtureEntity> fixture = players.get(FixturePlayerEntity_.fixture);
+
+        Expression<String> _firstName = b.upper(b.function("unaccent", String.class, person.get(PersonEntity_.firstNames)));
+        Expression<String> _lastName = b.upper(b.function("unaccent", String.class, person.get(PersonEntity_.lastName)));
+        Predicate a = b.conjunction();
+        List<Expression<Boolean>> wheres = a.getExpressions();
+
+        int s = 0;
+        if (param.getName() != null) {
             for (String n : param.getName().split("\\h+"))
             {
                 String p = n.toUpperCase().trim();
@@ -561,13 +669,54 @@ public class App {
                 wheres
                     .add(b.or(b.like(_firstName, "%" + p + "%"), b.like(_lastName, "%" + p + "%")));
             }
-        
+        }
+
         if (s < 3)
             throw new IllegalArgumentException("query at least three characters");
-        
+
         q.where(a);
         q.orderBy(b.asc(_lastName), b.asc(_firstName));
-        List<PersonEntity> res = 
+        List<FixturePlayerEntity> res =
+                em.createQuery(q).setMaxResults(101).getResultList();
+
+        long t2 = System.currentTimeMillis();
+
+        LOG.info(param + ": " + res.size() + " player(s) retrieved ("+(t2-t1)+"ms)");
+
+        return res;
+    }
+
+    public List<PersonEntity> getPeople(PlayersQueryParam param) {
+        long t1 = System.currentTimeMillis();
+
+        CriteriaBuilder b = em.getCriteriaBuilder();
+
+        CriteriaQuery<PersonEntity> q = b.createQuery(PersonEntity.class);
+        Root<PersonEntity> people = q.from(PersonEntity.class);
+
+        Expression<String> _firstName = b.upper(b.function("unaccent", String.class, people.get(PersonEntity_.firstNames)));
+        Expression<String> _lastName = b.upper(b.function("unaccent", String.class, people.get(PersonEntity_.lastName)));
+
+        Predicate a = b.conjunction();
+        List<Expression<Boolean>> wheres = a.getExpressions();
+
+        int s = 0;
+        if (param.getName() != null) {
+            for (String n : param.getName().split("\\h+"))
+            {
+                String p = n.toUpperCase().trim();
+                s += p.length();
+                wheres
+                    .add(b.or(b.like(_firstName, "%" + p + "%"), b.like(_lastName, "%" + p + "%")));
+            }
+        }
+
+        if (s < 3)
+            throw new IllegalArgumentException("query at least three characters");
+
+        q.where(a);
+        q.orderBy(b.asc(_lastName), b.asc(_firstName));
+        List<PersonEntity> res =
                 em.createQuery(q).setMaxResults(101).getResultList();
 
         long t2 = System.currentTimeMillis();
@@ -577,9 +726,56 @@ public class App {
         return res;
     }
 
+    public List<FixtureEntity> _pageOfFixtures(FixturesQueryParam param) {
+        long t1 = System.currentTimeMillis();
+
+        CriteriaBuilder b = em.getCriteriaBuilder();
+
+        CriteriaQuery<FixtureEntity> q = b.createQuery(FixtureEntity.class);
+        Root<FixtureEntity> fixtures = q.from(FixtureEntity.class);
+
+        if (param.getLastFixtureRef() != null) {
+            Subquery<String> sq = q.subquery(String.class);
+            Root<FixtureEntity> sfixture = sq.from(FixtureEntity.class);
+            sq.select(sortKeyOf(sfixture));
+            sq.where(b.equal(sfixture.get(FixtureEntity_.sourceRef), param.getLastFixtureRef()));
+
+            Expression<String> v = sortKeyOf(fixtures);
+            q.where(b.greaterThan(v, sq));
+        }
+
+        q.orderBy(b.asc(fixtures.get(FixtureEntity_.startTime)),
+                  b.asc(fixtures.get(FixtureEntity_.tournament).get(TournamentEntity_.slug)),
+                  b.asc(fixtures.get(FixtureEntity_.id)));
+
+        List<FixtureEntity> res = em.createQuery(q)
+                .setMaxResults(500)
+                .getResultList();
+
+        long t2 = System.currentTimeMillis();
+
+        LOG.info(param + ": next " + res.size() + " fixture(s) retrieved ("+(t2-t1)+"ms)");
+
+        return res;
+    }
+
+    private Expression<String> sortKeyOf(Root<FixtureEntity> fixture) {
+        CriteriaBuilder b = em.getCriteriaBuilder();
+
+        Expression<String> v = fixture.get(FixtureEntity_.startTime).as(String.class);
+        v = b.concat(v, "$");
+        v = b.concat(v, fixture.get(FixtureEntity_.tournament).get(TournamentEntity_.slug));
+        v = b.concat(v, "$");
+        v = b.concat(v, fixture.get(FixtureEntity_.id).as(String.class));
+
+        return v;
+    }
+
     public List<FixtureEntity> getFixtures(FixturesQueryParam param) {
         long t1 = System.currentTimeMillis();
 
+        boolean reverse = param.getReverseChrono() != null && param.getReverseChrono();
+        
         CriteriaBuilder builder = em.getCriteriaBuilder();
 
         CriteriaQuery<FixtureEntity> q = builder.createQuery(FixtureEntity.class);
@@ -620,7 +816,16 @@ public class App {
             }
         }
 
-        Order order = builder.asc(fixtures.get(FixtureEntity_.startTime));
+        if (param.getLastFixtureRef() != null) {
+            Subquery<String> sq = q.subquery(String.class);
+            Root<FixtureEntity> sfixture = sq.from(FixtureEntity.class);
+            sq.select(sortKeyOf(sfixture));
+            sq.where(builder.equal(sfixture.get(FixtureEntity_.sourceRef), param.getLastFixtureRef()));
+
+            Expression<String> v = sortKeyOf(fixtures);
+            wheres.add(reverse ?  builder.lessThan(v, sq) : builder.greaterThan(v, sq));
+        }
+
         if (!param.clubRef.isEmpty() || !param.homeClubRef.isEmpty() || !param.awayClubRef.isEmpty() || param.hasGamesheet != null) {
 
             Join<FixtureEntity, FixtureSideEntity> homeSide = fixtures.join(FixtureEntity_.homeSide);
@@ -632,7 +837,7 @@ public class App {
             Join<TeamEntity, ClubEntity> awayClub = awayTeam.join(TeamEntity_.club);
 
             if (!param.clubRef.isEmpty() || !param.awayClubRef.isEmpty()) {
-                Set<String> clubRefs = new HashSet<String>();
+                Set<String> clubRefs = new HashSet<>();
                 clubRefs.addAll(param.clubRef);
              // clubRefs.addAll(param.homeClubRef);
                 clubRefs.addAll(param.awayClubRef);
@@ -670,14 +875,20 @@ public class App {
                 }
                 else {
                     wheres.add(builder.equal(fixtures.get(FixtureEntity_.sheet), GamesheetStatus.MISSING));
-                    order = builder.desc(fixtures.get(FixtureEntity_.startTime));
+                    reverse = !reverse;
                 }
             }
         }
         q.where(a);
-        q.orderBy(order);
 
-        List<FixtureEntity> res = em.createQuery(q).getResultList();
+        q.orderBy(reverse ?  builder.desc(fixtures.get(FixtureEntity_.startTime)) : builder.asc(fixtures.get(FixtureEntity_.startTime)),
+                  builder.asc(fixtures.get(FixtureEntity_.tournament).get(TournamentEntity_.slug)),
+                  builder.asc(fixtures.get(FixtureEntity_.id)));
+
+        TypedQuery<FixtureEntity> tq = em.createQuery(q);
+        if (param.getMaxResults() != null)
+            tq.setMaxResults(param.getMaxResults());
+        List<FixtureEntity> res = tq.getResultList();
 
         long t2 = System.currentTimeMillis();
 
@@ -777,7 +988,7 @@ public class App {
                 fpe.setFixture(f);
                 if (jerseyNumber == 9001) {
                     fpe.setPerson(teamOffender());
-                    fpe.setPersonRole("TEAM");                    
+                    fpe.setPersonRole("TEAM");
                 }
                 else {
                     fpe.setPerson(unknownPlayer());

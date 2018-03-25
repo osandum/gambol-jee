@@ -6,6 +6,7 @@ import gambol.ejb.PlayersQueryParam;
 import gambol.model.ClubEntity;
 import gambol.model.FixtureEntity;
 import gambol.model.PersonEntity;
+import gambol.model.SeasonEntity;
 import gambol.util.DateParam;
 import gambol.xml.Club;
 import gambol.xml.Fixtures;
@@ -14,9 +15,12 @@ import gambol.xml.Series;
 import gambol.xml.Tournament;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
@@ -101,13 +105,37 @@ public class RootResource {
     @GET
     @Path("player")
     @Produces({APPLICATION_JSON, APPLICATION_XML})
-    public List<Person> findPlayer(
+    public List<Person> findPlayers(
             @Context UriInfo uriInfo,
             @QueryParam("name") String name,
             @QueryParam("club") String clubRef) {
         
         PlayersQueryParam searchParams =  playerQ(name);
-        List<PersonEntity> people = gambol.getPlayers(searchParams);
+        Map<PersonEntity, Map<ClubEntity, Set<SeasonEntity>>> players = 
+                gambol.getPlayers(searchParams);
+
+        List<Person> res = new LinkedList<>();
+        for (Map.Entry<PersonEntity, Map<ClubEntity, Set<SeasonEntity>>> ps : players.entrySet()) {
+            System.out.println("# " + ps.getKey());
+            for (Map.Entry<ClubEntity, Set<SeasonEntity>> sx : ps.getValue().entrySet())
+              System.out.println("#       " + sx.getKey() + ": " + Arrays.toString(sx.getValue().toArray()));
+            System.out.println("# ------");
+            res.add(PersonResource.entity2person(ps.getKey(), uriInfo));
+        }
+
+        return res;
+    }
+
+    @GET
+    @Path("person")
+    @Produces({APPLICATION_JSON, APPLICATION_XML})
+    public List<Person> findPeople(
+            @Context UriInfo uriInfo,
+            @QueryParam("name") String name,
+            @QueryParam("club") String clubRef) {
+        
+        PlayersQueryParam searchParams =  playerQ(name);
+        List<PersonEntity> people = gambol.getPeople(searchParams);
         
         
         List<Person> res = new LinkedList<>();
@@ -130,9 +158,11 @@ public class RootResource {
             @QueryParam("club") List<String> clubRef,
             @QueryParam("home") List<String> homeClubRef,
             @QueryParam("away") List<String> awayClubRef,
+            @QueryParam("after") String lastFixtureRef,
+            @QueryParam("reverse") Boolean reverseChrono,
             @Context UriInfo uriInfo) {
 
-        FixturesQueryParam searchParams = fixtureQ(start, end, hasGamesheet, seasonId, seriesId, tournamentRef, clubRef, homeClubRef, awayClubRef);
+        FixturesQueryParam searchParams = fixtureQ(start, end, hasGamesheet, seasonId, seriesId, tournamentRef, clubRef, homeClubRef, awayClubRef, lastFixtureRef, reverseChrono);
         List<FixtureEntity> fixtures = gambol.getFixtures(searchParams);
 
         Fixtures res = new Fixtures();
@@ -153,7 +183,7 @@ public class RootResource {
         return res;
     }
 
-    private static FixturesQueryParam fixtureQ(DateParam start, DateParam end, Boolean sheet, List<String> seasonId, List<String> seriesId, List<String> tournamentRef, List<String> clubRef, List<String> homeClubRef, List<String> awayClubRef) {
+    private static FixturesQueryParam fixtureQ(DateParam start, DateParam end, Boolean sheet, List<String> seasonId, List<String> seriesId, List<String> tournamentRef, List<String> clubRef, List<String> homeClubRef, List<String> awayClubRef, String lastFixtureRef, Boolean reverseChrono) {
         FixturesQueryParam res = new FixturesQueryParam();
         res.setStart(u(start));
         res.setEnd(u(end));
@@ -164,6 +194,8 @@ public class RootResource {
         res.setClubRef(clubRef);
         res.setHomeClubRef(homeClubRef);
         res.setAwayClubRef(awayClubRef);
+        res.setLastFixtureRef(lastFixtureRef);
+        res.setReverseChrono(reverseChrono);
         return res;
     }
 
@@ -186,14 +218,16 @@ public class RootResource {
             @QueryParam("tournament") List<String> tournamentRef,
             @QueryParam("club") List<String> clubRef,
             @QueryParam("home") List<String> homeClubRef,
-            @QueryParam("away") List<String> awayClubRef) throws ValidationException, IOException {
+            @QueryParam("away") List<String> awayClubRef,
+            @QueryParam("after") String lastFixtureRef,
+            @QueryParam("reverse") Boolean reverseChrono) throws ValidationException, IOException {
 
         LOG.info("### get fullcalendar events...");
         
-        FixturesQueryParam searchParams = fixtureQ(start, end, hasGamesheet, seasonId, seriesId, tournamentRef, clubRef, homeClubRef, awayClubRef);
+        FixturesQueryParam searchParams = fixtureQ(start, end, hasGamesheet, seasonId, seriesId, tournamentRef, clubRef, homeClubRef, awayClubRef, lastFixtureRef, reverseChrono);
         List<FixtureEntity> fixtures = gambol.getFixtures(searchParams);
 
-        List<FullCalendarEvent> res = new LinkedList<FullCalendarEvent>();
+        List<FullCalendarEvent> res = new LinkedList<>();
         for (FixtureEntity f : fixtures) {
             FullCalendarEvent e = new FullCalendarEvent();
             e.id = f.getSourceRef(); // TODO: make our own opaque ref
@@ -219,11 +253,13 @@ public class RootResource {
             @QueryParam("home") List<String> homeClubRef,
             @QueryParam("away") List<String> awayClubRef,
             @QueryParam("calname") String calname,
-            @QueryParam("caldesc") String caldesc) throws ValidationException, IOException {
+            @QueryParam("caldesc") String caldesc,
+            @QueryParam("after") String lastFixtureRef,
+            @QueryParam("reverse") Boolean reverseChrono) throws ValidationException, IOException {
 
         LOG.info("### get a fixtures calendar...");
 
-        FixturesQueryParam searchParams = fixtureQ(start, end, hasGamesheet, seasonId, seriesId, tournamentRef, clubRef, homeClubRef, awayClubRef);
+        FixturesQueryParam searchParams = fixtureQ(start, end, hasGamesheet, seasonId, seriesId, tournamentRef, clubRef, homeClubRef, awayClubRef, lastFixtureRef, reverseChrono);
         List<FixtureEntity> fixtures = gambol.getFixtures(searchParams);
 
         Calendar cal = getCalendar(fixtures, calname, caldesc);

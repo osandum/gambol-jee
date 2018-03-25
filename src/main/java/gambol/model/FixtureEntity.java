@@ -215,6 +215,11 @@ public class FixtureEntity implements Serializable {
         return eet;
     }
     
+    public GamesheetStatus getGamesheetStatus() {
+        Date eet = estimateEndTime();        
+        return eet == null || eet.getTime() > System.currentTimeMillis() ? GamesheetStatus.FUTURE : sheet;        
+    }
+    
     public ScheduleStatus getStatus() {
         return status;
     }
