@@ -23,6 +23,7 @@ import gambol.model.TournamentEntity_;
 import gambol.model.TeamEntity;
 import gambol.model.TeamEntity_;
 import gambol.model.GameTime;
+import gambol.model.ModelUtil;
 import gambol.model.PenaltyEventEntity_;
 import gambol.xml.Event;
 import gambol.xml.Fixture;
@@ -42,20 +43,16 @@ import gambol.xml.TeamDef;
 import gambol.xml.Tournament;
 import java.io.InputStream;
 import java.sql.Timestamp;
-import java.text.Normalizer;
 import java.util.Calendar;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.regex.Pattern;
 import javax.ejb.Stateless;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -327,16 +324,6 @@ public class App {
         }
     }
 
-    private static String asSlug(String name, int maxLength) {
-        String slug = name
-                .replaceAll("[-_/,. ]+", "-")
-                .replaceAll("[-\\p{IsAlphabetic}\\p{IsDigit}]+", "")
-                .toLowerCase();
-        if (slug.length() > maxLength)
-            slug = slug.substring(0, maxLength);
-        return slug;
-    }
-
     public void updateOrCreateSeries(String slug, SeriesEntity s) {
         SeriesEntity entity = findOrCreateSeries(slug);
         entity.setName(s.getName());
@@ -581,7 +568,7 @@ public class App {
         if (param.getName() != null) {
             for (String n : param.getName().split("\\h+"))
             {
-                String p = unaccent(n).toUpperCase().trim();
+                String p = ModelUtil.unaccent(n).toUpperCase().trim();
                 s += p.length();
                 wheres
                     .add(b.or(b.like(_firstName, "%" + p + "%"), b.like(_lastName, "%" + p + "%")));
@@ -629,20 +616,6 @@ public class App {
 
         return rr;
     }
-
-    private final static Pattern DIACRIT = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
-    private final static Pattern LIG_A = Pattern.compile("[æÆ]");
-    private final static Pattern LIG_O = Pattern.compile("[øØꟹŒœ]");
-    
-    private static String unaccent(String s) {
-        String decomposed = Normalizer.normalize(s, Normalizer.Form.NFD);
-        LOG.info("# decompose('{}') = '{}'", s, decomposed);
-        String reduced = DIACRIT.matcher(decomposed).replaceAll("");
-        reduced = LIG_A.matcher(reduced).replaceAll("a");
-        reduced = LIG_O.matcher(reduced).replaceAll("o");
-        LOG.info("# reduce('{}') = '{}'", decomposed, reduced);
-        return reduced;
-    }    
     
     public List<FixturePlayerEntity> getPlayers__(PlayersQueryParam param) {
         long t1 = System.currentTimeMillis();

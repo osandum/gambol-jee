@@ -5,15 +5,15 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>as10</groupId>
-    <artifactId>as10</artifactId>
+    <groupId>as11</groupId>
+    <artifactId>as11</artifactId>
     <version>0.2-SNAPSHOT</version>
 
     <packaging>war</packaging>
 
-    <name>as10-ksf.rhcloud.com</name>
+    <name>as11-ksf.rhcloud.com</name>
     <description>
-        Testing the Wildfly AS 10 on OpenShift 3
+        Testing the Wildfly AS 11 on OpenShift 3
     </description>
 
     <properties>
@@ -73,9 +73,9 @@
                 <artifactId>maven-processor-plugin</artifactId>
 
                 <!--
-                ! cannot go to version 3 until openshift upgrade their
-                ! maven to 3.1
-                ! -->
+                 ! cannot go to version 3 until openshift upgrade their
+                 ! maven to 3.1
+                 ! -->
                 <version>2.2.4</version>
 
                 <executions>

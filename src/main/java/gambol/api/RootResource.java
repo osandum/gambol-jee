@@ -196,6 +196,7 @@ public class RootResource {
         res.setAwayClubRef(awayClubRef);
         res.setLastFixtureRef(lastFixtureRef);
         res.setReverseChrono(reverseChrono);
+        res.setMaxResults(50);
         return res;
     }
 

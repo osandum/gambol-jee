@@ -10,6 +10,7 @@ import javax.persistence.PostLoad;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,7 +49,8 @@ public class PersonEntity implements Serializable {
     @PostLoad
     public void fixupSlug() {
         if (slug == null) {
-            LOG.info("{}, {}: null slug", lastName, firstNames);
+            slug = generateSlug();
+            LOG.info("{}, {}: null slug -> {}", lastName, firstNames, slug);            
         }
     }
 
@@ -105,5 +107,28 @@ public class PersonEntity implements Serializable {
 
     public boolean isTUC() {
         return "(ukendt)".equals(firstNames) && "(ukendt)".equals(lastName);
+    }
+
+    private String generateSlug() {
+/*  slug = translate(left(lower(unaccent(substr(firstnames, 1, 1) || lastname)), 11) || '_'
+      || substr('bcdfghkmnpqrstvwxz', (random() * id)::integer % 18 + 1, 1)
+      || substr('aeiouy18', (random() * id)::integer % 8 + 1, 1)
+      || substr('bcdfhkmnpqrstwxz2345679', (random() * id)::integer % 23 + 1, 1)
+      || substr('bcdfhkmnpqrstwxz2345679', (random() * id)::integer % 23 + 1, 1), ' -/,', '')
+*/
+        String name;
+        if (StringUtils.isEmpty(firstNames))
+            name = lastName;
+        else
+            name = firstNames.substring(0, 1) + lastName;
+        name = ModelUtil.asSlug(name, 11);
+
+        String random =
+                ModelUtil.oneOf("bcdfghkmnpqrstvwxz") +
+                ModelUtil.oneOf("aeiouy18") +
+                ModelUtil.oneOf("bcdfhkmnpqrstwxz2345679") +
+                ModelUtil.oneOf("bcdfhkmnpqrstwxz2345679");
+        
+        return name + "_" + random;
     }
 }
