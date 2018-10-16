@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -39,7 +40,6 @@ import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
-import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.property.CalScale;
@@ -50,8 +50,8 @@ import net.fortuna.ical4j.model.property.ProdId;
 import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.model.property.Version;
 import net.fortuna.ical4j.model.property.XProperty;
-import org.apache.commons.lang.StringUtils;
-
+import org.apache.commons.lang3.StringUtils;
+ 
 /**
  *
  * @author osa
@@ -155,14 +155,17 @@ public class RootResource {
             @QueryParam("season") List<String> seasonId,
             @QueryParam("series") List<String> seriesId,
             @QueryParam("tournament") List<String> tournamentRef,
+            @QueryParam("src") String sourcePrefix,
             @QueryParam("club") List<String> clubRef,
             @QueryParam("home") List<String> homeClubRef,
             @QueryParam("away") List<String> awayClubRef,
             @QueryParam("after") String lastFixtureRef,
             @QueryParam("reverse") Boolean reverseChrono,
+            @DefaultValue("50")
+            @QueryParam("max") Integer maxResults,
             @Context UriInfo uriInfo) {
 
-        FixturesQueryParam searchParams = fixtureQ(start, end, hasGamesheet, seasonId, seriesId, tournamentRef, clubRef, homeClubRef, awayClubRef, lastFixtureRef, reverseChrono);
+        FixturesQueryParam searchParams = fixtureQ(start, end, hasGamesheet, seasonId, seriesId, tournamentRef, sourcePrefix, clubRef, homeClubRef, awayClubRef, lastFixtureRef, reverseChrono, maxResults);
         List<FixtureEntity> fixtures = gambol.getFixtures(searchParams);
 
         Fixtures res = new Fixtures();
@@ -183,7 +186,7 @@ public class RootResource {
         return res;
     }
 
-    private static FixturesQueryParam fixtureQ(DateParam start, DateParam end, Boolean sheet, List<String> seasonId, List<String> seriesId, List<String> tournamentRef, List<String> clubRef, List<String> homeClubRef, List<String> awayClubRef, String lastFixtureRef, Boolean reverseChrono) {
+    private static FixturesQueryParam fixtureQ(DateParam start, DateParam end, Boolean sheet, List<String> seasonId, List<String> seriesId, List<String> tournamentRef, String sourcePrefix, List<String> clubRef, List<String> homeClubRef, List<String> awayClubRef, String lastFixtureRef, Boolean reverseChrono, Integer maxResults) {
         FixturesQueryParam res = new FixturesQueryParam();
         res.setStart(u(start));
         res.setEnd(u(end));
@@ -191,12 +194,13 @@ public class RootResource {
         res.setSeasonId(seasonId);
         res.setSeriesId(seriesId);
         res.setTournamentRef(tournamentRef);
+        res.setSourcePrefix(sourcePrefix);
         res.setClubRef(clubRef);
         res.setHomeClubRef(homeClubRef);
         res.setAwayClubRef(awayClubRef);
         res.setLastFixtureRef(lastFixtureRef);
         res.setReverseChrono(reverseChrono);
-        res.setMaxResults(50);
+        res.setMaxResults(maxResults);
         return res;
     }
 
@@ -217,15 +221,18 @@ public class RootResource {
             @QueryParam("season") List<String> seasonId,
             @QueryParam("series") List<String> seriesId,
             @QueryParam("tournament") List<String> tournamentRef,
+            @QueryParam("src") String sourcePrefix,
             @QueryParam("club") List<String> clubRef,
             @QueryParam("home") List<String> homeClubRef,
             @QueryParam("away") List<String> awayClubRef,
             @QueryParam("after") String lastFixtureRef,
-            @QueryParam("reverse") Boolean reverseChrono) throws ValidationException, IOException {
+            @QueryParam("reverse") Boolean reverseChrono,
+            @DefaultValue("50")
+            @QueryParam("max") Integer maxResults) throws IOException {
 
         LOG.info("### get fullcalendar events...");
         
-        FixturesQueryParam searchParams = fixtureQ(start, end, hasGamesheet, seasonId, seriesId, tournamentRef, clubRef, homeClubRef, awayClubRef, lastFixtureRef, reverseChrono);
+        FixturesQueryParam searchParams = fixtureQ(start, end, hasGamesheet, seasonId, seriesId, tournamentRef, sourcePrefix, clubRef, homeClubRef, awayClubRef, lastFixtureRef, reverseChrono, maxResults);
         List<FixtureEntity> fixtures = gambol.getFixtures(searchParams);
 
         List<FullCalendarEvent> res = new LinkedList<>();
@@ -250,17 +257,20 @@ public class RootResource {
             @QueryParam("season") List<String> seasonId,
             @QueryParam("series") List<String> seriesId,
             @QueryParam("tournament") List<String> tournamentRef,
+            @QueryParam("src") String sourcePrefix,
             @QueryParam("club") List<String> clubRef,
             @QueryParam("home") List<String> homeClubRef,
             @QueryParam("away") List<String> awayClubRef,
             @QueryParam("calname") String calname,
             @QueryParam("caldesc") String caldesc,
             @QueryParam("after") String lastFixtureRef,
-            @QueryParam("reverse") Boolean reverseChrono) throws ValidationException, IOException {
+            @QueryParam("reverse") Boolean reverseChrono,
+            @DefaultValue("50")
+            @QueryParam("max") Integer maxResults) throws IOException {
 
         LOG.info("### get a fixtures calendar...");
 
-        FixturesQueryParam searchParams = fixtureQ(start, end, hasGamesheet, seasonId, seriesId, tournamentRef, clubRef, homeClubRef, awayClubRef, lastFixtureRef, reverseChrono);
+        FixturesQueryParam searchParams = fixtureQ(start, end, hasGamesheet, seasonId, seriesId, tournamentRef, sourcePrefix, clubRef, homeClubRef, awayClubRef, lastFixtureRef, reverseChrono, maxResults);
         List<FixtureEntity> fixtures = gambol.getFixtures(searchParams);
 
         Calendar cal = getCalendar(fixtures, calname, caldesc);
