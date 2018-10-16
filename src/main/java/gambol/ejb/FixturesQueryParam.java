@@ -14,6 +14,7 @@ public class FixturesQueryParam implements Serializable {
     List<String> seasonId;
     List<String> seriesId;
     List<String> tournamentRef;
+    String sourcePrefix;
     List<String> clubRef;
     List<String> homeClubRef;
     List<String> awayClubRef;
@@ -70,6 +71,14 @@ public class FixturesQueryParam implements Serializable {
         this.tournamentRef = tournamentRef;
     }
 
+    public String getSourcePrefix() {
+        return sourcePrefix;
+    }
+
+    public void setSourcePrefix(String sourcePrefix) {
+        this.sourcePrefix = sourcePrefix;
+    }
+
     public List<String> getClubRef() {
         return clubRef;
     }
@@ -120,6 +129,6 @@ public class FixturesQueryParam implements Serializable {
 
     @Override
     public String toString() {
-        return "FixturesQueryParam{" + "start=" + start + ", end=" + end + ", seasonId=" + seasonId + ", seriesId=" + seriesId + ", tournamentRef=" + tournamentRef + ", clubRef=" + clubRef + ", homeClubRef=" + homeClubRef + ", awayClubRef=" + awayClubRef + ", sheet=" + hasGamesheet + ", after=" + lastFixtureRef + ", max=" + maxResults + '}';
+        return "FixturesQueryParam{" + "start=" + start + ", end=" + end + ", seasonId=" + seasonId + ", seriesId=" + seriesId + ", tournamentRef=" + tournamentRef + ", sourcePrefix=" + sourcePrefix + ", clubRef=" + clubRef + ", homeClubRef=" + homeClubRef + ", awayClubRef=" + awayClubRef + ", sheet=" + hasGamesheet + ", after=" + lastFixtureRef + ", max=" + maxResults + '}';
     }
 }

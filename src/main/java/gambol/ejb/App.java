@@ -69,7 +69,7 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
@@ -589,7 +589,7 @@ public class App {
         Comparator<PersonEntity> byFirstName = (PersonEntity p1, PersonEntity p2) -> {
             return p1.getFirstNames().compareToIgnoreCase(p2.getFirstNames());
         };
-        Map<PersonEntity,Map<ClubEntity,Set<SeasonEntity>>> rr = 
+        Map<PersonEntity,Map<ClubEntity,Set<SeasonEntity>>> rr =
                 new TreeMap<>(byLastName.thenComparing(byFirstName));
         res.stream().forEach((entity) -> {
             PersonEntity person = (PersonEntity)entity.get(0);
@@ -616,7 +616,7 @@ public class App {
 
         return rr;
     }
-    
+
     public List<FixturePlayerEntity> getPlayers__(PlayersQueryParam param) {
         long t1 = System.currentTimeMillis();
 
@@ -694,7 +694,7 @@ public class App {
 
         long t2 = System.currentTimeMillis();
 
-        LOG.info(param + ": " + res.size() + " person(s) retrieved ("+(t2-t1)+"ms)");
+        LOG.info("{}: {} person(s) retrieved ({}ms)", param, res.size(), t2-t1);
 
         return res;
     }
@@ -727,7 +727,7 @@ public class App {
 
         long t2 = System.currentTimeMillis();
 
-        LOG.info(param + ": next " + res.size() + " fixture(s) retrieved ("+(t2-t1)+"ms)");
+        LOG.info("{}: next {} fixture(s) retrieved ({}ms)", param, res.size(), t2-t1);
 
         return res;
     }
@@ -748,7 +748,7 @@ public class App {
         long t1 = System.currentTimeMillis();
 
         boolean reverse = param.getReverseChrono() != null && param.getReverseChrono();
-        
+
         CriteriaBuilder builder = em.getCriteriaBuilder();
 
         CriteriaQuery<FixtureEntity> q = builder.createQuery(FixtureEntity.class);
@@ -768,27 +768,30 @@ public class App {
         if (param.end != null)
             wheres.add(builder.lessThanOrEqualTo(builder.coalesce(fixtures.get(FixtureEntity_.startTime), fixtures.get(FixtureEntity_.endTime)), param.end));
 
-        if (!param.seasonId.isEmpty() || !param.seriesId.isEmpty() || !param.tournamentRef.isEmpty()) {
-            if (!param.seasonId.isEmpty()) {
-                Join<TournamentEntity, SeasonEntity> season = tournament.join(TournamentEntity_.season);
-                wheres.add(season.get(SeasonEntity_.id).in(param.seasonId));
-            }
-            if (!param.seriesId.isEmpty()) {
-                Path<String> seriesSlug = tournament.join(TournamentEntity_.series).get(SeriesEntity_.slug);
-                Predicate b = builder.disjunction();
-                for (String ss : param.seriesId)
-                    b.getExpressions().add(builder.like(seriesSlug, ss + "%"));
-                wheres.add(b);
-            }
-            if (!param.tournamentRef.isEmpty()) {
-                Path<String> tournamentSlug = tournament.get(TournamentEntity_.slug);
-                Predicate b = builder.disjunction();
-                for (String ts : param.tournamentRef)
-                    b.getExpressions().add(builder.like(tournamentSlug, ts + "%"));
-                wheres.add(b);
-            }
+        if (!param.seasonId.isEmpty()) {
+            Join<TournamentEntity, SeasonEntity> season = tournament.join(TournamentEntity_.season);
+            wheres.add(season.get(SeasonEntity_.id).in(param.seasonId));
+        }
+        if (!param.seriesId.isEmpty()) {
+            Path<String> seriesSlug = tournament.join(TournamentEntity_.series).get(SeriesEntity_.slug);
+            Predicate b = builder.disjunction();
+            for (String ss : param.seriesId)
+                b.getExpressions().add(builder.like(seriesSlug, ss + "%"));
+            wheres.add(b);
+        }
+        if (!param.tournamentRef.isEmpty()) {
+            Path<String> tournamentSlug = tournament.get(TournamentEntity_.slug);
+            Predicate b = builder.disjunction();
+            for (String ts : param.tournamentRef)
+                b.getExpressions().add(builder.like(tournamentSlug, ts + "%"));
+            wheres.add(b);
+        }
+        if (param.sourcePrefix != null) {
+            Path<String> sourceRef = tournament.get(TournamentEntity_.sourceRef);
+            wheres.add(builder.like(sourceRef, param.sourcePrefix + "%"));
         }
 
+        
         if (param.getLastFixtureRef() != null) {
             Subquery<String> sq = q.subquery(String.class);
             Root<FixtureEntity> sfixture = sq.from(FixtureEntity.class);
@@ -930,7 +933,7 @@ public class App {
             f.setAwaySide(awaySide);
         }
 
-        LOG.info("#### updating fixture "+f);
+        LOG.info("#### updating fixture {}", f);
 
         for (Roster r : gg.getRosters())
             updateFixtureRoster(f, r.getSide(), r.getPlayers());
