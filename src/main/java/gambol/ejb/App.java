@@ -1126,6 +1126,8 @@ public class App {
         }
 
         for (FixturePlayerEntity unused : all.values()) {
+            if (unused.getJerseyNumber() == 9001)
+                continue;
             for (FixtureEventEntity e : fixture.getEvents())
                 if (e.usesPlayer(unused)) {
                     LOG.info("  #        {} removed!", e.signature());
@@ -1174,7 +1176,9 @@ public class App {
     }};
 
     private PersonEntity teamOffender() {
-        return findOrCreatePlayerPerson(TEAM_OFFENDER);
+        PersonEntity person = findOrCreatePlayerPerson(TEAM_OFFENDER);
+        LOG.info("team offender: {}", person);
+        return person;
     }
 
     private PersonEntity findOrCreatePlayerPerson(Player p) {
