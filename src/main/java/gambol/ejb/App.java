@@ -44,6 +44,7 @@ import gambol.xml.Tournament;
 import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;

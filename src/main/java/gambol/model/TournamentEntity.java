@@ -169,4 +169,8 @@ public class TournamentEntity implements Serializable {
         t.setFixtures(Collections.<FixtureEntity>emptyList());
         return t;
     }
+
+    public Integer getGwsTimeSecond() {
+        return GameTime.parse("65:00");
+    }
 }

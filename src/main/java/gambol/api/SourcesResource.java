@@ -9,6 +9,7 @@ import java.net.URI;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -27,6 +28,7 @@ import org.slf4j.LoggerFactory;
 @LocalBean
 @Path("source")
 public class SourcesResource {
+
     private final static Logger LOG = LoggerFactory.getLogger(SourcesResource.class);
     
     @EJB

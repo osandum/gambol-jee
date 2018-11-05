@@ -4,6 +4,7 @@ import gambol.ejb.App;
 import gambol.model.FixtureEntity;
 import gambol.model.FixturePlayerEntity;
 import gambol.model.FixtureSideEntity;
+import gambol.model.GameTime;
 import gambol.model.GoalEventEntity;
 import gambol.model.PenaltyEventEntity;
 import gambol.model.PersonEntity;
@@ -102,7 +103,7 @@ public class PersonResource {
             FixtureSideEntity home = fixture.getHomeSide();
             FixtureSideEntity away = fixture.getAwaySide();
             
-            LOG.info(date + " " + tournament.getSeries().getName() + "("+ tournament.getSeason().getName() +") " + home.getTeam().getName() + "-" + away.getTeam().getName() + ": "+ + ge.getGameTimeSecond() + " " + ge.getGameSituation());
+            LOG.info(date + " " + tournament.getSeries().getName() + "("+ tournament.getSeason().getName() +") " + home.getTeam().getName() + "-" + away.getTeam().getName() + ": " + GameTime.format(ge.getGameTimeSecond()) + " " + ge.getGameSituation());
         }
         
         return Response.ok(res).build();
