@@ -872,7 +872,7 @@ public class App {
 
         long t2 = System.currentTimeMillis();
 
-        LOG.info(param + ": " + res.size() + " fixture(s) retrieved ("+(t2-t1)+"ms)");
+        LOG.info("{}: {} fixture(s) retrieved ({}ms)", param, res.size(), t2-t1);
 
         return res;
 
