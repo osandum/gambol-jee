@@ -216,7 +216,7 @@ public class App {
             throw new IllegalArgumentException("Invalid tournament name");
         if (slug == null)
             slug = name.toLowerCase().replaceAll("[-_,. ]+", "-");
-        LOG.info("#### updating tournament "+slug+" \""+name+"\"");
+        LOG.info("updating tournament {} \"{}\"", slug, name);
 
         String seriesSlug = slug.replaceAll("-[^-]*$", "");
         SeriesEntity series = findOrCreateSeries(seriesSlug);
@@ -933,13 +933,16 @@ public class App {
             f.setAwaySide(awaySide);
         }
 
-        LOG.info("#### updating fixture {}", f);
+        LOG.info("updating fixture {}", f);
 
         for (Roster r : gg.getRosters())
             updateFixtureRoster(f, r.getSide(), r.getPlayers());
 
         updateFixtureEvents(f, gg.getEvents());
 
+        for (Roster r : gg.getRosters())
+            trimFixtureRoster(f, r.getSide(), r.getPlayers());
+        
         f.setSheet(GamesheetStatus.READY);
 
         return f;
@@ -962,6 +965,7 @@ public class App {
                 fpe.setJerseyNumber(jerseyNumber);
                 fpe.setSide(partSide);
                 fpe.setFixture(f);
+                LOG.info("{} attaching 'teamOffender'", e);
                 if (jerseyNumber == 9001) {
                     fpe.setPerson(teamOffender());
                     fpe.setPersonRole("TEAM");
@@ -1066,18 +1070,21 @@ public class App {
 
 
         for (FixtureEventEntity ee : all.values()) {
-            LOG.info("### {} gone", ee.signature());
+            LOG.info("{} gone", ee.signature());
             em.remove(ee);
         }
     }
 
+    private void trimFixtureRoster(FixtureEntity fixture, FixtureSideRole role, List<Player> players) {
+    }
+
     private void updateFixtureRoster(FixtureEntity fixture, FixtureSideRole role, List<Player> players) {
         FixtureSideEntity side = fixture.getSide(role);
-        LOG.debug("===== " + side.getTeam().getName() + " ROSTER ======");
+        LOG.debug("===== {} ROSTER ======", side.getTeam().getName());
 
         Map<String, FixturePlayerEntity> all = new HashMap<>();
         for (FixturePlayerEntity fp : side.getPlayers()) {
-            LOG.debug("already seen " + fp.getRef());
+            LOG.debug("already seen {}", fp.getRef());
             if (fp.getPerson().isTUC())
                 continue;
             FixturePlayerEntity dupe = all.put(fp.getRef(), fp);
@@ -1177,7 +1184,7 @@ public class App {
             pe.setFirstNames(p.getFirstNames());
             pe.setLastName(p.getLastName());
             em.persist(pe);
-            LOG.info(pe + " created");
+            LOG.info("{} created", pe);
             return pe;
         }
     }

@@ -13,10 +13,8 @@ import gambol.xml.Fixtures;
 import gambol.xml.Person;
 import gambol.xml.Player;
 import java.util.Date;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateful;
-import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -27,6 +25,8 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author osa
@@ -35,8 +35,7 @@ import javax.ws.rs.core.UriInfo;
 @Path("person/{slug}")
 public class PersonResource {
 
-    @Inject
-    private Logger LOG;
+    private final static Logger LOG = LoggerFactory.getLogger(PersonResource.class);
 
     @EJB
     App gambol;

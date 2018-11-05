@@ -33,6 +33,8 @@ import javax.ws.rs.core.Context;
 import static javax.ws.rs.core.MediaType.*;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author osa
@@ -41,8 +43,7 @@ import javax.ws.rs.core.UriInfo;
 @Path("fixture/{fixtureId}")
 public class FixtureResource {
 
-    @Inject
-    private Logger LOG;
+    private final static Logger LOG = LoggerFactory.getLogger(FixtureResource.class);
 
     @EJB
     App gambol;
@@ -58,7 +59,7 @@ public class FixtureResource {
         if (f == null)
             throw new WebApplicationException("Not found", Response.Status.NOT_FOUND);
 
-        LOG.info("# fixture loaded: " + f);
+        LOG.info("# fixture loaded: {}", f);
 
         return entity2gamesheet(f, uriInfo);
     }

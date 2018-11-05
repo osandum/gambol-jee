@@ -21,7 +21,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -51,6 +50,8 @@ import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.model.property.Version;
 import net.fortuna.ical4j.model.property.XProperty;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
  
 /**
  *
@@ -60,8 +61,7 @@ import org.apache.commons.lang3.StringUtils;
 @Path("/")
 public class RootResource {
 
-    @Inject
-    private Logger LOG;
+    private final static Logger LOG = LoggerFactory.getLogger(RootResource.class);
 
     @EJB
     App gambol;
