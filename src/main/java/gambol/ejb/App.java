@@ -44,8 +44,8 @@ import gambol.xml.Tournament;
 import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -842,10 +842,13 @@ public class App {
             }
 
             if (param.hasGamesheet != null) {
+                wheres.add(builder.equal(fixtures.get(FixtureEntity_.status), ScheduleStatus.CONFIRMED));
+
                 // disregard un-scheduled or un-finished games when examining gamesheet status:
                 Expression<Timestamp> now_ = builder.currentTimestamp();
-                wheres.add(builder.equal(fixtures.get(FixtureEntity_.status), ScheduleStatus.CONFIRMED));
-                wheres.add(builder.greaterThan(now_, fixtures.get(FixtureEntity_.startTime)));
+                Path<Date> startTime = fixtures.get(FixtureEntity_.startTime);
+                Predicate isPastStartTime = builder.greaterThan(now_, startTime);
+                wheres.add(isPastStartTime);
 
                 if (param.hasGamesheet) {
                     wheres.add(builder.equal(fixtures.get(FixtureEntity_.sheet), GamesheetStatus.READY));
