@@ -13,14 +13,11 @@ import gambol.xml.Fixture;
 import gambol.xml.FixtureEvents;
 import gambol.xml.FixtureSideRole;
 import gambol.xml.Gamesheet;
-import gambol.xml.GamesheetStatus;
 import gambol.xml.Player;
 import gambol.xml.Roster;
 import gambol.xml.Side;
 import gambol.xml.TeamDef;
 import gambol.xml.Tournament;
-import java.util.Date;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateful;
 import javax.inject.Inject;
@@ -70,7 +67,7 @@ public class FixtureResource {
         Roster homeR = new Roster();
         homeR.setSide(FixtureSideRole.HOME);
         for (FixturePlayerEntity p : f.getHomeSide().getPlayers())
-            homeR.getPlayers().add(pentity2domain(p));
+            homeR.getPlayers().add(pentity2domain(p, uriInfo));
         sheet.getRosters().add(homeR);
         TeamDef homeT = new TeamDef();
         homeT.setSide(FixtureSideRole.HOME);
@@ -82,7 +79,7 @@ public class FixtureResource {
         Roster awayR = new Roster();
         awayR.setSide(FixtureSideRole.AWAY);
         for (FixturePlayerEntity p : f.getAwaySide().getPlayers())
-            awayR.getPlayers().add(pentity2domain(p));
+            awayR.getPlayers().add(pentity2domain(p, uriInfo));
         sheet.getRosters().add(awayR);
         TeamDef awayT = new TeamDef();
         awayT.setSide(FixtureSideRole.AWAY);
@@ -98,19 +95,20 @@ public class FixtureResource {
         sheet.setEvents(fe);
         sheet.setSourceRef(f.getSourceRef());
         sheet.setMatchNumber(f.getMatchNumber());
-        sheet.setTournament(tentity2domain(f.getTournament()));
+        sheet.setTournament(tentity2domain(f.getTournament(), uriInfo));
         sheet.setStartTime(f.getStartTime());
 
         return sheet;
     }
 
-    private static Player pentity2domain(FixturePlayerEntity p) {
+    private static Player pentity2domain(FixturePlayerEntity p, UriInfo uriInfo) {
         Player pp = new Player();
         pp.setFirstNames(p.getPerson().getFirstNames());
         pp.setLastName(p.getPerson().getLastName());
         pp.setNumber(p.getJerseyNumber());
         pp.setLine(p.getLineupLine());
         pp.setPos(p.getLineupPosition());
+        pp.setDetails(uriInfo.getBaseUriBuilder().path(PersonResource.class).build(p.getPerson().getSlug()));
         return pp;
     }
 
@@ -153,7 +151,7 @@ public class FixtureResource {
         return model;
     }
 
-    private static Tournament tentity2domain(TournamentEntity entity) {
+    private static Tournament tentity2domain(TournamentEntity entity, UriInfo uriInfo) {
         if (entity == null)
             return null;
 
@@ -164,6 +162,7 @@ public class FixtureResource {
             model.setArena(a.getSlug());
         model.setSeries(entity.getSeries().getSlug());
         model.setTitle(entity.getName());
+        model.setDetails(uriInfo.getBaseUriBuilder().path(TournamentResource.class).build(entity.getSeason().getId(), entity.getSlug()));
 
         return model;
     }

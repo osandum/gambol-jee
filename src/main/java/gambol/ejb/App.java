@@ -985,11 +985,13 @@ public class App {
                 ee.setFixture(f);
                 ee.setSide(e.getSide());
                 ee.setPlayer(fpe);
-                ee.setGameTimeSecond(GameTime.parse(timeCode));
                 ee.setGameSituation(ge.getGameSituation());
                 if (ee.getGameSituation() == null)
                     ee.setGameSituation(GameSituation.EQ);
-
+                if (!StringUtils.isBlank(timeCode))
+                    ee.setGameTimeSecond(GameTime.parse(timeCode));
+                else if (GameSituation.GWS.equals(ge.getGameSituation()))
+                    ee.setGameTimeSecond(f.getTournament().getGwsTimeSecond());
                 ee.setAssists(new LinkedList<>());
                 for (PlayerRef a : ge.getAssists()) {
                     FixturePlayerEntity ape = partSide.getPlayerByJerseyNumber(a.getNumber());
