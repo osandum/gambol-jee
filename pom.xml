@@ -143,6 +143,54 @@
                 </dependencies>
             </plugin>
 
+            <plugin>
+              <groupId>io.fabric8</groupId>
+              <artifactId>docker-maven-plugin</artifactId>
+              <version>0.27.1</version>
+
+              <configuration>
+                <images>
+                  <image>
+                    
+                    <alias>gambol-war</alias>
+                    <name>${project.groupId}/${project.artifactId}:latest</name>
+
+                    <build>
+                      <from>jboss/wildfly:14.0.1.Final</from>
+                      <runCmds>
+                          <run>/opt/jboss/wildfly/bin/add-user.sh admin Admin#70365</run>
+                          <run>/opt/jboss/wildfly/bin/jboss-cli.sh --file=/tmp/wildfly-conf.cli</run>
+                      </runCmds>
+                      <user>jboss</user>
+
+                      <assembly>
+                        <!-- targetDir>/opt/jboss/wildfly/standalone/deployments</targetDir -->
+                        <descriptorRef>artifact</descriptorRef>
+
+                        <!-- inline>
+                          <id>gambol</id>
+
+                          <dependencySets>
+                            <dependencySet>
+                              <includes>
+                                <include>org.jolokia:jolokia-war</include>
+                              </includes>
+                              <outputDirectory>.</outputDirectory>
+                              <outputFileNameMapping>jolokia.war</outputFileNameMapping>
+                            </dependencySet>
+                          </dependencySets>
+                        </inline -->
+                      </assembly>
+                    </build>
+                    <!-- The <run> part is taken from compose -->
+                    <external>
+                      <type>compose</type>
+                    </external>
+                  </image>
+                </images>
+              </configuration>
+            </plugin>
+            
         </plugins>
 
         <resources>

@@ -1,6 +1,6 @@
-FROM jboss/wildfly:11.0.0.Final
+FROM jboss/wildfly:14.0.1.Final
 
-RUN /opt/jboss/wildfly/bin/add-user.sh admin Admin#70365 
+RUN /opt/jboss/wildfly/bin/add-user.sh admin Admin#70365
 
 ADD ./patches/ds/ /tmp/
 
@@ -16,5 +16,4 @@ ENV POSTGRES_PASSWORD=as10
 ENV _JAVA_OPTIONS=-Dfile.encoding=UTF-8
 
 # ADD target/as11-0.2-SNAPSHOT/ /opt/jboss/wildfly/standalone/deployments/as11.war/
-ADD target/as11-0.2-SNAPSHOT.war /opt/jboss/wildfly/standalone/deployments/as11.war
-
+ADD target/gambol-0.2-SNAPSHOT.war /opt/jboss/wildfly/standalone/deployments/gambol.war
