@@ -277,6 +277,12 @@
                 </xs:annotation>
             </xs:enumeration>
 
+            <xs:enumeration value="LEAVE">
+                <xs:annotation>
+                    <xs:documentation>Rule 629 – Leaving the Players’ Bench or Penalty Bench</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
             <xs:enumeration value="SL-FO">
                 <xs:annotation><xs:documentation>Rule 160 – Slew-footing</xs:documentation></xs:annotation>
             </xs:enumeration>
