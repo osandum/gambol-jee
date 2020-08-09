@@ -144,6 +144,26 @@
             </plugin>
 
             <plugin>
+              <groupId>com.google.cloud.tools</groupId>
+              <artifactId>jib-maven-plugin</artifactId>
+              <version>2.5.0</version>
+              <configuration>
+                <container>
+                  <creationTime>USE_CURRENT_TIMESTAMP</creationTime>
+                  <entrypoint>INHERIT</entrypoint>
+                  <format>Docker</format>
+                </container>
+                <to>
+                  <image>sandum.net:5000/osa/myimage</image>
+                  <tags>
+                    <tag>latest</tag>
+                  </tags>
+                </to>
+
+              </configuration>
+            </plugin>
+
+            <plugin>
               <groupId>io.fabric8</groupId>
               <artifactId>docker-maven-plugin</artifactId>
               <version>0.27.1</version>
