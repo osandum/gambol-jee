@@ -5,15 +5,15 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>as10</groupId>
-    <artifactId>as10</artifactId>
+    <groupId>net.sandum</groupId>
+    <artifactId>gambol</artifactId>
     <version>0.2-SNAPSHOT</version>
 
     <packaging>war</packaging>
 
-    <name>as10-ksf.rhcloud.com</name>
+    <name>as11-ksf.rhcloud.com</name>
     <description>
-        Testing the Wildfly AS 10 on OpenShift 3
+        Testing the Wildfly AS 11 on OpenShift 3
     </description>
 
     <properties>
@@ -26,12 +26,12 @@
         <dependency>
             <groupId>org.mnode.ical4j</groupId>
             <artifactId>ical4j</artifactId>
-            <version>1.0.5.2</version>
+            <version>3.0.11</version>
         </dependency>
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>1.13</version>
+            <version>1.25</version>
         </dependency>
         <dependency>
             <groupId>gambol</groupId>
@@ -42,26 +42,26 @@
         <dependency>
             <groupId>gambol</groupId>
             <artifactId>gambol-frontend-base</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <version>0.2-SNAPSHOT</version>
             <type>war</type>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
-            <version>7.0</version>
+            <version>8.0.1</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.12</version>
+            <version>1.7.28</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-jdk14</artifactId>
-            <version>1.7.12</version>
+            <version>1.7.28</version>
             <scope>runtime</scope>
         </dependency>
     </dependencies>
@@ -143,6 +143,74 @@
                 </dependencies>
             </plugin>
 
+            <plugin>
+              <groupId>com.google.cloud.tools</groupId>
+              <artifactId>jib-maven-plugin</artifactId>
+              <version>2.5.0</version>
+              <configuration>
+                <container>
+                  <creationTime>USE_CURRENT_TIMESTAMP</creationTime>
+                  <entrypoint>INHERIT</entrypoint>
+                  <format>Docker</format>
+                </container>
+                <to>
+                  <image>sandum.net:5000/osa/myimage</image>
+                  <tags>
+                    <tag>latest</tag>
+                  </tags>
+                </to>
+
+              </configuration>
+            </plugin>
+
+            <plugin>
+              <groupId>io.fabric8</groupId>
+              <artifactId>docker-maven-plugin</artifactId>
+              <version>0.27.1</version>
+
+              <configuration>
+                <images>
+                  <image>
+                    
+                    <alias>gambol-war</alias>
+                    <name>${project.groupId}/${project.artifactId}:latest</name>
+
+                    <build>
+                      <from>jboss/wildfly:14.0.1.Final</from>
+                      <runCmds>
+                          <run>/opt/jboss/wildfly/bin/add-user.sh admin Admin#70365</run>
+                          <run>/opt/jboss/wildfly/bin/jboss-cli.sh --file=/tmp/wildfly-conf.cli</run>
+                      </runCmds>
+                      <user>jboss</user>
+
+                      <assembly>
+                        <!-- targetDir>/opt/jboss/wildfly/standalone/deployments</targetDir -->
+                        <descriptorRef>artifact</descriptorRef>
+
+                        <!-- inline>
+                          <id>gambol</id>
+
+                          <dependencySets>
+                            <dependencySet>
+                              <includes>
+                                <include>org.jolokia:jolokia-war</include>
+                              </includes>
+                              <outputDirectory>.</outputDirectory>
+                              <outputFileNameMapping>jolokia.war</outputFileNameMapping>
+                            </dependencySet>
+                          </dependencySets>
+                        </inline -->
+                      </assembly>
+                    </build>
+                    <!-- The <run> part is taken from compose -->
+                    <external>
+                      <type>compose</type>
+                    </external>
+                  </image>
+                </images>
+              </configuration>
+            </plugin>
+            
         </plugins>
 
         <resources>
@@ -166,7 +234,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-war-plugin</artifactId>
-                        <version>2.4</version>
+                        <version>2.3</version>
                         <configuration>
                             <failOnMissingWebXml>false</failOnMissingWebXml>
                             <outputDirectory>target</outputDirectory>
@@ -191,20 +259,27 @@
 
     <repositories>
         <repository>
-            <id>gambol-docs-mvn-repo</id>
-            <url>https://raw.github.com/osandum/gambol-docs/mvn-repo/</url>
-            <snapshots>
+            <id>osandum-github-release</id>
+            <name>Sandum.Net repo on github</name>
+            <releases>
                 <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
             </snapshots>
+            <url>https://raw.github.com/osandum/mvn-repo/releases</url>
         </repository>
         <repository>
-            <id>gambol-frontend-base-mvn-repo</id>
-            <url>https://raw.github.com/osandum/gambol-frontend-base/mvn-repo/</url>
+            <id>osandum-github-snapshot</id>
+            <name>Sandum.Net repo on github</name>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
             <snapshots>
                 <enabled>true</enabled>
                 <updatePolicy>always</updatePolicy>
             </snapshots>
+            <url>https://raw.github.com/osandum/mvn-repo/snapshots</url>
         </repository>
     </repositories>
 

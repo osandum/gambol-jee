@@ -1,7 +1,6 @@
 package gambol.web;
 
 import gambol.ejb.App;
-import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -14,9 +13,6 @@ import javax.servlet.annotation.WebListener;
  */
 @WebListener 
 public class Global implements ServletContextListener {
-
-    @Inject
-    private Logger LOG;
 
     @Inject
     private App app;

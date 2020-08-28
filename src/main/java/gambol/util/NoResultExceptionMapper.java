@@ -19,8 +19,19 @@ public class NoResultExceptionMapper implements ExceptionMapper<EJBTransactionRo
 
     @Override
     public Response toResponse(EJBTransactionRolledbackException ex) {
+        Throwable cause = ex.getCause();
+        
+        if (cause instanceof RuntimeException) {
+            LOG.info(cause.getMessage());
+            
+            return Response.
+                    status(Response.Status.BAD_REQUEST).
+                    type("text/plain").
+                    entity(cause.getMessage()).
+                    build();
+        }
+        
         LOG.info(ex.getMessage());
-
         return Response.
                 status(Response.Status.NOT_FOUND).
                 type("text/plain").

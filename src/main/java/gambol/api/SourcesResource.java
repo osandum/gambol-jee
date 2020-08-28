@@ -9,6 +9,7 @@ import java.net.URI;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -27,6 +28,7 @@ import org.slf4j.LoggerFactory;
 @LocalBean
 @Path("source")
 public class SourcesResource {
+
     private final static Logger LOG = LoggerFactory.getLogger(SourcesResource.class);
     
     @EJB
@@ -43,13 +45,13 @@ public class SourcesResource {
         TournamentEntity t = gambol.putTournamentSrc(tt);
 
         // Construct resource URL:
-        URI tournamentUri = uriInfo.getBaseUriBuilder().path("tournament/{seasonId}/{tournamentSlug}").build(t.getSeason().getId(), t.getSlug());
+        URI scheduleUri = uriInfo.getBaseUriBuilder().path("tournament/{seasonId}/{tournamentSlug}").build(t.getSeason().getId(), t.getSlug());
 
-        LOG.info("New schedule: {}", tournamentUri);
+        LOG.debug("schedule: {}", scheduleUri);
         
         return Response
-                .created(tournamentUri)
-                .entity("Upload complete. See: " + tournamentUri + "\n")
+                .created(scheduleUri)
+                .entity("Upload complete. See: " + scheduleUri + "\n")
                 .build();
     }
 
@@ -65,7 +67,6 @@ public class SourcesResource {
                     .entity("Invalid gamesheet\n")
                     .build();
         }
-        LOG.info("# loading gamesheet {} {}", gg.getSourceRef(), tt.getSeason());
         
         // Do the work:
         FixtureEntity f = gambol.putGamesheet(gg);
@@ -74,7 +75,7 @@ public class SourcesResource {
         TournamentEntity t = f.getTournament();
         URI sheetUri = uriInfo.getBaseUriBuilder().path("fixture/{fixtureId}").build(f.getId());
 
-        LOG.info("# new gamesheet: {}", sheetUri);
+        LOG.debug("{} {} gamesheet: {}", gg.getSourceRef(), tt.getSeason(), sheetUri);
         
         return Response
                 .created(sheetUri)

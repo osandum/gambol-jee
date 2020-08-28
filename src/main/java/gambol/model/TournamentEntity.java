@@ -14,6 +14,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 
@@ -39,6 +41,12 @@ public class TournamentEntity implements Serializable {
     @Column(length = 64, nullable = false)
     private String name;
 
+    @Temporal(TemporalType.DATE)
+    private Date birthYearMin;
+    
+    @Temporal(TemporalType.DATE)
+    private Date birthYearMax;
+    
     private Timestamp dateCreated;
 
     @Version
@@ -74,6 +82,22 @@ public class TournamentEntity implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Date getBirthYearMin() {
+        return birthYearMin;
+    }
+
+    public void setBirthYearMin(Date birthYearMin) {
+        this.birthYearMin = birthYearMin;
+    }
+
+    public Date getBirthYearMax() {
+        return birthYearMax;
+    }
+
+    public void setBirthYearMax(Date birthYearMax) {
+        this.birthYearMax = birthYearMax;
     }
 
     @PreUpdate
@@ -144,5 +168,9 @@ public class TournamentEntity implements Serializable {
         t.setSeries(series);
         t.setFixtures(Collections.<FixtureEntity>emptyList());
         return t;
+    }
+
+    public Integer getGwsTimeSecond() {
+        return GameTime.parse("65:00");
     }
 }

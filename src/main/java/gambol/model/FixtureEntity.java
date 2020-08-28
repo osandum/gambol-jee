@@ -6,6 +6,7 @@ import gambol.xml.GamesheetStatus;
 import gambol.xml.ScheduleStatus;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -24,7 +25,7 @@ import javax.persistence.OrderBy;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,9 +82,12 @@ public class FixtureEntity implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date endTime;
 
-    @OneToMany(mappedBy = "fixture")
+    @OneToMany(mappedBy = "fixture", orphanRemoval = true)
     @OrderBy("gameTimeSecond")
     private List<FixtureEventEntity> events;
+
+    @OneToMany(mappedBy = "fixture")
+    private List<FixturePlayerEntity> players;
 
     @Enumerated(EnumType.STRING)
     @Column(length = 15, nullable = false)
@@ -192,6 +196,15 @@ public class FixtureEntity implements Serializable {
         this.events = events;
     }
 
+    
+    public List<FixturePlayerEntity> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(List<FixturePlayerEntity> players) {
+        this.players = players;
+    }
+
 
     public Date estimateEndTime() {
         if (getEndTime() != null)
@@ -213,6 +226,11 @@ public class FixtureEntity implements Serializable {
         }
         
         return eet;
+    }
+    
+    public GamesheetStatus getGamesheetStatus() {
+        Date eet = estimateEndTime();        
+        return eet == null || eet.getTime() > System.currentTimeMillis() ? GamesheetStatus.FUTURE : sheet;        
     }
     
     public ScheduleStatus getStatus() {
@@ -276,6 +294,12 @@ public class FixtureEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "{[" + sourceRef + "] id=" + id + " home=" + homeSide + " away=" + awaySide + "}";
+        return "{[" + sourceRef + "] id=" + id + " home=" + homeSide + " away=" + awaySide + " at=" + mmdd_hhmi(startTime) + "}";
+    }
+    
+    private final static SimpleDateFormat MMDD = new SimpleDateFormat("yyMMdd-HHmm");
+    
+    private static String mmdd_hhmi(Date d) {
+        return d == null ? "null" : MMDD.format(d);
     }
 }

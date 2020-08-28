@@ -90,7 +90,7 @@ public class PenaltyEventEntity extends FixtureEventEntity {
 
     @Override
     public String toString() {
-        return "[" + getOffense() + "("+penaltyMinutes+"):"+getId()+" " + getGameTimeSecond()/60 + ":"+getGameTimeSecond()%60+" " + getPlayer() + "]";
+        return "[" + offense + "("+penaltyMinutes+"):"+getId()+" " + getGameTimeSecond()/60 + ":"+getGameTimeSecond()%60+" " + getPlayer() + "]";
     }
 
     @Override
@@ -104,6 +104,7 @@ public class PenaltyEventEntity extends FixtureEventEntity {
         return player.equals(unused);
     }
 
+    @Override
     public Event asXml(UriInfo uriInfo) {
         PenaltyEvent pe = new PenaltyEvent();
 

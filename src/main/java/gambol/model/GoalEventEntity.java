@@ -101,8 +101,11 @@ public class GoalEventEntity extends FixtureEventEntity {
 
     @Override
     public String signature() {
-        return super.signature() +
-                String.format(":G:%d", player.getId());
+        String sig = super.signature();
+        sig += String.format(":G:%d", player.getId());
+        for (FixturePlayerEntity a : assists)
+            sig += String.format(":A:%d", a.getId());
+        return sig;
     }
 
     @Override

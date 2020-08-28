@@ -1,6 +1,7 @@
 package gambol.ejb;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -9,15 +10,21 @@ import java.util.List;
  */
 public class FixturesQueryParam implements Serializable {
 
-    Date start; 
-    Date end; 
-    List<String> seasonId; 
-    List<String> seriesId; 
-    List<String> tournamentRef;
-    List<String> clubRef;
-    List<String> homeClubRef;
-    List<String> awayClubRef;
+    private final static List<String> _EMPTY = Collections.emptyList();
+    
+    Date start;
+    Date end;
+    List<String> seasonId = _EMPTY;
+    List<String> seriesId = _EMPTY;
+    List<String> tournamentRef = _EMPTY;
+    String sourcePrefix;
+    List<String> clubRef = _EMPTY;
+    List<String> homeClubRef = _EMPTY;
+    List<String> awayClubRef = _EMPTY;
     Boolean hasGamesheet;
+    String lastFixtureRef;
+    Integer maxResults;
+    Boolean reverseChrono;
 
     public Date getStart() {
         return start;
@@ -67,6 +74,14 @@ public class FixturesQueryParam implements Serializable {
         this.tournamentRef = tournamentRef;
     }
 
+    public String getSourcePrefix() {
+        return sourcePrefix;
+    }
+
+    public void setSourcePrefix(String sourcePrefix) {
+        this.sourcePrefix = sourcePrefix;
+    }
+
     public List<String> getClubRef() {
         return clubRef;
     }
@@ -90,9 +105,33 @@ public class FixturesQueryParam implements Serializable {
     public void setAwayClubRef(List<String> awayClubRef) {
         this.awayClubRef = awayClubRef;
     }
-    
+
+    public String getLastFixtureRef() {
+        return lastFixtureRef;
+    }
+
+    public void setLastFixtureRef(String ref) {
+        this.lastFixtureRef = ref;
+    }
+
+    public Integer getMaxResults() {
+        return maxResults;
+    }
+
+    public void setMaxResults(Integer maxResults) {
+        this.maxResults = maxResults;
+    }
+
+    public Boolean getReverseChrono() {
+        return reverseChrono;
+    }
+
+    public void setReverseChrono(Boolean reverse) {
+        this.reverseChrono = reverse;
+    }
+
     @Override
     public String toString() {
-        return "FixturesQueryParam{" + "start=" + start + ", end=" + end + ", seasonId=" + seasonId + ", seriesId=" + seriesId + ", tournamentRef=" + tournamentRef + ", clubRef=" + clubRef + ", homeClubRef=" + homeClubRef + ", awayClubRef=" + awayClubRef + ", sheet=" + hasGamesheet + '}';
+        return "FixturesQueryParam{" + "start=" + start + ", end=" + end + ", seasonId=" + seasonId + ", seriesId=" + seriesId + ", tournamentRef=" + tournamentRef + ", sourcePrefix=" + sourcePrefix + ", clubRef=" + clubRef + ", homeClubRef=" + homeClubRef + ", awayClubRef=" + awayClubRef + ", sheet=" + hasGamesheet + ", after=" + lastFixtureRef + ", max=" + maxResults + '}';
     }
 }
