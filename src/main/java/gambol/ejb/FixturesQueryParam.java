@@ -1,6 +1,7 @@
 package gambol.ejb;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -9,15 +10,17 @@ import java.util.List;
  */
 public class FixturesQueryParam implements Serializable {
 
+    private final static List<String> _EMPTY = Collections.emptyList();
+    
     Date start;
     Date end;
-    List<String> seasonId;
-    List<String> seriesId;
-    List<String> tournamentRef;
+    List<String> seasonId = _EMPTY;
+    List<String> seriesId = _EMPTY;
+    List<String> tournamentRef = _EMPTY;
     String sourcePrefix;
-    List<String> clubRef;
-    List<String> homeClubRef;
-    List<String> awayClubRef;
+    List<String> clubRef = _EMPTY;
+    List<String> homeClubRef = _EMPTY;
+    List<String> awayClubRef = _EMPTY;
     Boolean hasGamesheet;
     String lastFixtureRef;
     Integer maxResults;

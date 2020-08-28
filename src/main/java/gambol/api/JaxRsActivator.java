@@ -13,5 +13,5 @@ import javax.ws.rs.core.Application;
  * </p>
  */
 @ApplicationPath("/rs")
-public class JaxRsActivator extends Application {
+public class JaxRsActivator extends Application {    
 }

@@ -18,9 +18,10 @@ import gambol.xml.Roster;
 import gambol.xml.Side;
 import gambol.xml.TeamDef;
 import gambol.xml.Tournament;
+import java.util.Calendar;
+import java.util.TimeZone;
 import javax.ejb.EJB;
 import javax.ejb.Stateful;
-import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -37,7 +38,7 @@ import org.slf4j.LoggerFactory;
  * @author osa
  */
 @Stateful
-@Path("fixture/{fixtureId}")
+//@Path("fixture/{fixtureId}")
 public class FixtureResource {
 
     private final static Logger LOG = LoggerFactory.getLogger(FixtureResource.class);
@@ -45,20 +46,33 @@ public class FixtureResource {
     @EJB
     App gambol;
 
-    @PathParam("fixtureId")
-    private long fixtureId;
+//    @PathParam("fixtureId")
+//    long fixtureId;
+    
 
+    private FixtureEntity fixture;
+
+    public FixtureEntity getFixture() {
+        return fixture;
+    }
+
+    public void setFixture(FixtureEntity fixture) {
+        this.fixture = fixture;
+    }
+
+    
     @GET
     @Produces({APPLICATION_JSON, APPLICATION_XML})
     public Gamesheet getGamesheet(@Context UriInfo uriInfo) {
 
-        FixtureEntity f = gambol.getFixtureById(fixtureId);
-        if (f == null)
+        LOG.info("... now load fixture[{}]", fixture);
+//        FixtureEntity f = gambol.getFixtureById(fixture);
+        if (fixture == null)
             throw new WebApplicationException("Not found", Response.Status.NOT_FOUND);
 
-        LOG.info("# fixture loaded: {}", f);
+        LOG.info("# fixture loaded: {}", fixture);
 
-        return entity2gamesheet(f, uriInfo);
+        return entity2gamesheet(fixture, uriInfo);
     }
 
     public static Gamesheet entity2gamesheet(FixtureEntity f, UriInfo uriInfo) {
@@ -112,6 +126,8 @@ public class FixtureResource {
         return pp;
     }
 
+    private final static TimeZone CPH = TimeZone.getTimeZone("Europe/Copenhagen");
+    
     public static Fixture entity2domain(FixtureEntity entity, UriInfo uriInfo) {
         if (entity == null)
             return null;
@@ -131,7 +147,18 @@ public class FixtureResource {
         String seasonRef = season.getId();
         model.setSeason(seasonRef);
         model.setSchedule(entity.getStatus());
-        model.setMatchDetails(uriInfo.getBaseUriBuilder().path(FixtureResource.class).build(entity.getId()));
+//      model.setMatchDetails(uriInfo.getBaseUriBuilder().path(FixtureResource.class).build(entity.getId()));
+        
+        Calendar c = Calendar.getInstance(CPH);
+        c.setTime(entity.getStartTime());
+        int mm = c.get(Calendar.MONTH)+1;
+        int dd = c.get(Calendar.DAY_OF_MONTH);
+        String home = entity.getHomeSide().getTeam().getSlug();
+        String away = entity.getAwaySide().getTeam().getSlug();
+        model.setMatchDetails(uriInfo.getBaseUriBuilder()
+                .path(TournamentResource.class)
+                .path(TournamentResource.class, "getFixtureByDate")
+                .build(season.getId(), tournament.getSlug(), mm, dd, home, away));
 
         return model;
     }

@@ -803,6 +803,13 @@ public class App {
             wheres.add(reverse ?  builder.lessThan(v, sq) : builder.greaterThan(v, sq));
         }
 
+      /*  {
+            ListJoin<FixtureEntity, FixturePlayerEntity> player = fixtures.join(FixtureEntity_.players);
+            Join<FixturePlayerEntity, PersonEntity> person = player.join(FixturePlayerEntity_.person);
+            Path<String> personSlug = person.get(PersonEntity_.slug);
+            builder.equal(personSlug, param....)
+        }*/
+
         if (!param.clubRef.isEmpty() || !param.homeClubRef.isEmpty() || !param.awayClubRef.isEmpty() || param.hasGamesheet != null) {
 
             Join<FixtureEntity, FixtureSideEntity> homeSide = fixtures.join(FixtureEntity_.homeSide);
@@ -812,7 +819,7 @@ public class App {
             Join<FixtureEntity, FixtureSideEntity> awaySide = fixtures.join(FixtureEntity_.awaySide);
             Join<FixtureSideEntity, TeamEntity> awayTeam = awaySide.join(FixtureSideEntity_.team);
             Join<TeamEntity, ClubEntity> awayClub = awayTeam.join(TeamEntity_.club);
-
+            
             if (!param.clubRef.isEmpty() || !param.awayClubRef.isEmpty()) {
                 Set<String> clubRefs = new HashSet<>();
                 clubRefs.addAll(param.clubRef);
@@ -958,98 +965,106 @@ public class App {
             all.put(ee.signature(), ee);
 
         int homeGoals = 0, awayGoals = 0, totalEvents = 0;
-        for (Event e : events.getGoalsAndPenalties()) {
-            ++totalEvents;
-            Integer jerseyNumber = e.getPlayer().getNumber();
-            String timeCode = e.getTime();
-            FixtureSideEntity partSide = f.getSide(e.getSide());
-            FixturePlayerEntity fpe = partSide.getPlayerByJerseyNumber(jerseyNumber);
-            if (fpe == null) {
-                fpe = new FixturePlayerEntity();
-                fpe.setJerseyNumber(jerseyNumber);
-                fpe.setSide(partSide);
-                fpe.setFixture(f);
-                LOG.info("{} attaching 'teamOffender'", e);
-                if (jerseyNumber == 9001) {
-                    fpe.setPerson(teamOffender());
-                    fpe.setPersonRole("TEAM");
+        for (Event e : events.getGoalsAndPenalties())
+            try
+            {
+                Integer jerseyNumber = e.getPlayer().getNumber();
+                String timeCode = e.getTime();
+                FixtureSideEntity partSide = f.getSide(e.getSide());
+                FixturePlayerEntity fpe = partSide.getPlayerByJerseyNumber(jerseyNumber);
+                if (fpe == null) {
+                    fpe = new FixturePlayerEntity();
+                    fpe.setJerseyNumber(jerseyNumber);
+                    fpe.setSide(partSide);
+                    fpe.setFixture(f);
+                    LOG.info("{} attaching 'teamOffender'", e);
+                    if (jerseyNumber == 9001) {
+                        fpe.setPerson(teamOffender());
+                        fpe.setPersonRole("TEAM");
+                    }
+                    else {
+                        fpe.setPerson(unknownPlayer());
+                        fpe.setPersonRole("PLAYER");
+                        LOG.warn("player #{} not found in {} - attributing {} event to The Unknown Citizen", jerseyNumber, partSide.getTeam().getName(), e.getTime());
+                    }
+                    em.persist(fpe);
+                    partSide.getPlayers().add(fpe);
                 }
-                else {
-                    fpe.setPerson(unknownPlayer());
-                    fpe.setPersonRole("PLAYER");
-                    LOG.warn("player #{} not found in {} - attributing {} event to The Unknown Citizen", jerseyNumber, partSide.getTeam().getName(), e.getTime());
-                }
-                em.persist(fpe);
-                partSide.getPlayers().add(fpe);
-            }
-            if (e instanceof GoalEvent) {
-                GoalEvent ge = (GoalEvent)e;
+                if (e instanceof GoalEvent) {
+                    GoalEvent ge = (GoalEvent)e;
 
-                GoalEventEntity ee = new GoalEventEntity();
-                ee.setFixture(f);
-                ee.setSide(e.getSide());
-                ee.setPlayer(fpe);
-                ee.setGameSituation(ge.getGameSituation());
-                if (ee.getGameSituation() == null)
-                    ee.setGameSituation(GameSituation.EQ);
-                if (!StringUtils.isBlank(timeCode))
+                    GoalEventEntity ee = new GoalEventEntity();
+                    ee.setFixture(f);
+                    ee.setSide(e.getSide());
+                    ee.setPlayer(fpe);
+                    ee.setGameSituation(ge.getGameSituation());
+                    if (ee.getGameSituation() == null)
+                        ee.setGameSituation(GameSituation.EQ);
+                    if (!StringUtils.isBlank(timeCode))
+                        ee.setGameTimeSecond(GameTime.parse(timeCode));
+                    else if (GameSituation.GWS.equals(ge.getGameSituation()))
+                        ee.setGameTimeSecond(f.getTournament().getGwsTimeSecond());
+                    ee.setAssists(new LinkedList<>());
+                    for (PlayerRef a : ge.getAssists()) {
+                        FixturePlayerEntity ape = partSide.getPlayerByJerseyNumber(a.getNumber());
+                        ee.getAssists().add(ape);
+                    }
+
+                    if (all.remove(ee.signature()) == null) {
+                        em.persist(ee);
+                        LOG.info("{} created", ee.signature());
+                    }
+                    else {
+                        LOG.debug("{} seen", ee.signature());
+                    }
+
+                    if (ee.isHome())
+                        ++homeGoals;
+                    else
+                        ++awayGoals;
+                }
+                else if (e instanceof PenaltyEvent) {
+                    PenaltyEvent pe = (PenaltyEvent)e;
+
+                    PenaltyEventEntity ee = new PenaltyEventEntity();
+                    ee.setFixture(f);
+                    ee.setSide(e.getSide());
+                    ee.setPlayer(fpe);
                     ee.setGameTimeSecond(GameTime.parse(timeCode));
-                else if (GameSituation.GWS.equals(ge.getGameSituation()))
-                    ee.setGameTimeSecond(f.getTournament().getGwsTimeSecond());
-                ee.setAssists(new LinkedList<>());
-                for (PlayerRef a : ge.getAssists()) {
-                    FixturePlayerEntity ape = partSide.getPlayerByJerseyNumber(a.getNumber());
-                    ee.getAssists().add(ape);
-                }
+                    ee.setOffense(pe.getOffense());
+                    ee.setPenaltyMinutes(pe.getMinutes());
+                    String stx = pe.getStartTime();
+                    try {
+                        ee.setStarttimeSecond(GameTime.parse(stx));
+                    }
+                    catch (IllegalArgumentException ex) {
+                        ee.setStarttimeSecond(ee.getGameTimeSecond());
+                    }
+                    String etx = pe.getEndTime();
+                    try {
+                        ee.setEndtimeSecond(GameTime.parse(etx));
+                    }
+                    catch (IllegalArgumentException ex) {
+                        ee.setEndtimeSecond(ee.getStarttimeSecond() + 60 * ee.getPenaltyMinutes());
+                    }
+                    if (ee.getOffense() == null)
+                        throw new IllegalArgumentException("unrecognized offense: " + ee.toString());
 
-                if (all.remove(ee.signature()) == null) {
-                    em.persist(ee);
-                    LOG.info("{} created", ee.signature());
+                    if (all.remove(ee.signature()) == null) {
+                        em.persist(ee);
+                        LOG.info("{} created", ee.signature());
+                    }
+                    else {
+                        LOG.debug("{} seen", ee.signature());
+                    }
                 }
                 else {
-                    LOG.debug("{} seen", ee.signature());
+                    LOG.warn("WTF? {}", e.getClass().getSimpleName());
                 }
-
-                if (ee.isHome())
-                    ++homeGoals;
-                else
-                    ++awayGoals;
+                ++totalEvents;
             }
-            else if (e instanceof PenaltyEvent) {
-                PenaltyEvent pe = (PenaltyEvent)e;
-
-                PenaltyEventEntity ee = new PenaltyEventEntity();
-                ee.setFixture(f);
-                ee.setSide(e.getSide());
-                ee.setPlayer(fpe);
-                ee.setGameTimeSecond(GameTime.parse(timeCode));
-                ee.setOffense(pe.getOffense());
-                ee.setPenaltyMinutes(pe.getMinutes());
-                String stx = pe.getStartTime();
-                try {
-                    ee.setStarttimeSecond(GameTime.parse(stx));
-                }
-                catch (IllegalArgumentException ex) {
-                    ee.setStarttimeSecond(ee.getGameTimeSecond());
-                }
-                String etx = pe.getEndTime();
-                try {
-                    ee.setEndtimeSecond(GameTime.parse(etx));
-                }
-                catch (IllegalArgumentException ex) {
-                    ee.setEndtimeSecond(ee.getStarttimeSecond() + 60 * ee.getPenaltyMinutes());
-                }
-                if (ee.getOffense() == null)
-                    throw new IllegalArgumentException("unrecognized offense: " + ee.toString());
-
-                if (all.remove(ee.signature()) == null) {
-                    em.persist(ee);
-                    LOG.info("{} created", ee.signature());
-                }
-                else {
-                    LOG.debug("{} seen", ee.signature());
-                }
-            }
+        catch (Exception ex) {
+            LOG.error("{} ignored", e.getClass().getSimpleName(), ex);
         }
 
         if (totalEvents == 0) {
