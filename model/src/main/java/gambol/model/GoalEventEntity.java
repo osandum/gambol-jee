@@ -1,6 +1,5 @@
 package gambol.model;
 
-import gambol.api.FixtureResource;
 import gambol.xml.Event;
 import gambol.xml.GameSituation;
 import gambol.xml.GoalEvent;
@@ -67,7 +66,7 @@ public class GoalEventEntity extends FixtureEventEntity {
         this.assists = players;
     }
 
-/*    
+/*
     @ManyToMany
     @JoinTable(name = "goal_part_positive")
     private Set<FixturePlayerEntity> positiveParticipants;
@@ -75,7 +74,7 @@ public class GoalEventEntity extends FixtureEventEntity {
     @ManyToMany
     @JoinTable(name = "goal_part_negative")
     private Set<FixturePlayerEntity> negativeParticipants;
-    
+
     public Set<FixturePlayerEntity> getPositiveParticipants() {
         return positiveParticipants;
     }
@@ -111,7 +110,7 @@ public class GoalEventEntity extends FixtureEventEntity {
     @Override
     public boolean usesPlayer(FixturePlayerEntity unused) {
         return player.equals(unused) || assists.contains(unused);
-    }    
+    }
 
     @Override
     public Event asXml(UriInfo uriInfo) {
@@ -130,8 +129,8 @@ public class GoalEventEntity extends FixtureEventEntity {
         }
         ge.setGameSituation(getGameSituation());
 
-        if (uriInfo != null)
-            ge.setFixture(uriInfo.getBaseUriBuilder().path(FixtureResource.class).build(getFixture().getId()));
+//      if (uriInfo != null)
+//          ge.setFixture(uriInfo.getBaseUriBuilder().path(FixtureResource.class).build(getFixture().getId()));
 
         return ge;
     }

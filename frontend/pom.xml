@@ -31,9 +31,9 @@
             <version>1.25</version>
         </dependency>
         <dependency>
-            <groupId>gambol</groupId>
-            <artifactId>gambol-docs</artifactId>
-            <version>0.6-SNAPSHOT</version>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>model</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>

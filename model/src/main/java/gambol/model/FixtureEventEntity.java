@@ -63,8 +63,8 @@ public abstract class FixtureEventEntity implements Serializable {
     public void setSide(FixtureSideRole side) {
         this.side = side;
     }
-    
-    
+
+
     @ManyToOne(optional = false)
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_fixture"))
     private FixtureEntity fixture;
@@ -77,7 +77,7 @@ public abstract class FixtureEventEntity implements Serializable {
         this.fixture = fixture;
     }
 
-    
+
     // .......
 
     @Override
@@ -85,14 +85,14 @@ public abstract class FixtureEventEntity implements Serializable {
         FixtureSideEntity fs = getFixture().getSide(side);
         return String.format("[%d] %02d:%02d %s", id, gameTimeSecond / 60, gameTimeSecond % 60, fs.getTeam().getName());
     }
-    
+
     public String signature() {
         return String.format("%02d%02d:%s", gameTimeSecond / 60, gameTimeSecond % 60, side.value());
     }
 
     public abstract boolean usesPlayer(FixturePlayerEntity unused);
     public abstract Event asXml(UriInfo uriInfo);
-    
+
     public boolean isHome() { return HOME.equals(getSide()); }
     public boolean isAway() { return AWAY.equals(getSide()); }
 }
