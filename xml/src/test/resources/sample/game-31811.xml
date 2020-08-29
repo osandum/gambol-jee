@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<gamesheet xmlns="http://sandum.net/namespaces/gambol" 
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+           source-ref="DIU:1045:31811">
+  <roster side="home">
+    <player pos="GK" number="30">
+        <first-names>Peter</first-names>
+        <last-name>Becher Nielsen</last-name>
+      </player>
+    <player pos="GK" number="79">
+        <first-names>Emil</first-names>
+        <last-name>Gransøe</last-name>
+      </player>
+    <player line="1" pos="CE" number="32">
+        <first-names>Jonas</first-names>
+        <last-name>Veiby</last-name>
+      </player>
+    <player line="1" pos="LD" number="71">
+        <first-names>Daniel</first-names>
+        <last-name>Baastrup-Andersen</last-name>
+      </player>
+    <player line="1" pos="LW" number="29">
+        <first-names>Christopher Skovgaard</first-names>
+        <last-name>Nielsen</last-name>
+      </player>
+    <player line="1" pos="RD" number="12">
+        <first-names>Stefan</first-names>
+        <last-name>Stokholm</last-name>
+      </player>
+    <player line="1" pos="RW" number="61">
+        <first-names>Emil</first-names>
+        <last-name>Grandal</last-name>
+      </player>
+    <player line="2" pos="CE" number="23">
+        <first-names>Jeppe</first-names>
+        <last-name>Klitgaard</last-name>
+      </player>
+    <player line="2" pos="LD" number="50">
+        <first-names>Mikkel</first-names>
+        <last-name>Svenson</last-name>
+      </player>
+    <player line="2" pos="LW" number="25">
+        <first-names>Mads</first-names>
+        <last-name>Crone</last-name>
+      </player>
+    <player line="2" pos="RD" number="8">
+        <first-names>Carl Gustav</first-names>
+        <last-name>Schultz</last-name>
+      </player>
+    <player line="2" pos="RW" number="24">
+        <first-names>Rasmus</first-names>
+        <last-name>Klokholm</last-name>
+      </player>
+    <player line="3" pos="CE" number="26">
+        <first-names>Frederik</first-names>
+        <last-name>Christensen</last-name>
+      </player>
+    <player line="3" pos="LD" number="81">
+        <first-names>Oliver Jerichow</first-names>
+        <last-name>Mailund</last-name>
+      </player>
+    <player line="3" pos="LW" number="17">
+        <first-names>Magnus</first-names>
+        <last-name>Ferslew</last-name>
+      </player>
+    <player line="3" pos="RW" number="10">
+        <first-names>Jesper</first-names>
+        <last-name>malle</last-name>
+      </player>
+    <player line="4" pos="LW" number="9">
+        <first-names>Marcus Møller</first-names>
+        <last-name>Winther</last-name>
+      </player>
+  </roster>
+  <roster side="away">
+    <player pos="GK" number="31">
+        <first-names>Jacob B.</first-names>
+        <last-name>Jensen</last-name>
+      </player>
+    <player pos="GK" number="1">
+        <first-names>Jesper Wulff</first-names>
+        <last-name>Pedersen</last-name>
+      </player>
+    <player line="1" pos="CE" number="9">
+        <first-names>Alexander Brinkman</first-names>
+        <last-name>Andersen</last-name>
+      </player>
+    <player line="1" pos="LD" number="4">
+        <first-names>Mathias</first-names>
+        <last-name>Pehrson</last-name>
+      </player>
+    <player line="1" pos="LW" number="3">
+        <first-names>Emil</first-names>
+        <last-name>Borup</last-name>
+      </player>
+    <player line="1" pos="RD" number="18">
+        <first-names>Lasse Bo</first-names>
+        <last-name>Knudsen</last-name>
+      </player>
+    <player line="1" pos="RW" number="16">
+        <first-names>Oliver</first-names>
+        <last-name>Anker Christensen</last-name>
+      </player>
+    <player line="2" pos="CE" number="6">
+        <first-names>Tobias Sand</first-names>
+        <last-name>Christensen</last-name>
+      </player>
+    <player line="2" pos="LD" number="17">
+        <first-names>Søren</first-names>
+        <last-name>Vestergaard</last-name>
+      </player>
+    <player line="2" pos="LW" number="14">
+        <first-names>Sebastian</first-names>
+        <last-name>Ehlers</last-name>
+      </player>
+    <player line="2" pos="RD" number="12">
+        <first-names>Mike</first-names>
+        <last-name>Lindstrøm</last-name>
+      </player>
+    <player line="2" pos="RW" number="19">
+        <first-names>Matias</first-names>
+        <last-name>Posio</last-name>
+      </player>
+    <player line="3" pos="RD" number="5">
+        <first-names>Oliver Gatz</first-names>
+        <last-name>Nielsen</last-name>
+      </player>
+    <player line="3" pos="RW" number="21">
+        <first-names>Emil</first-names>
+        <last-name>Marcussen</last-name>
+      </player>
+  </roster>
+  <events>
+    <goal side="home" game-situation="EQ">
+        <time>00:06</time>
+        <player number="61"/>
+        <assist number="32"/>
+      </goal>
+    <penalty side="home">
+        <time>01:16</time>
+        <player number="12"/>
+        <minutes>2</minutes>
+        <offense>CROSS</offense>
+        <end-time>03:16</end-time>
+      </penalty>
+    <penalty side="home">
+        <time>07:36</time>
+        <player number="50"/>
+        <minutes>2</minutes>
+        <offense>BOARD</offense>
+        <end-time>09:36</end-time>
+      </penalty>
+    <penalty side="away">
+        <time>13:59</time>
+        <player number="3"/>
+        <minutes>2</minutes>
+        <offense>HI-ST</offense>
+        <end-time>15:59</end-time>
+      </penalty>
+    <penalty side="home">
+        <time>26:09</time>
+        <player number="10"/>
+        <minutes>2</minutes>
+        <offense>INTRF</offense>
+        <end-time>28:09</end-time>
+      </penalty>
+    <penalty side="home">
+        <time>27:48</time>
+        <player number="50"/>
+        <minutes>2</minutes>
+        <offense>UN-SP</offense>
+        <end-time>29:48</end-time>
+      </penalty>
+    <goal side="away" game-situation="PP1">
+        <time>29:42</time>
+        <player number="17"/>
+        <assist number="16"/>
+        <assist number="21"/>
+      </goal>
+    <penalty side="away">
+        <time>34:34</time>
+        <player number="12"/>
+        <minutes>2</minutes>
+        <offense>DELAY</offense>
+        <end-time>36:34</end-time>
+      </penalty>
+    <goal side="away" game-situation="EQ">
+        <time>47:32</time>
+        <player number="16"/>
+        <assist number="21"/>
+      </goal>
+    <penalty side="home">
+        <time>49:28</time>
+        <player number="25"/>
+        <minutes>2</minutes>
+        <offense>ELBOW</offense>
+        <end-time>51:28</end-time>
+      </penalty>
+    <penalty side="away">
+        <time>53:12</time>
+        <player number="21"/>
+        <minutes>2</minutes>
+        <offense>INTRF</offense>
+        <end-time>55:12</end-time>
+      </penalty>
+    <goal side="home" game-situation="PP1">
+        <time>54:59</time>
+        <player number="12"/>
+        <assist number="61"/>
+        <assist number="8"/>
+      </goal>
+    <goal side="home" game-situation="GWS">
+        <time>65:00</time>
+        <player number="61"/>
+      </goal>
+  </events>
+</gamesheet>

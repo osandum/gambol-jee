@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+
+<bindings xmlns="http://java.sun.com/xml/ns/jaxb" 
+          xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" 
+          xmlns:g="http://sandum.net/namespaces/gambol"
+          xmlns:xs="http://www.w3.org/2001/XMLSchema"
+          elementFormDefault="qualified"
+          xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+          extensionBindingPrefixes="xjc"
+          xsi:schemaLocation="http://java.sun.com/xml/ns/jaxb http://java.sun.com/xml/ns/jaxb/bindingschema_2_0.xsd" 
+          version="2.1"> 
+
+    <bindings schemaLocation="gambol.xsd">
+        <schemaBindings>
+            <package name="gambol.xml"/>
+        </schemaBindings>
+            
+        <globalBindings generateElementClass="false">
+            <xjc:simple />
+            <xjc:javaType name="java.util.Date"   xmlType="xs:dateTime" adapter="net.sandum.xml.XmlDateTimeAdapter" />
+            <xjc:javaType name="java.net.URI"     xmlType="xs:anyURI"   adapter="net.sandum.xml.XmlUriAdapter" />
+
+            <javaType name="java.lang.Integer"    xmlType="xs:integer" /> 
+            <javaType name="java.math.BigDecimal" xmlType="xs:double" /> 
+        </globalBindings>
+    </bindings>            
+
+</bindings>
+
