@@ -21,9 +21,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>gambol</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>gambol-docs</artifactId>
-            <version>0.6-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
