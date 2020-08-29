@@ -12,6 +12,13 @@
     </parent>
 
     <artifactId>gambol-docs</artifactId>
+    <name>Gambol API docs</name>
+
+    <description>
+      Schema definitions for documents used in REST API
+
+      Java stub generation with JAXB2 plugin.
+    </description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -40,25 +47,6 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <!-- plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>jaxb2-maven-plugin</artifactId>
-                <version>1.6</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>xjc</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <extension>true</extension>
-                    <schemaFiles>
-                        gambol.xsd
-                    </schemaFiles>
-                </configuration>
-            </plugin -->
 
         </plugins>
 

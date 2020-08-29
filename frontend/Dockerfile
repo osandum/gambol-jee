@@ -16,4 +16,4 @@ ENV POSTGRES_PASSWORD=as10
 ENV _JAVA_OPTIONS=-Dfile.encoding=UTF-8
 
 # ADD target/as11-0.2-SNAPSHOT/ /opt/jboss/wildfly/standalone/deployments/as11.war/
-ADD target/gambol-0.2-SNAPSHOT.war /opt/jboss/wildfly/standalone/deployments/gambol.war
+ADD target/gambol.war /opt/jboss/wildfly/standalone/deployments/gambol.war
