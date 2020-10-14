@@ -37,15 +37,17 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
 
     <maven.min.version>3.5.0</maven.min.version>
 
-    <version.junit>4.11</version.junit>
+    <version.junit>4.13.1</version.junit>
     <version.javaee_api>7.0</version.javaee_api>
     <version.bootable.jar>2.0.0.Alpha4</version.bootable.jar>
-    <version.wildfly>20.0.0.Final</version.wildfly>
+    <version.wildfly>20.0.1.Final</version.wildfly>
+
     <version.arquillian_core>1.1.5.Final</version.arquillian_core>
   </properties>
 
