@@ -19,10 +19,6 @@
     Gambol persistence layer classes
   </description>
 
-  <properties>
-    <version.arquillian_core>1.1.5.Final</version.arquillian_core>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
@@ -139,18 +135,6 @@
       </resource>
     </resources>
   </build>
-
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>org.jboss.arquillian</groupId>
-        <artifactId>arquillian-bom</artifactId>
-        <version>${version.arquillian_core}</version>
-        <scope>import</scope>
-        <type>pom</type>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
 
   <profiles>
 
