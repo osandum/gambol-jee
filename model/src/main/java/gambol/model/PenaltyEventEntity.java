@@ -9,11 +9,6 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.ForeignKey;
-import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.UriInfo;
 
@@ -23,19 +18,12 @@ import javax.ws.rs.core.UriInfo;
  */
 @Entity(name = "penalty_event")
 @DiscriminatorValue("PLTY")
-@Table(indexes = {
-  @Index(name = "penalty_fk_player", columnList = "player")
-})
 public class PenaltyEventEntity extends FixtureEventEntity {
 
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(length = 7)
     private GameOffense offense;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_player"))
-    private FixturePlayerEntity player;
 
     @NotNull
     @Column(name = "penalty_minutes") //, nullable = false) wont't fly on single-table inheritance
@@ -57,14 +45,6 @@ public class PenaltyEventEntity extends FixtureEventEntity {
         this.offense = offense;
     }
 
-
-    public FixturePlayerEntity getPlayer() {
-        return player;
-    }
-
-    public void setPlayer(FixturePlayerEntity player) {
-        this.player = player;
-    }
 
     public Integer getStarttimeSecond() {
         return starttimeSecond;

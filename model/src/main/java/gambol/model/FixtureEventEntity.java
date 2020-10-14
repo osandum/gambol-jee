@@ -12,10 +12,12 @@ import javax.persistence.Enumerated;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.ws.rs.core.UriInfo;
 
 /**
@@ -24,12 +26,16 @@ import javax.ws.rs.core.UriInfo;
 @Entity(name = "fixture_event")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "event_type")
+@Table(indexes = {
+  @Index(name = "event_fk_player", columnList = "player_id"),
+  @Index(name = "event_fk_fixture", columnList = "fixture_id")
+})
 public abstract class FixtureEventEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue
-    private Long id;
+    protected Long id;
 
     public Long getId() {
         return id;
@@ -39,9 +45,22 @@ public abstract class FixtureEventEntity implements Serializable {
         this.id = id;
     }
 
+    @ManyToOne(optional = false)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_player"))
+    protected FixturePlayerEntity player;
+
+
+    public FixturePlayerEntity getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(FixturePlayerEntity player) {
+        this.player = player;
+    }
+
 
     @Column(name = "game_second", nullable = false)
-    private Integer gameTimeSecond;
+    protected Integer gameTimeSecond;
 
     public Integer getGameTimeSecond() {
         return gameTimeSecond;
@@ -54,7 +73,7 @@ public abstract class FixtureEventEntity implements Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(length = 4)
-    private FixtureSideRole side;
+    protected FixtureSideRole side;
 
     public FixtureSideRole getSide() {
         return side;
@@ -67,7 +86,7 @@ public abstract class FixtureEventEntity implements Serializable {
 
     @ManyToOne(optional = false)
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_fixture"))
-    private FixtureEntity fixture;
+    protected FixtureEntity fixture;
 
     public FixtureEntity getFixture() {
         return fixture;

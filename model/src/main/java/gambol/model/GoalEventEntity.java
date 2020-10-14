@@ -10,14 +10,9 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.ForeignKey;
-import javax.persistence.Index;
-import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.OrderColumn;
-import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.UriInfo;
 
@@ -26,19 +21,12 @@ import javax.ws.rs.core.UriInfo;
  */
 @Entity(name = "goal_event")
 @DiscriminatorValue("GOAL")
-@Table(indexes = {
-  @Index(name = "goal_fk_player", columnList = "player")
-})
 public class GoalEventEntity extends FixtureEventEntity {
 
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "game_situation", length = 7)
     private GameSituation gameSituation;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_player"))
-    private FixturePlayerEntity player;
 
     @ManyToMany
     @OrderColumn
@@ -51,15 +39,6 @@ public class GoalEventEntity extends FixtureEventEntity {
 
     public void setGameSituation(GameSituation situation) {
         this.gameSituation = situation;
-    }
-
-
-    public FixturePlayerEntity getPlayer() {
-        return player;
-    }
-
-    public void setPlayer(FixturePlayerEntity player) {
-        this.player = player;
     }
 
 
