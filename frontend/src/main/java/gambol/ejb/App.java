@@ -205,6 +205,7 @@ public class App {
 
 
     public TournamentEntity putTournamentSrc(Tournament tt) {
+        long t1 = System.currentTimeMillis();
         String sourceRef = tt.getSourceRef();
         String seasonId = tt.getSeason();
         if (seasonId == null)
@@ -217,7 +218,7 @@ public class App {
             throw new IllegalArgumentException("Invalid tournament name");
         if (slug == null)
             slug = name.toLowerCase().replaceAll("[-_,. ]+", "-");
-        LOG.info("updating tournament {} \"{}\"", slug, name);
+        LOG.info("updating tournament schedule {} \"{}\"", slug, name);
 
         String seriesSlug = slug.replaceAll("-[^-]*$", "");
         SeriesEntity series = findOrCreateSeries(seriesSlug);
@@ -240,9 +241,12 @@ public class App {
         String arenaClubRef = tt.getArena();
         if (arenaClubRef != null) {
             ClubEntity arena = findOrCreateClub(arenaClubRef);
-            LOG.info(name + " is held at " + arena);
+            LOG.info("{} is held at {}", name, arena);
             entity.setArena(arena);
         }
+
+        long t2 = System.currentTimeMillis();
+        LOG.info("tournament schedule {} \"{}\" updated ({}ms)", slug, name, t2-t1);
 
         return entity;
     }
@@ -792,7 +796,7 @@ public class App {
             wheres.add(builder.like(sourceRef, param.sourcePrefix + "%"));
         }
 
-        
+
         if (param.getLastFixtureRef() != null) {
             Subquery<String> sq = q.subquery(String.class);
             Root<FixtureEntity> sfixture = sq.from(FixtureEntity.class);
@@ -819,7 +823,7 @@ public class App {
             Join<FixtureEntity, FixtureSideEntity> awaySide = fixtures.join(FixtureEntity_.awaySide);
             Join<FixtureSideEntity, TeamEntity> awayTeam = awaySide.join(FixtureSideEntity_.team);
             Join<TeamEntity, ClubEntity> awayClub = awayTeam.join(TeamEntity_.club);
-            
+
             if (!param.clubRef.isEmpty() || !param.awayClubRef.isEmpty()) {
                 Set<String> clubRefs = new HashSet<>();
                 clubRefs.addAll(param.clubRef);
@@ -953,7 +957,7 @@ public class App {
 
         for (Roster r : gg.getRosters())
             trimFixtureRoster(f, r.getSide(), r.getPlayers());
-        
+
         f.setSheet(GamesheetStatus.READY);
 
         return f;

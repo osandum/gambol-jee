@@ -65,7 +65,7 @@
 
   <build>
     <finalName>gambol</finalName>
-      
+
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -108,7 +108,6 @@
               <tag>latest</tag>
             </tags>
           </to>
-
         </configuration>
       </plugin>
 

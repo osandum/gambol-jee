@@ -12,7 +12,6 @@
   </parent>
 
   <artifactId>model</artifactId>
-  <packaging>jar</packaging>
 
   <name>JPA Model</name>
   <description>
@@ -81,9 +80,9 @@
         <artifactId>maven-processor-plugin</artifactId>
 
         <!--
-        ! cannot go to version 3 until openshift upgrade their
-        ! maven to 3.1
-        ! -->
+         ! cannot go to version 3 until openshift upgrade their
+         ! maven to 3.1
+         ! -->
         <version>2.2.4</version>
 
         <executions>
