@@ -1,16 +1,29 @@
+##
+##  Executed during docker build to patch configuration
+##
+##  Dockerfile except:
+##
+##    | ADD ./patches/ /tmp/
+##    | USER jboss
+##    | RUN /opt/jboss/wildfly/bin/jboss-cli.sh --file=/tmp/wildfly-conf.cli
+##    | ...
+##
+
 # Launch stand-alone server to modify:
 embed-server --std-out=echo --server-config=standalone.xml
 
 batch
 
-# Register Postgres JDBC jar:
+# Install Postgres JDBC jar as a module:
 module add \
   --name=org.postgres \
   --resources=/tmp/postgresql-42.2.1.jar \
   --dependencies=javax.api,javax.transaction.api
 
+# Register postgres JDBC-driver:
 /subsystem=datasources/jdbc-driver=postgres:add(driver-name="postgres",driver-module-name="org.postgres",driver-class-name=org.postgresql.Driver)
 
+# Register GambolDS datasource:
 /subsystem=datasources/data-source=GambolDS/:add(connection-url=jdbc:postgresql://${env.POSTGRES_HOSTPORT}/${env.POSTGRES_DATABASE},driver-name=postgres,jndi-name=java:jboss/datasources/GambolDS,initial-pool-size=4,max-pool-size=64,min-pool-size=4,password=${env.POSTGRES_PASSWORD},user-name=${env.POSTGRES_USERNAME})
 
 # Set Undertow proxy-address-forwarding=true to reflect X-Forwarded-For:
