@@ -7,15 +7,16 @@
 <resources>
 
   <jdbc-resource
-      pool-name="ArquillianEmbeddedDerbyPool"
-      jndi-name="jdbc/arquillian" />
+        pool-name="TestDerbyPool"
+        jndi-name="jdbc/derby-test" />
 
   <jdbc-connection-pool
-      name="ArquillianEmbeddedDerbyPool"
-      res-type="javax.sql.DataSource"
-      datasource-classname="org.apache.derby.jdbc.EmbeddedDataSource"
-      is-isolation-level-guaranteed="false">
-    <property name="databaseName" value="target/databases/derby" />
+        name="TestDerbyPool"
+        res-type="javax.sql.DataSource"
+        datasource-classname="org.apache.derby.jdbc.EmbeddedDataSource"
+        is-isolation-level-guaranteed="false">
+
+    <property name="databaseName" value="target/databases/gambol-test" />
     <property name="createDatabase" value="create" />
   </jdbc-connection-pool>
 
