@@ -27,7 +27,6 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
-      <version>3.8.1</version>
     </dependency>
     <dependency>
       <groupId>javax</groupId>
@@ -39,7 +38,6 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.7.28</version>
     </dependency>
     <!-- dependency>
       <groupId>org.slf4j</groupId>
@@ -70,6 +68,13 @@
       <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
       <scope>test</scope>
     </dependency -->
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>1.7.28</version>
+      <scope>test</scope>
+    </dependency>
 
   </dependencies>
 
@@ -151,22 +156,17 @@
         </dependency>
         <dependency>
           <groupId>org.glassfish.main.extras</groupId>
-          <artifactId>glassfish-embedded-web</artifactId>
-          <version>4.1</version>
+          <artifactId>glassfish-embedded-all</artifactId>
+          <version>5.1.0</version>
           <scope>test</scope>
         </dependency>
 
         <!-- dependency>
           <groupId>org.slf4j</groupId>
-          <artifactId>slf4j-simple</artifactId>
-          <scope>test</scope>
-        </dependency -->
-        <dependency>
-          <groupId>org.slf4j</groupId>
           <artifactId>slf4j-jdk14</artifactId>
           <version>1.7.28</version>
           <scope>runtime</scope>
-        </dependency>
+        </dependency -->
 
       </dependencies>
 

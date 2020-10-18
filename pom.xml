@@ -44,11 +44,6 @@
     <maven.min.version>3.5.0</maven.min.version>
 
     <version.junit>4.13.1</version.junit>
-    <version.javaee_api>7.0</version.javaee_api>
-    <version.bootable.jar>2.0.0.Alpha4</version.bootable.jar>
-    <version.wildfly>20.0.1.Final</version.wildfly>
-
-    <version.arquillian_core>1.1.5.Final</version.arquillian_core>
   </properties>
 
   <prerequisites>
@@ -66,7 +61,7 @@
       <dependency>
         <groupId>org.jboss.arquillian</groupId>
         <artifactId>arquillian-bom</artifactId>
-        <version>${version.arquillian_core}</version>
+        <version>1.6.0.Final</version>
         <scope>import</scope>
         <type>pom</type>
       </dependency>
