@@ -14,8 +14,11 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -23,11 +26,12 @@ import org.junit.runner.RunWith;
  */
 @RunWith(Arquillian.class)
 public class ClubEntityIT {
+  private static final Logger LOG = LoggerFactory.getLogger(ClubEntityIT.class);
 
   @Deployment
   public static Archive<?> createDeployment() {
     return
-      ShrinkWrap.create(WebArchive.class, "test.war")
+      ShrinkWrap.create(WebArchive.class, "gambol-jpa-test.war")
             .addPackage(ClubEntity.class.getPackage())
             .addAsResource("test-persistence.xml", "META-INF/persistence.xml")
             .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
@@ -38,6 +42,20 @@ public class ClubEntityIT {
 
   @Inject
   UserTransaction utx;
+
+  @Before
+  public void loadClubs() throws Exception {
+    utx.begin();
+    ClubEntity c = new ClubEntity();
+    c.setName("Test HC");
+    c.setSlug("test-hc");
+    em.persist(c);c = new ClubEntity();
+    c.setName("Kjøbenhavn Skøjteløber Forening");
+    c.setSlug("ksf");
+    em.persist(c);
+    utx.commit();
+    LOG.info("# persisted {}", c);
+  }
 
   @Test
   public void shouldFindAllGamesUsingCriteriaApi() throws Exception {
@@ -53,10 +71,10 @@ public class ClubEntityIT {
     // No WHERE clause, which implies select all
 
     // when
-    System.out.println("Selecting (using Criteria)...");
-    List<ClubEntity> games = em.createQuery(criteria).getResultList();
+    LOG.info("Selecting (using Criteria)...");
+    List<ClubEntity> clubs = em.createQuery(criteria).getResultList();
 
     // then
-    System.out.println("Found " + games.size() + " games (using Criteria):");
+    LOG.info("Found {} clubs: {}", clubs.size(), clubs);
   }
 }
