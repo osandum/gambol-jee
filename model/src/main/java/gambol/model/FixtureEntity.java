@@ -15,10 +15,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
@@ -37,7 +35,7 @@ public class FixtureEntity implements Serializable {
     private static final Logger LOG = LoggerFactory.getLogger(FixtureEntity.class);
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue
     private Long id;
@@ -65,20 +63,17 @@ public class FixtureEntity implements Serializable {
     }
 
     @ManyToOne(optional = false)
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_tournament"))
     private TournamentEntity tournament;
-    
+
     @ManyToOne(cascade = CascadeType.ALL, optional = false)
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_home"))
     private FixtureSideEntity homeSide;
 
     @ManyToOne(cascade = CascadeType.ALL, optional = false)
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_away"))
     private FixtureSideEntity awaySide;
-    
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date startTime;
-    
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date endTime;
 
@@ -107,9 +102,8 @@ public class FixtureEntity implements Serializable {
     private String descriptionAnnotation;
 
     @ManyToOne
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_arena"))
     private ClubEntity arena;
-    
+
     public TournamentEntity getTournament() {
         return tournament;
     }
@@ -133,12 +127,12 @@ public class FixtureEntity implements Serializable {
     public void setAwaySide(FixtureSideEntity awaySide) {
         this.awaySide = awaySide;
     }
-    
+
     public FixtureSideEntity getSide(FixtureSideRole role) {
         return role == AWAY ? getAwaySide() : getHomeSide();
     }
 
-    
+
     public boolean isGamesheetLoaded() {
         if (!ScheduleStatus.CONFIRMED.equals(status))
             return false; // game not scheduled
@@ -150,7 +144,7 @@ public class FixtureEntity implements Serializable {
             return false; // no away players listed
         if (getEvents().isEmpty())
             return false; // no game events listed -- boooring
-        
+
         return true;
     }
 
@@ -196,7 +190,7 @@ public class FixtureEntity implements Serializable {
         this.events = events;
     }
 
-    
+
     public List<FixturePlayerEntity> getPlayers() {
         return players;
     }
@@ -217,22 +211,22 @@ public class FixtureEntity implements Serializable {
         int durationMinutes = getTournament().getSeries().getFixtureDuration();
         d.add(Calendar.MINUTE, durationMinutes);
         Date eet = d.getTime();
-        
-        ClubEntity homeClub = getHomeSide().getTeam().getClub();        
+
+        ClubEntity homeClub = getHomeSide().getTeam().getClub();
         Date curfew = homeClub.curfewAfter(getStartTime());
         if (curfew != null && eet.after(curfew)) {
             LOG.info("{}: culling estimated end-time {} to {} (as per {} rules)", sourceRef, eet, curfew, homeClub.getName());
             eet = curfew;
         }
-        
+
         return eet;
     }
-    
+
     public GamesheetStatus getGamesheetStatus() {
-        Date eet = estimateEndTime();        
-        return eet == null || eet.getTime() > System.currentTimeMillis() ? GamesheetStatus.FUTURE : sheet;        
+        Date eet = estimateEndTime();
+        return eet == null || eet.getTime() > System.currentTimeMillis() ? GamesheetStatus.FUTURE : sheet;
     }
-    
+
     public ScheduleStatus getStatus() {
         return status;
     }
@@ -272,7 +266,7 @@ public class FixtureEntity implements Serializable {
     public void setDesciptionAnnotation(String desciptionAnnotation) {
         this.descriptionAnnotation = desciptionAnnotation;
     }
-    
+
     public String getEventDescription() {
         String descr = tournament.getName() + ", kamp " + matchNumber;
         if (!StringUtils.isBlank(descriptionAnnotation))
@@ -296,9 +290,9 @@ public class FixtureEntity implements Serializable {
     public String toString() {
         return "{[" + sourceRef + "] id=" + id + " home=" + homeSide + " away=" + awaySide + " at=" + mmdd_hhmi(startTime) + "}";
     }
-    
+
     private final static SimpleDateFormat MMDD = new SimpleDateFormat("yyMMdd-HHmm");
-    
+
     private static String mmdd_hhmi(Date d) {
         return d == null ? "null" : MMDD.format(d);
     }

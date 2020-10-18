@@ -3,11 +3,9 @@ package gambol.model;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Index;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -31,11 +29,9 @@ public class FixturePlayerEntity implements Serializable {
     private Long id;
 
     @ManyToOne(optional = false)
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_fixture"))
     private FixtureEntity fixture;
 
     @ManyToOne(optional = false)
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_person"))
     private PersonEntity person;
 
     public Long getId() {
@@ -65,7 +61,6 @@ public class FixturePlayerEntity implements Serializable {
     }
 
     @ManyToOne(optional = false)
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_side"))
     private FixtureSideEntity side;
 
     @Column(length = 3)

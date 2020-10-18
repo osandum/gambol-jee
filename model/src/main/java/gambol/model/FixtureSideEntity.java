@@ -3,10 +3,8 @@ package gambol.model;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
@@ -36,7 +34,6 @@ public class FixtureSideEntity implements Serializable {
     }
 
     @ManyToOne(optional = false)
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_team"))
     private TeamEntity team;
 
     public TeamEntity getTeam() {
@@ -59,7 +56,7 @@ public class FixtureSideEntity implements Serializable {
         this.players = players;
     }
 
-    
+
     private Integer score;
 
     public Integer getScore() {
@@ -76,15 +73,15 @@ public class FixtureSideEntity implements Serializable {
     }
 
     public FixturePlayerEntity getPlayerByJerseyNumber(Integer n) {
-        for (FixturePlayerEntity fpe : getPlayers()) 
+        for (FixturePlayerEntity fpe : getPlayers())
             if (n.equals(fpe.getJerseyNumber()))
                 return fpe;
 
         LOG.info("??? {} not in {}", n, team);
         return null;
     }
- 
-    
+
+
     public boolean isGameDetailsLoaded() {
         return !getPlayers().isEmpty();
     }

@@ -9,13 +9,11 @@ import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.ws.rs.core.UriInfo;
@@ -45,10 +43,9 @@ public abstract class FixtureEventEntity implements Serializable {
         this.id = id;
     }
 
-    @ManyToOne(optional = false)
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_player"))
-    protected FixturePlayerEntity player;
 
+    @ManyToOne(optional = false)
+    protected FixturePlayerEntity player;
 
     public FixturePlayerEntity getPlayer() {
         return player;
@@ -85,7 +82,6 @@ public abstract class FixtureEventEntity implements Serializable {
 
 
     @ManyToOne(optional = false)
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_fixture"))
     protected FixtureEntity fixture;
 
     public FixtureEntity getFixture() {
