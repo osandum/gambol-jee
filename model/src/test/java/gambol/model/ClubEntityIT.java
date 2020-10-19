@@ -49,12 +49,16 @@ public class ClubEntityIT {
     ClubEntity c = new ClubEntity();
     c.setName("Test HC");
     c.setSlug("test-hc");
-    em.persist(c);c = new ClubEntity();
+    em.persist(c);
+    LOG.info("# persisted {}", c);
+
+    c = new ClubEntity();
     c.setName("Kjøbenhavn Skøjteløber Forening");
     c.setSlug("ksf");
     em.persist(c);
-    utx.commit();
     LOG.info("# persisted {}", c);
+
+    utx.commit();
   }
 
   @Test
