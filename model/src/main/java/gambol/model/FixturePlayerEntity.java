@@ -14,12 +14,13 @@ import javax.persistence.UniqueConstraint;
  * @author osa
  */
 @Entity(name = "fixture_person")
-@Table(uniqueConstraints = {
+@Table(
+  uniqueConstraints = {
     @UniqueConstraint(name = "player_uq",
         columnNames={"fixture_id", "side_id", "person_id", "jerseynumber", "person_role"}) },
   indexes = {
-    @Index(name = "player_fk_fixture", columnList = "fixture" ),
-    @Index(name = "player_fk_person", columnList = "person" )
+    @Index(name = "player_fk_fixture", columnList = "fixture_id" ),
+    @Index(name = "player_fk_person", columnList = "person_id" )
   })
 public class FixturePlayerEntity implements Serializable {
     private static final long serialVersionUID = 1L;
