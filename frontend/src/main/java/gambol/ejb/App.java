@@ -364,13 +364,13 @@ public class App {
                 f.setSheet(GamesheetStatus.MISSING);
                 domain2entity(fo, f);
                 em.persist(f);
-                LOG.info(fo.getSourceRef() + " not found: new fixture created: " + f);
+                LOG.info("{} not found: new fixture created: {}", fo.getSourceRef(), f);
             }
             else {
                 // existing fixture, update:
                 f.setTournament(t);
                 domain2entity(fo, f);
-                LOG.info(fo.getSourceRef() + ": fixture updated: " + f);
+                LOG.info("{}: fixture updated: {}", fo.getSourceRef(), f);
             }
         }
 
@@ -498,7 +498,7 @@ public class App {
         List<GoalEventEntity> res = em.createQuery(q).getResultList();
         long t2 = System.currentTimeMillis();
 
-        LOG.info(personId + ": " + res.size() + " goal(s) retrieved ("+(t2-t1)+"ms)");
+        LOG.info("{}: {} goal(s) retrieved ({}ms)", personId, res.size(), t2-t1);
 
         return res;
     }
@@ -520,7 +520,7 @@ public class App {
         List<PenaltyEventEntity> res = em.createQuery(q).getResultList();
         long t2 = System.currentTimeMillis();
 
-        LOG.info(personId + ": " + res.size() + " penalties(s) retrieved ("+(t2-t1)+"ms)");
+        LOG.info("{}: {} penalties(s) retrieved ({}ms)", personId, res.size(), t2-t1);
 
         return res;
     }
@@ -542,7 +542,7 @@ public class App {
 
         long t2 = System.currentTimeMillis();
 
-        LOG.info(personId + ": " + res.size() + " fixture(s) retrieved ("+(t2-t1)+"ms)");
+        LOG.info("{}: {} fixture(s) retrieved ({}ms)", personId, res.size(), t2-t1);
 
         return res;
     }
@@ -617,7 +617,7 @@ public class App {
 
         long t2 = System.currentTimeMillis();
 
-        LOG.info(param + ": " + res.size() + " player(s) retrieved ("+(t2-t1)+"ms)");
+        LOG.info("{}: {} player(s) retrieved ({}ms)", param, res.size(), t2-t1);
 
         return rr;
     }
@@ -659,7 +659,7 @@ public class App {
 
         long t2 = System.currentTimeMillis();
 
-        LOG.info(param + ": " + res.size() + " player(s) retrieved ("+(t2-t1)+"ms)");
+        LOG.info("{}: {} player(s) retrieved ({}ms)", param, res.size(), t2-t1);
 
         return res;
     }
