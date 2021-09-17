@@ -225,6 +225,11 @@
             <xs:enumeration value="BENCH" />
             <xs:enumeration value="BOARD" />
             <xs:enumeration value="CHARG" />
+            <xs:enumeration value="FIGHT">
+                <xs:annotation>
+                    <xs:documentation>Fighting</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
             <xs:enumeration value="LA-HI" />
             <xs:enumeration value="HI-ST" />
             <xs:enumeration value="HO-ST" />
