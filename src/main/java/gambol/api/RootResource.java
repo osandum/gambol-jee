@@ -7,6 +7,7 @@ import gambol.model.ClubEntity;
 import gambol.model.FixtureEntity;
 import gambol.model.PersonEntity;
 import gambol.model.SeasonEntity;
+import gambol.source.FixtureSource;
 import gambol.util.DateParam;
 import gambol.xml.Club;
 import gambol.xml.Fixtures;
@@ -265,6 +266,7 @@ public class RootResource {
             e.setTitle(f.getEventTitle());
             e.setStart(LocalDateTime.ofInstant(f.getStartTime().toInstant(), ZoneId.systemDefault()));
             e.setEnd(LocalDateTime.ofInstant(f.estimateEndTime().toInstant(), ZoneId.systemDefault()));
+            e.setUrl(FixtureSource.forSourceRef(srcRef).getGamesheetUrl());
 
             res.add(e);
         }
