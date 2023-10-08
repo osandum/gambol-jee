@@ -86,7 +86,7 @@ public class RootResource {
     @Path("{season: [0-9]{4}}")
     public SeasonResource getSeason(@PathParam("season") String slug) {
         LOG.info("... season[{}]?", slug);
-        for (SeasonEntity se : gambol.getSeasons()) 
+        for (SeasonEntity se : gambol.getSeasons())
             if (slug.equals(se.getId())) {
                 LOG.info("... {}? found {}: \"{}\"", slug, se.getId(), se.getName());
                 SeasonResource res = CDI.current().select(SeasonResource.class).get();
@@ -132,9 +132,9 @@ public class RootResource {
             @Context UriInfo uriInfo,
             @QueryParam("name") String name,
             @QueryParam("club") String clubRef) {
-        
+
         PlayersQueryParam searchParams =  playerQ(name);
-        Map<PersonEntity, Map<ClubEntity, Set<SeasonEntity>>> players = 
+        Map<PersonEntity, Map<ClubEntity, Set<SeasonEntity>>> players =
                 gambol.getPlayers(searchParams);
 
         List<Person> res = new LinkedList<>();
@@ -156,11 +156,11 @@ public class RootResource {
             @Context UriInfo uriInfo,
             @QueryParam("name") String name,
             @QueryParam("club") String clubRef) {
-        
+
         PlayersQueryParam searchParams =  playerQ(name);
         List<PersonEntity> people = gambol.getPeople(searchParams);
-        
-        
+
+
         List<Person> res = new LinkedList<>();
         people.stream().forEach((entity) -> {
             res.add(PersonResource.entity2person(entity, uriInfo));

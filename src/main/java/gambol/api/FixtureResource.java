@@ -60,7 +60,7 @@ public class FixtureResource {
         this.fixture = fixture;
     }
 
-    
+
     @GET
     @Produces({APPLICATION_JSON, APPLICATION_XML})
     public Gamesheet getGamesheet(@Context UriInfo uriInfo) {
@@ -127,7 +127,7 @@ public class FixtureResource {
     }
 
     private final static TimeZone CPH = TimeZone.getTimeZone("Europe/Copenhagen");
-    
+
     public static Fixture entity2domain(FixtureEntity entity, UriInfo uriInfo) {
         if (entity == null)
             return null;
@@ -148,7 +148,7 @@ public class FixtureResource {
         model.setSeason(seasonRef);
         model.setSchedule(entity.getStatus());
 //      model.setMatchDetails(uriInfo.getBaseUriBuilder().path(FixtureResource.class).build(entity.getId()));
-        
+
         Calendar c = Calendar.getInstance(CPH);
         c.setTime(entity.getStartTime());
         int mm = c.get(Calendar.MONTH)+1;

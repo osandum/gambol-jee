@@ -11,9 +11,9 @@
 
     <packaging>war</packaging>
 
-    <name>as11-ksf.rhcloud.com</name>
+    <name>Gambol JEE app</name>
     <description>
-        Testing the Wildfly AS 11 on OpenShift 3
+        Testing the Wildfly AS 25 on naked Docker
     </description>
 
     <properties>
