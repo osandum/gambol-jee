@@ -10,11 +10,14 @@ import gambol.model.SeasonEntity;
 import gambol.util.DateParam;
 import gambol.xml.Club;
 import gambol.xml.Fixtures;
+import gambol.xml.FullCalendarEvent;
 import gambol.xml.Person;
 import gambol.xml.Series;
 import gambol.xml.Tournament;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
@@ -54,7 +57,7 @@ import net.fortuna.ical4j.model.property.XProperty;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
- 
+
 /**
  *
  * @author osa
@@ -249,20 +252,24 @@ public class RootResource {
             @DefaultValue("50")
             @QueryParam("max") Integer maxResults) throws IOException {
 
-        LOG.info("### get fullcalendar events...");
-        
         FixturesQueryParam searchParams = fixtureQ(start, end, hasGamesheet, seasonId, seriesId, tournamentRef, sourcePrefix, clubRef, homeClubRef, awayClubRef, lastFixtureRef, reverseChrono, maxResults);
+        LOG.info("### get fullcalendar events {}...", searchParams);
+
         List<FixtureEntity> fixtures = gambol.getFixtures(searchParams);
 
         List<FullCalendarEvent> res = new LinkedList<>();
         for (FixtureEntity f : fixtures) {
             FullCalendarEvent e = new FullCalendarEvent();
-            e.id = f.getSourceRef(); // TODO: make our own opaque ref
-            e.title = f.getEventTitle();
-            e.start = f.getStartTime();
-            e.end = f.estimateEndTime();
+            String srcRef = f.getSourceRef();
+            e.setId(srcRef); // TODO: make our own opaque ref
+            e.setTitle(f.getEventTitle());
+            e.setStart(LocalDateTime.ofInstant(f.getStartTime().toInstant(), ZoneId.systemDefault()));
+            e.setEnd(LocalDateTime.ofInstant(f.estimateEndTime().toInstant(), ZoneId.systemDefault()));
+
             res.add(e);
         }
+
+        LOG.info("### got fullcalendar events {}...", res);
         return res;
     }
 
