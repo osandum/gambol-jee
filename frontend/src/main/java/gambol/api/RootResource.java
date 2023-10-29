@@ -10,11 +10,14 @@ import gambol.model.SeasonEntity;
 import gambol.util.DateParam;
 import gambol.xml.Club;
 import gambol.xml.Fixtures;
+import gambol.xml.FullCalendarEvent;
 import gambol.xml.Person;
 import gambol.xml.Series;
 import gambol.xml.Tournament;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
@@ -23,14 +26,11 @@ import java.util.Map;
 import java.util.Set;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
-import javax.enterprise.inject.spi.CDI;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import static javax.ws.rs.core.MediaType.*;
 import javax.ws.rs.core.Response;
@@ -257,10 +257,11 @@ public class RootResource {
         List<FullCalendarEvent> res = new LinkedList<>();
         for (FixtureEntity f : fixtures) {
             FullCalendarEvent e = new FullCalendarEvent();
-            e.id = f.getSourceRef(); // TODO: make our own opaque ref
-            e.title = f.getEventTitle();
-            e.start = f.getStartTime();
-            e.end = f.estimateEndTime();
+            String srcRef = f.getSourceRef();
+            e.setId(srcRef); // TODO: make our own opaque ref
+            e.setTitle("\uD83C\uDFD2 " + f.getEventTitle());
+            e.setStart(LocalDateTime.ofInstant(f.getStartTime().toInstant(), ZoneId.systemDefault()));
+            e.setEnd(LocalDateTime.ofInstant(f.estimateEndTime().toInstant(), ZoneId.systemDefault()));
             res.add(e);
         }
         return res;
@@ -334,7 +335,7 @@ public class RootResource {
         for (FixtureEntity f : fixtures) {
             DateTime start = new DateTime(f.getStartTime());
             DateTime end = new DateTime(f.estimateEndTime());
-            String summary = f.getEventTitle();
+            String summary = "\uD83C\uDFD2 " + f.getEventTitle();
             VEvent evt = new VEvent(start, end, summary);
 
             String uid = "GAMBOL:fixture:" + f.getSourceRef();
