@@ -7,14 +7,18 @@ import gambol.model.ClubEntity;
 import gambol.model.FixtureEntity;
 import gambol.model.PersonEntity;
 import gambol.model.SeasonEntity;
+import gambol.source.FixtureSource;
 import gambol.util.DateParam;
 import gambol.xml.Club;
 import gambol.xml.Fixtures;
+import gambol.xml.FullCalendarEvent;
 import gambol.xml.Person;
 import gambol.xml.Series;
 import gambol.xml.Tournament;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
@@ -23,14 +27,11 @@ import java.util.Map;
 import java.util.Set;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
-import javax.enterprise.inject.spi.CDI;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import static javax.ws.rs.core.MediaType.*;
 import javax.ws.rs.core.Response;
@@ -54,7 +55,7 @@ import net.fortuna.ical4j.model.property.XProperty;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
- 
+
 /**
  *
  * @author osa
@@ -82,7 +83,7 @@ public class RootResource {
     @Path("{season: [0-9]{4}}")
     public SeasonResource getSeason(@PathParam("season") String slug) {
         LOG.info("... season[{}]?", slug);
-        for (SeasonEntity se : gambol.getSeasons()) 
+        for (SeasonEntity se : gambol.getSeasons())
             if (slug.equals(se.getId())) {
                 LOG.info("... {}? found {}: \"{}\"", slug, se.getId(), se.getName());
                 SeasonResource res = CDI.current().select(SeasonResource.class).get();
@@ -128,9 +129,9 @@ public class RootResource {
             @Context UriInfo uriInfo,
             @QueryParam("name") String name,
             @QueryParam("club") String clubRef) {
-        
+
         PlayersQueryParam searchParams =  playerQ(name);
-        Map<PersonEntity, Map<ClubEntity, Set<SeasonEntity>>> players = 
+        Map<PersonEntity, Map<ClubEntity, Set<SeasonEntity>>> players =
                 gambol.getPlayers(searchParams);
 
         List<Person> res = new LinkedList<>();
@@ -152,11 +153,11 @@ public class RootResource {
             @Context UriInfo uriInfo,
             @QueryParam("name") String name,
             @QueryParam("club") String clubRef) {
-        
+
         PlayersQueryParam searchParams =  playerQ(name);
         List<PersonEntity> people = gambol.getPeople(searchParams);
-        
-        
+
+
         List<Person> res = new LinkedList<>();
         people.stream().forEach((entity) -> {
             res.add(PersonResource.entity2person(entity, uriInfo));
@@ -249,18 +250,20 @@ public class RootResource {
             @DefaultValue("50")
             @QueryParam("max") Integer maxResults) throws IOException {
 
-        LOG.info("### get fullcalendar events...");
-        
         FixturesQueryParam searchParams = fixtureQ(start, end, hasGamesheet, seasonId, seriesId, tournamentRef, sourcePrefix, clubRef, homeClubRef, awayClubRef, lastFixtureRef, reverseChrono, maxResults);
         List<FixtureEntity> fixtures = gambol.getFixtures(searchParams);
 
         List<FullCalendarEvent> res = new LinkedList<>();
         for (FixtureEntity f : fixtures) {
+            String srcRef = f.getSourceRef();
+
             FullCalendarEvent e = new FullCalendarEvent();
-            e.id = f.getSourceRef(); // TODO: make our own opaque ref
-            e.title = f.getEventTitle();
-            e.start = f.getStartTime();
-            e.end = f.estimateEndTime();
+            e.setId(srcRef); // TODO: make our own opaque ref
+            e.setTitle("\uD83C\uDFD2 " + f.getEventTitle());
+            e.setStart(LocalDateTime.ofInstant(f.getStartTime().toInstant(), ZoneId.systemDefault()));
+            e.setEnd(LocalDateTime.ofInstant(f.estimateEndTime().toInstant(), ZoneId.systemDefault()));
+            e.setUrl(FixtureSource.forSourceRef(srcRef).getGamesheetUrl());
+
             res.add(e);
         }
         return res;
@@ -334,7 +337,7 @@ public class RootResource {
         for (FixtureEntity f : fixtures) {
             DateTime start = new DateTime(f.getStartTime());
             DateTime end = new DateTime(f.estimateEndTime());
-            String summary = f.getEventTitle();
+            String summary = "\uD83C\uDFD2 " + f.getEventTitle();
             VEvent evt = new VEvent(start, end, summary);
 
             String uid = "GAMBOL:fixture:" + f.getSourceRef();
