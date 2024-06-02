@@ -8,6 +8,8 @@ USER jboss
 
 RUN /opt/jboss/wildfly/bin/jboss-cli.sh --file=/tmp/wildfly-conf.cli
 
+RUN rm -rf /opt/jboss/wildfly/standalone/configuration/standalone_xml_history/current
+
 ENV POSTGRES_HOSTPORT=localhost:5432
 ENV POSTGRES_DATABASE=as10
 ENV POSTGRES_USERNAME=as10
