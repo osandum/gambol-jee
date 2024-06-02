@@ -86,6 +86,43 @@
       </plugin>
 
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.6.1</version>
+
+        <executions>
+          <!--
+           ! Fetch the PostgreSQL JDBC driver jar into ./target/patches.
+           ! From there, the docker build will place it in /tmp and execute
+           ! wildfly-conf.cli to patch it from there into the Wildfly image
+           ! -->
+          <execution>
+            <id>copy</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.postgresql</groupId>
+                  <artifactId>postgresql</artifactId>
+                  <outputDirectory>${project.build.directory}/patches</outputDirectory>
+                  <destFileName>postgresql-jdbc.jar</destFileName>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.3.0</version>
+      </plugin>
+
+      <plugin>
         <groupId>org.wildfly.plugins</groupId>
         <artifactId>wildfly-maven-plugin</artifactId>
         <version>4.2.0.Final</version>

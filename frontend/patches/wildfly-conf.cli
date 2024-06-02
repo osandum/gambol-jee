@@ -17,7 +17,7 @@ batch
 # Install Postgres JDBC jar as a module:
 module add \
   --name=org.postgres \
-  --resources=/tmp/postgresql-42.3.7.jar \
+  --resources=/tmp/postgresql-jdbc.jar \
   --dependencies=javax.api,javax.transaction.api
 
 # Register postgres JDBC-driver:

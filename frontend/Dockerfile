@@ -2,7 +2,7 @@ FROM jboss/wildfly:25.0.0.Final
 
 RUN /opt/jboss/wildfly/bin/add-user.sh admin Admin#70365
 
-ADD ./patches/ /tmp/
+ADD ./patches/ ./target/patches/ /tmp/
 
 USER jboss
 
