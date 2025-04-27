@@ -25,12 +25,11 @@ public class ClubParserTest {
     @Before
     public void setUp() throws JAXBException, SAXException {
         jaxbContext = JAXBContext.newInstance(Club.class);
-
         assertNotNull(jaxbContext);
 
         SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        schema = sf.newSchema(getClass().getResource("/gambol.xsd"));
-
+        schema = sf.newSchema(getClass().getClassLoader().getResource("META-INF/xsd/gambol.xsd"));
+        assertNotNull(schema);
     }
 
     @After

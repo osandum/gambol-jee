@@ -28,7 +28,8 @@ public class GamesheetParserTest {
         assertNotNull(jaxbContext);
 
         SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        schema = sf.newSchema(getClass().getResource("/gambol.xsd"));
+        schema = sf.newSchema(getClass().getClassLoader().getResource("META-INF/xsd/gambol.xsd"));
+        assertNotNull(schema);
     }
 
     private Gamesheet parseGame(String path) throws JAXBException {
@@ -47,7 +48,7 @@ public class GamesheetParserTest {
     @Test
     public void parseGame31597() throws JAXBException {
         Gamesheet game = parseGame("/sample/game-31597.xml");
-        
+
     }
 
     @Test

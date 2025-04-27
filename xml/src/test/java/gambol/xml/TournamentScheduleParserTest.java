@@ -27,7 +27,8 @@ public class TournamentScheduleParserTest {
         assertNotNull(jaxbContext);
 
         SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        schema = sf.newSchema(getClass().getResource("/gambol.xsd"));
+        schema = sf.newSchema(getClass().getClassLoader().getResource("META-INF/xsd/gambol.xsd"));
+        assertNotNull(schema);
     }
 
     private Tournament parseTournament(String path) throws JAXBException {
