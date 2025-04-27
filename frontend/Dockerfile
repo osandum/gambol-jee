@@ -1,4 +1,4 @@
-FROM jboss/wildfly:25.0.0.Final
+FROM quay.io/wildfly/wildfly:27.0.1.Final-jdk11
 
 RUN /opt/jboss/wildfly/bin/add-user.sh admin Admin#70365
 
