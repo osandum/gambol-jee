@@ -4,13 +4,13 @@ import gambol.xml.Event;
 import gambol.xml.GameOffense;
 import gambol.xml.PenaltyEvent;
 import gambol.xml.PlayerRef;
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.core.UriInfo;
+import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.NotNull;
+import jakarta.ws.rs.core.UriInfo;
 
 /**
  * @see  http://en.wikipedia.org/wiki/Penalty_(ice_hockey)

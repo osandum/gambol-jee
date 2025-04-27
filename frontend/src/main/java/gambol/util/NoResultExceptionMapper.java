@@ -1,11 +1,11 @@
 package gambol.util;
 
-import java.util.logging.Logger;
-import javax.ejb.EJBTransactionRolledbackException;
-import javax.inject.Inject;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.Provider;
+import org.slf4j.Logger;
+import jakarta.ejb.EJBTransactionRolledbackException;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.ext.ExceptionMapper;
+import jakarta.ws.rs.ext.Provider;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -14,23 +14,22 @@ import javax.ws.rs.ext.Provider;
 @Provider
 public class NoResultExceptionMapper implements ExceptionMapper<EJBTransactionRolledbackException> {
 
-    @Inject
-    private Logger LOG;
+    private static final Logger LOG = LoggerFactory.getLogger(NoResultExceptionMapper.class);
 
     @Override
     public Response toResponse(EJBTransactionRolledbackException ex) {
         Throwable cause = ex.getCause();
-        
+
         if (cause instanceof RuntimeException) {
             LOG.info(cause.getMessage());
-            
+
             return Response.
                     status(Response.Status.BAD_REQUEST).
                     type("text/plain").
                     entity(cause.getMessage()).
                     build();
         }
-        
+
         LOG.info(ex.getMessage());
         return Response.
                 status(Response.Status.NOT_FOUND).
@@ -38,5 +37,5 @@ public class NoResultExceptionMapper implements ExceptionMapper<EJBTransactionRo
                 entity(ex.getMessage()).
                 build();
     }
-    
+
 }

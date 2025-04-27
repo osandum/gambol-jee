@@ -5,16 +5,16 @@ import gambol.xml.GameSituation;
 import gambol.xml.GoalEvent;
 import gambol.xml.PlayerRef;
 import java.util.List;
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OrderColumn;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.core.UriInfo;
+import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OrderColumn;
+import jakarta.validation.constraints.NotNull;
+import jakarta.ws.rs.core.UriInfo;
 
 /**
  * @author osa

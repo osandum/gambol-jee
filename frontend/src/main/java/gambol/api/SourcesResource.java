@@ -6,18 +6,17 @@ import gambol.model.TournamentEntity;
 import gambol.xml.Gamesheet;
 import gambol.xml.Tournament;
 import java.net.URI;
-import javax.ejb.EJB;
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.validation.Valid;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Context;
-import static javax.ws.rs.core.MediaType.*;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import jakarta.ejb.EJB;
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.Stateless;
+import jakarta.validation.Valid;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.Context;
+import static jakarta.ws.rs.core.MediaType.*;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +29,7 @@ import org.slf4j.LoggerFactory;
 public class SourcesResource {
 
     private final static Logger LOG = LoggerFactory.getLogger(SourcesResource.class);
-    
+
     @EJB
     App gambol;
 
@@ -48,7 +47,7 @@ public class SourcesResource {
         URI scheduleUri = uriInfo.getBaseUriBuilder().path("tournament/{seasonId}/{tournamentSlug}").build(t.getSeason().getId(), t.getSlug());
 
         LOG.debug("schedule: {}", scheduleUri);
-        
+
         return Response
                 .created(scheduleUri)
                 .entity("Upload complete. See: " + scheduleUri + "\n")
@@ -67,7 +66,7 @@ public class SourcesResource {
                     .entity("Invalid gamesheet\n")
                     .build();
         }
-        
+
         // Do the work:
         FixtureEntity f = gambol.putGamesheet(gg);
 
@@ -76,7 +75,7 @@ public class SourcesResource {
         URI sheetUri = uriInfo.getBaseUriBuilder().path("fixture/{fixtureId}").build(f.getId());
 
         LOG.debug("{} {} gamesheet: {}", gg.getSourceRef(), tt.getSeason(), sheetUri);
-        
+
         return Response
                 .created(sheetUri)
                 .entity("Upload complete. See: " + sheetUri + "\n")

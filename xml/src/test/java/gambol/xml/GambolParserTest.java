@@ -2,9 +2,9 @@ package gambol.xml;
 
 import java.net.URL;
 import javax.xml.XMLConstants;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import org.junit.After;
@@ -47,9 +47,9 @@ public class GambolParserTest {
 
         int n = 0;
         for (Section s : cal.getSections())
-            for (Tournament t : s.getTournaments()) 
+            for (Tournament t : s.getTournaments())
                 ++n;
-        
+
         assertEquals(88, n);
     }
 }

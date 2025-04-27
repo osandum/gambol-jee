@@ -1,11 +1,10 @@
 package gambol.xml;
 
 import java.net.URL;
-import java.util.List;
 import javax.xml.XMLConstants;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import static org.junit.Assert.*;
@@ -41,7 +40,7 @@ public class GamesheetParserTest {
         Gamesheet game = (Gamesheet)um.unmarshal(src);
         assertNotNull(game);
         assertEquals(2, game.getRosters().size());
-        
+
         return game;
     }
 
@@ -59,9 +58,9 @@ public class GamesheetParserTest {
     @Test
     public void parseGame25977() throws JAXBException {
         Gamesheet game = parseGame("/sample/game-25977.xml");
-        
+
         assertEquals(30, game.getSpectators().intValue());
-        
+
         for (Roster r : game.getRosters())
             if (FixtureSideRole.HOME.equals(r.getSide())) {
                 assertEquals(18, r.getPlayers().size());
@@ -71,9 +70,9 @@ public class GamesheetParserTest {
                 assertEquals(11, r.getPlayers().size());
                 assertEquals(0, r.getOfficials().size());
             }
-        
+
         assertEquals(7, game.getEvents().getGoalsAndPenalties().size());
-        
+
         int eeHome = 0, eeAway = 0;
         for (Event e : game.getEvents().getGoalsAndPenalties())
             if (e instanceof GoalEvent) {
@@ -84,7 +83,7 @@ public class GamesheetParserTest {
             }
         assertEquals(5, eeHome);
         assertEquals(2, eeAway);
-        
+
         int psHome = 0, psAway = 0;
         for (PeriodSummary ps : game.getGamePeriods()) {
             psHome += ps.getGoals().getHome();
@@ -92,6 +91,6 @@ public class GamesheetParserTest {
         }
         assertEquals(5, psHome);
         assertEquals(2, psAway);
-        
+
     }
 }

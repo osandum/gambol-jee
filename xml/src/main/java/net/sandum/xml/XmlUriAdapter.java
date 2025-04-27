@@ -1,7 +1,7 @@
 package net.sandum.xml;
 
 import java.net.URI;
-import javax.xml.bind.annotation.adapters.XmlAdapter;
+import jakarta.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
  * @author osa
